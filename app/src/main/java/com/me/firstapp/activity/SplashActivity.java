@@ -1,0 +1,51 @@
+package com.me.firstapp.activity;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.me.firstapp.R;
+import com.me.firstapp.utils.PrefUtils;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+/**
+ * Created by FirstApp.Me on 2016/3/1.
+ */
+public class SplashActivity extends BaseActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                jumpNextPage();
+            }
+        };
+        timer.schedule(task, 1000*3);
+
+    }
+
+    /**
+     * 跳转下一个页面的方法
+     */
+    private void jumpNextPage() {
+        // 判断之前有没有显示过新手引导
+        boolean userGuide = PrefUtils.getBoolean(this, "is_user_guide_showed", false);
+        if (!userGuide) {
+            // 跳转到新手引导页
+            startActivity(new Intent(SplashActivity.this, GuideActivity.class));
+        } else {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        }
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+}
