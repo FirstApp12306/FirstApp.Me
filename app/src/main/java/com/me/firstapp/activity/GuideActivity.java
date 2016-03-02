@@ -13,33 +13,40 @@ import android.widget.RelativeLayout;
 import com.me.firstapp.R;
 import com.me.firstapp.adapter.NewUserGuideAdapter;
 import com.me.firstapp.utils.DensityUtils;
+import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
+
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 
 /**
- * Created by FirstApp.Me on 2016/3/1.
+ * 作者： FirstApp.Me.
+ * 博客: WWW.FirstApp.Me
+ * 微信: 1046566144
+ * QQ: 1046566144
  */
+@ContentView(R.layout.activity_guide)
 public class GuideActivity extends  BaseActivity {
+
     private static final int[] mImageIds = new int[] {R.drawable.login_help_guide1,R.drawable.login_help_guide2,
             R.drawable.login_help_guide3,R.drawable.login_help_guide4,R.drawable.login_help_guide5,};
-    private ViewPager vpGuide;
     private ArrayList<ImageView> mImageViewList;
-    private LinearLayout llPointGroup;// 引导圆点的父控件
     private int mPointWidth;// 圆点间的距离
+
+    @ViewInject(R.id.activity_guide_vp_guide)
+    private ViewPager vpGuide;
+    @ViewInject(R.id.activity_guide_point_group)
+    private LinearLayout llPointGroup;// 引导圆点的父控件
+    @ViewInject(R.id.activity_guide_red_point)
     private View viewRedPoint;// 小红点
+    @ViewInject(R.id.activity_guide_btn_start)
     private Button btnStart;// 开始体验按钮
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guide);
-
-        vpGuide = (ViewPager) findViewById(R.id.activity_guide_vp_guide);
-        llPointGroup = (LinearLayout) findViewById(R.id.activity_guide_point_group);
-        viewRedPoint = findViewById(R.id.activity_guide_red_point);
-        btnStart = (Button) findViewById(R.id.activity_guide_btn_start);
-
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +61,7 @@ public class GuideActivity extends  BaseActivity {
         initViews();
 
         vpGuide.setAdapter(new NewUserGuideAdapter(mImageIds, mImageViewList));
-        vpGuide.setOnPageChangeListener(new GuidePageListener());
+        vpGuide.addOnPageChangeListener(new GuidePageListener());//setOnPageChangeListener已过时
     }
 
     /**
@@ -88,10 +95,10 @@ public class GuideActivity extends  BaseActivity {
                     // 当layout执行结束后回调此方法
                     @Override
                     public void onGlobalLayout() {
-                        System.out.println("layout 结束");
+                        LogUtils.d(this.getClass(),"layout 结束");
                         llPointGroup.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                         mPointWidth = llPointGroup.getChildAt(1).getLeft() - llPointGroup.getChildAt(0).getLeft();
-                        System.out.println("圆点距离:" + mPointWidth);
+                        LogUtils.d(this.getClass(), "圆点距离:" + mPointWidth);
                     }
                 });
     }
@@ -105,8 +112,7 @@ public class GuideActivity extends  BaseActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset,
                                    int positionOffsetPixels) {
-            // System.out.println("当前位置:" + position + ";百分比:" + positionOffset
-            // + ";移动距离:" + positionOffsetPixels);
+            LogUtils.d(GuidePageListener.class, "当前位置:" + position + ";百分比:" + positionOffset + ";移动距离:" + positionOffsetPixels);
             int len = (int) (mPointWidth * positionOffset) + position * mPointWidth;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewRedPoint.getLayoutParams();// 获取当前红点的布局参数
             params.leftMargin = len;// 设置左边距

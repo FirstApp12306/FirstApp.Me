@@ -2,6 +2,7 @@ package com.me.firstapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 
 import com.me.firstapp.R;
 import com.me.firstapp.utils.PrefUtils;
@@ -10,14 +11,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by FirstApp.Me on 2016/3/1.
+ * 作者： FirstApp.Me.
+ * 博客: WWW.FirstApp.Me
+ * 微信: 1046566144
+ * QQ: 1046566144
  */
 public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override

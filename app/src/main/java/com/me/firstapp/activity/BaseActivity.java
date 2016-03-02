@@ -1,23 +1,30 @@
 package com.me.firstapp.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import com.me.firstapp.manager.ActivityManager;
 
+import org.xutils.x;
+
 /**
- * Created by FirstApp.Me on 2016/3/1.
+ * 作者： FirstApp.Me.
+ * 博客: WWW.FirstApp.Me
+ * 微信: 1046566144
+ * QQ: 1046566144
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
     private ActivityManager activityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题
+        x.view().inject(this);
+
         activityManager = ActivityManager.getInstance();
         activityManager.pushActivity(this);
+
     }
 
     @Override
