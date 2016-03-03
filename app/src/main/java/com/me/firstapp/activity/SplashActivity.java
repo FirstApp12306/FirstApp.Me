@@ -2,10 +2,11 @@ package com.me.firstapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 
 import com.me.firstapp.R;
 import com.me.firstapp.utils.PrefUtils;
+
+import org.xutils.view.annotation.ContentView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,11 +17,11 @@ import java.util.TimerTask;
  * 微信: 1046566144
  * QQ: 1046566144
  */
+@ContentView(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -29,7 +30,6 @@ public class SplashActivity extends BaseActivity {
             }
         };
         timer.schedule(task, 1000*3);
-
     }
 
     /**

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.me.firstapp.view.NoScrollViewPager
+        android:id="@+id/fragment_content_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </com.me.firstapp.view.NoScrollViewPager>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioGroup
+            android:id="@+id/fragment_content_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#fff">
+            <RadioButton
+                android:id="@+id/fragment_content_rb_first_page"
+                style="@style/BottomTabStyle"
+                android:drawableTop="@drawable/btn_tab_firstpage_selector"
+                android:text="首页" />
+
+            <RadioButton
+                android:id="@+id/fragment_content_rb_topic"
+                style="@style/BottomTabStyle"
+                android:drawableTop="@drawable/btn_tab_topic_selector"
+                android:text="话题" />
+
+            <RadioButton
+                android:id="@+id/fragment_content_rb_msg"
+                style="@style/BottomTabStyle"
+                android:drawableTop="@drawable/btn_tab_msg_selector"
+                android:text="消息" />
+
+            <RadioButton
+                android:id="@+id/fragment_content_rb_find"
+                style="@style/BottomTabStyle"
+                android:drawableTop="@drawable/btn_tab_find_selector"
+                android:text="盒子" />
+
+            <RadioButton
+                android:id="@+id/fragment_content_rb_person"
+                style="@style/BottomTabStyle"
+                android:drawableTop="@drawable/btn_tab_person_selector"
+                android:text="我" />
+        </RadioGroup>
+        <TextView
+            android:id="@+id/fragment_content_new_msg_number"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/shape_red_circle"
+            android:gravity="center"
+            android:text="99"
+            android:textColor="@android:color/white"
+            android:visibility="invisible" />
+    </FrameLayout>
+
+</LinearLayout>
