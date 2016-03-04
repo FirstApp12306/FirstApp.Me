@@ -2,10 +2,13 @@ package com.me.firstapp.pager;
 
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 
+import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 
 /**
  * 作者： FirstApp.Me.
@@ -14,6 +17,7 @@ import com.me.firstapp.utils.LogUtils;
  * QQ: 1046566144
  */
 public class TopicPager extends BasePager {
+
     public TopicPager(MainActivity activity) {
         super(activity);
     }

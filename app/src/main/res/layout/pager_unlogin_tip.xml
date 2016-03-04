@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/pager_unlogin_tip_text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="您还未登陆"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_below="@id/pager_unlogin_tip_text">
+        <Button
+            android:id="@+id/pager_unlogin_btn_login"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_login_bg"
+            android:textColor="#ffffff"
+            android:text="登录" />
+        <Button
+            android:id="@+id/pager_unlogin_btn_regest"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_regest_bg"
+            android:textColor="#ffffff"
+            android:text="注册" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#3f80dc" >
+
+        <ImageButton
+            android:id="@+id/activity_regest_returnback"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_returnback_bg"
+            android:src="@drawable/return_back_btn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="完成注册"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp">
+
+        <EditText
+            android:id="@+id/activity_complete_regest_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_regest_bg_selector"
+            android:drawableLeft="@drawable/regest_login_account_selector"
+            android:hint="输入昵称"
+            android:singleLine="true"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/activity_complete_regest_psd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_regest_bg_selector"
+            android:drawableLeft="@drawable/regest_login_password_selector"
+            android:inputType=""
+            android:hint="输入密码"
+            android:singleLine="true"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/activity_complete_regest_sure_psd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_regest_bg_selector"
+            android:drawableLeft="@drawable/regest_login_password_selector"
+            android:inputType="phone"
+            android:hint="确认密码"
+            android:singleLine="true"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <Button
+            android:id="@+id/activity_complete_regest_btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_default_bg"
+            android:enabled="true"
+            android:text="完成"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="15dp" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

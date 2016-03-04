@@ -16,6 +16,13 @@
     </style>
     <!-- Activity全屏 结束-->
 
+    <!-- Activity取消toolBar 开始-->
+    <style name="NoToolBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+    <!-- Activity取消toolBar 结束-->
+
     <!-- 低栏RadioButton的样式开始 -->
     <style name="BottomTabStyle">
         <item name="android:layout_width">wrap_content</item>
