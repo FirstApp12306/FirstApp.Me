@@ -31,9 +31,11 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.GuideActivity"
             android:theme="@style/MyFullScreenTheme"/>
-        <activity android:name=".activity.RegestActivity"
+        <activity android:name=".activity.SignUpActivity"
             android:theme="@style/NoToolBarTheme"/>
-        <activity android:name=".activity.CompleteRegestActivity"
+        <activity android:name=".activity.CompleteSignUpActivity"
+            android:theme="@style/NoToolBarTheme"/>
+        <activity android:name=".activity.settings.SettingsActivity"
             android:theme="@style/NoToolBarTheme"/>
         <!-- Mob短信SDK开始-->
         <activity

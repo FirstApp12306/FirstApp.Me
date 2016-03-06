@@ -25,7 +25,7 @@ public class MsgPager extends BasePager {
 
     @Override
     public void initData() {
-        LogUtils.d(FindPager.class, "初始化Msg页面数据。。。。。。。");
+        LogUtils.d("", "初始化Msg页面数据。。。。。。。");
         TextView textView = new TextView(mActivity);
         textView.setText("Msg页面");
         textView.setTextColor(Color.RED);

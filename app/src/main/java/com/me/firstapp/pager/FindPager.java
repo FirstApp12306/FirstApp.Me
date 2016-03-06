@@ -26,7 +26,7 @@ public class FindPager extends BasePager {
 
     @Override
     public void initData() {
-        LogUtils.d(FindPager.class, "初始化Find页面数据。。。。。。。");
+        LogUtils.d("", "初始化Find页面数据。。。。。。。");
         TextView textView = new TextView(mActivity);
         textView.setText("Find页面");
         textView.setTextColor(Color.RED);

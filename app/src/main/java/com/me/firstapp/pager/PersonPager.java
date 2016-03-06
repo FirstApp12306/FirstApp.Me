@@ -1,23 +1,14 @@
 package com.me.firstapp.pager;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
-import com.me.firstapp.activity.RegestActivity;
+import com.me.firstapp.activity.SignUpActivity;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
-
-import java.util.HashMap;
-
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
 
 /**
  * 作者： FirstApp.Me.
@@ -41,7 +32,7 @@ public class PersonPager extends BasePager {
 
     @Override
     public void initData() {
-        LogUtils.d(FindPager.class, "初始化Person页面数据。。。。。。。");
+        LogUtils.d("", "初始化Person页面数据。。。。。。。");
 //        TextView textView = new TextView(mActivity);
 //        textView.setText("Person页面");
 //        textView.setTextColor(Color.RED);
@@ -63,7 +54,7 @@ public class PersonPager extends BasePager {
                         case R.id.pager_unlogin_btn_login:
                             break;
                         case R.id.pager_unlogin_btn_regest:
-                            Intent intent = new Intent(mActivity, RegestActivity.class);
+                            Intent intent = new Intent(mActivity, SignUpActivity.class);
                             mActivity.startActivity(intent);
                             break;
                         default:

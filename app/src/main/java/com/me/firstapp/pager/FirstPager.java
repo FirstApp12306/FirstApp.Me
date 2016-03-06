@@ -26,7 +26,7 @@ public class FirstPager extends  BasePager {
 
     @Override
     public void initData() {
-        LogUtils.d(FindPager.class, "初始化First页面数据。。。。。。。");
+        LogUtils.d("", "初始化First页面数据。。。。。。。");
         TextView textView = new TextView(mActivity);
         textView.setText("First页面");
         textView.setTextColor(Color.RED);

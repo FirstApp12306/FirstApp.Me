@@ -95,10 +95,10 @@ public class GuideActivity extends  BaseActivity {
                     // 当layout执行结束后回调此方法
                     @Override
                     public void onGlobalLayout() {
-                        LogUtils.d(this.getClass(),"layout 结束");
+                        LogUtils.d("layout","layout 结束");
                         llPointGroup.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                         mPointWidth = llPointGroup.getChildAt(1).getLeft() - llPointGroup.getChildAt(0).getLeft();
-                        LogUtils.d(this.getClass(), "圆点距离:" + mPointWidth);
+                        LogUtils.d("mPointWidth", "圆点距离:" + mPointWidth);
                     }
                 });
     }
@@ -112,7 +112,7 @@ public class GuideActivity extends  BaseActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset,
                                    int positionOffsetPixels) {
-            LogUtils.d(GuidePageListener.class, "当前位置:" + position + ";百分比:" + positionOffset + ";移动距离:" + positionOffsetPixels);
+            LogUtils.d("position", "当前位置:" + position + ";百分比:" + positionOffset + ";移动距离:" + positionOffsetPixels);
             int len = (int) (mPointWidth * positionOffset) + position * mPointWidth;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewRedPoint.getLayoutParams();// 获取当前红点的布局参数
             params.leftMargin = len;// 设置左边距

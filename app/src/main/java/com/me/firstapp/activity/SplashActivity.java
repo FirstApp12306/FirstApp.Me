@@ -2,11 +2,16 @@ package com.me.firstapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.me.firstapp.R;
+import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.PrefUtils;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.x;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,7 +34,7 @@ public class SplashActivity extends BaseActivity {
                 jumpNextPage();
             }
         };
-        timer.schedule(task, 1000*3);
+        timer.schedule(task, 1000 * 2);
     }
 
     /**

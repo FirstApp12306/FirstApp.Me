@@ -37,10 +37,11 @@
             android:id="@+id/activity_complete_regest_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_regest_bg_selector"
-            android:drawableLeft="@drawable/regest_login_account_selector"
+            android:background="@drawable/input_signup_bg_selector"
+            android:drawableLeft="@drawable/signup_login_account_selector"
             android:hint="输入昵称"
             android:singleLine="true"
+            android:maxLength="10"
             android:padding="5dp"
             android:layout_marginTop="10dp"/>
 
@@ -48,11 +49,12 @@
             android:id="@+id/activity_complete_regest_psd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_regest_bg_selector"
+            android:background="@drawable/input_signup_bg_selector"
             android:drawableLeft="@drawable/regest_login_password_selector"
-            android:inputType=""
+            android:inputType="numberPassword"
             android:hint="输入密码"
             android:singleLine="true"
+            android:maxLength="20"
             android:padding="5dp"
             android:layout_marginTop="10dp"/>
 
@@ -60,11 +62,12 @@
             android:id="@+id/activity_complete_regest_sure_psd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_regest_bg_selector"
+            android:background="@drawable/input_signup_bg_selector"
             android:drawableLeft="@drawable/regest_login_password_selector"
-            android:inputType="phone"
+            android:inputType="numberPassword"
             android:hint="确认密码"
             android:singleLine="true"
+            android:maxLength="20"
             android:padding="5dp"
             android:layout_marginTop="10dp"/>
 

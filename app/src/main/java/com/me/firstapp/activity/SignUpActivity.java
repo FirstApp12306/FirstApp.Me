@@ -3,7 +3,6 @@ package com.me.firstapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,19 +16,12 @@ import com.me.firstapp.R;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.TimeCountUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
 import cn.smssdk.utils.SMSLog;
 
 /**
@@ -38,18 +30,18 @@ import cn.smssdk.utils.SMSLog;
  * 微信: 1046566144
  * QQ: 1046566144
  */
-@ContentView(R.layout.activity_regest)
-public class RegestActivity extends BaseActivity {
+@ContentView(R.layout.activity_signup)
+public class SignUpActivity extends BaseActivity {
 
     @ViewInject(R.id.activity_regest_returnback)
     private ImageButton btnReturnBack;
-    @ViewInject(R.id.activity_regest_phone)
+    @ViewInject(R.id.activity_signup_phone)
     private EditText phonEditText;
-    @ViewInject(R.id.activity_regest_btn_getcode)
+    @ViewInject(R.id.activity_signup_btn_getcode)
     private Button codeButton;
-    @ViewInject(R.id.activity_regest_verify_code)
+    @ViewInject(R.id.activity_signup_verify_code)
     private EditText codeEditText;
-    @ViewInject(R.id.activity_regest_btn_submit)
+    @ViewInject(R.id.activity_signup_btn_submit)
     private Button btnSubmit;
 
     public String phString;
@@ -78,10 +70,10 @@ public class RegestActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(phonEditText.getText().toString())) {
                     SMSSDK.getVerificationCode("86", phonEditText.getText().toString());
                     phString = phonEditText.getText().toString();
-                    TimeCountUtil timeCountUtil = new TimeCountUtil(RegestActivity.this, 30000, 1000, codeButton);
+                    TimeCountUtil timeCountUtil = new TimeCountUtil(SignUpActivity.this, 30000, 1000, codeButton);
                     timeCountUtil.start();
                 } else {
-                    Toast.makeText(RegestActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -93,13 +85,13 @@ public class RegestActivity extends BaseActivity {
 //                if (!TextUtils.isEmpty(codeEditText.getText().toString())) {
 //                    SMSSDK.submitVerificationCode("86", phString, codeEditText.getText().toString());
 //                }else{
-//                    Toast.makeText(RegestActivity.this, "验证码不能为空", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SignUpActivity.this, "验证码不能为空", Toast.LENGTH_SHORT).show();
 //                }
 
-                    Intent intent = new Intent(RegestActivity.this, CompleteRegestActivity.class);
+                    Intent intent = new Intent(SignUpActivity.this, CompleteSignUpActivity.class);
                     intent.putExtra("phone",phonEditText.getText().toString());
-                    RegestActivity.this.startActivity(intent);
-                    RegestActivity.this.finish();
+                    SignUpActivity.this.startActivity(intent);
+                    SignUpActivity.this.finish();
 
             }
         });
@@ -113,15 +105,15 @@ public class RegestActivity extends BaseActivity {
     }
 
 //    static class MyHandler extends  Handler{
-//        WeakReference<RegestActivity> mActivity;
-//        MyHandler(RegestActivity activity){
-//            mActivity = new WeakReference<RegestActivity>(activity);
+//        WeakReference<SignUpActivity> mActivity;
+//        MyHandler(SignUpActivity activity){
+//            mActivity = new WeakReference<SignUpActivity>(activity);
 //        }
 //
 //        @Override
 //        public void handleMessage(Message msg) {
 //            super.handleMessage(msg);
-//            RegestActivity theActivity = mActivity.get();
+//            SignUpActivity theActivity = mActivity.get();
 //            int event = msg.arg1;
 //            int result = msg.arg2;
 //            Object data = msg.obj;
@@ -130,7 +122,7 @@ public class RegestActivity extends BaseActivity {
 //                //短信注册成功后，返回MainActivity,然后提示新好友
 //                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
 //                    Toast.makeText(theActivity, "提交验证码成功", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(theActivity, CompleteRegestActivity.class);
+//                    Intent intent = new Intent(theActivity, CompleteSignUpActivity.class);
 //                    theActivity.startActivity(intent);
 //                    theActivity.finish();
 //                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
@@ -164,13 +156,13 @@ public class RegestActivity extends BaseActivity {
             int event = msg.arg1;
             int result = msg.arg2;
             Object data = msg.obj;
-            LogUtils.e(Handler.class, "event=" + event);
+            LogUtils.e("event", "event=" + event);
             if (result == SMSSDK.RESULT_COMPLETE) {
                 System.out.println("--------result"+event);
                 //短信注册成功后，返回MainActivity,然后提示新好友
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
-                    Toast.makeText(RegestActivity.this, "提交验证码成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegestActivity.this, CompleteRegestActivity.class);
+                    Toast.makeText(SignUpActivity.this, "提交验证码成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SignUpActivity.this, CompleteSignUpActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
@@ -195,7 +187,7 @@ public class RegestActivity extends BaseActivity {
                     status = object.optInt("status");
                     Log.d("detail","状态:"+status+" 描述:"+des);
 //                    if (!TextUtils.isEmpty(des)) {
-//                        Toast.makeText(RegestActivity.this, des, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SignUpActivity.this, des, Toast.LENGTH_SHORT).show();
 //                        return;
 //                    }
                 } catch (Exception e) {
