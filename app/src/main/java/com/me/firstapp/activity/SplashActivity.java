@@ -35,6 +35,7 @@ public class SplashActivity extends BaseActivity {
             }
         };
         timer.schedule(task, 1000 * 2);
+        firstAppInit();
     }
 
     /**
@@ -50,6 +51,33 @@ public class SplashActivity extends BaseActivity {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
         }
         finish();
+    }
+
+    private void firstAppInit(){
+        RequestParams params = new RequestParams(GlobalContants.SERVER_LOGIN_URL);
+        params.addQueryStringParameter("userno", GlobalContants.SERVER_USER_NO);
+        params.addQueryStringParameter("pwd", GlobalContants.SERVER_USER_PASSWORD);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.d("FirstApp.Me", "success");
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     @Override

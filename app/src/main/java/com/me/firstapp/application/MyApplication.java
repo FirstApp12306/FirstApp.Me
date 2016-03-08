@@ -28,36 +28,36 @@ public class MyApplication extends Application {
         x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志
 
         //FirstApp服务初始化
-        firstAppInit();
+//        firstAppInit();
 
         //Mob短信SDK初始化
         SMSSDK.initSDK(this, "10035105a5291", "3fd5b3308ebc6ab7cf1f617b90b88eca");
     }
 
-    private void firstAppInit(){
-        RequestParams params = new RequestParams(GlobalContants.SERVER_LOGIN_URL);
-        params.addQueryStringParameter("userNO", GlobalContants.SERVER_USER_NO);
-        params.addQueryStringParameter("password", GlobalContants.SERVER_USER_PASSWORD);
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Log.d("FirstApp.Me","success");
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
+//    private void firstAppInit(){
+//        RequestParams params = new RequestParams(GlobalContants.SERVER_LOGIN_URL);
+//        params.addQueryStringParameter("userno", GlobalContants.SERVER_USER_NO);
+//        params.addQueryStringParameter("pwd", GlobalContants.SERVER_USER_PASSWORD);
+//        x.http().post(params, new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String result) {
+//                Log.d("FirstApp.Me","success");
+//            }
+//
+//            @Override
+//            public void onError(Throwable ex, boolean isOnCallback) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException cex) {
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//
+//            }
+//        });
+//    }
 }

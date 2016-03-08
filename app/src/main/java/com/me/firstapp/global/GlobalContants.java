@@ -9,9 +9,9 @@ package com.me.firstapp.global;
  */
 public class GlobalContants {
     //服务器用户号
-    public static final String SERVER_USER_NO = "123321";
+    public static final String SERVER_USER_NO = "9xjyuy";
     //服务器密码
-    public static final String SERVER_USER_PASSWORD = "111111";
+    public static final String SERVER_USER_PASSWORD = "x5z1zoh9";
     //app编号
     // public static final String APP_ID = "ee252ba63500463cb59edea481b54291";
     //主url
@@ -19,5 +19,5 @@ public class GlobalContants {
     //服务器系统登录接口
     public static final String SERVER_LOGIN_URL = SERVER_URL + "automake/controller/system/login/LoginAction.do";
     //客户端用户注册接口
-    public static final String REGEST_URL = SERVER_URL + "automake/controller/system/regest/RegestController";
+    public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/system/signup/SignUpController";
 }

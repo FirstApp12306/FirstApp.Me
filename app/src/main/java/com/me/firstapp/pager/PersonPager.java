@@ -3,6 +3,9 @@ package com.me.firstapp.pager;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
@@ -20,7 +23,19 @@ public class PersonPager extends BasePager {
 
     private View view;
     private Button btnLogin;
-    private Button btnRegest;
+    private Button btnSignUp;
+    private Button btnSetting;
+    private ImageView avatar;
+    private Button btnEditData;
+    private EditText nickName;
+    private EditText level;
+    private EditText userID;
+    private EditText location;
+    private TextView attention;
+    private Button btnFav;
+    private TextView fans;
+    private TextView signature;
+
     public PersonPager(MainActivity activity) {
         super(activity);
     }
@@ -28,24 +43,20 @@ public class PersonPager extends BasePager {
     @Override
     public void initViews() {
         super.initViews();
+        mRl.setVisibility(View.GONE);//让基础页面的标题栏消失
     }
 
     @Override
     public void initData() {
         LogUtils.d("", "初始化Person页面数据。。。。。。。");
-//        TextView textView = new TextView(mActivity);
-//        textView.setText("Person页面");
-//        textView.setTextColor(Color.RED);
-//        textView.setTextSize(25);
-//        textView.setGravity(Gravity.CENTER);
-
         boolean isLogin = PrefUtils.getBoolean(mActivity, "login_flag", false);
         if (isLogin){
+            view = View.inflate(mActivity, R.layout.pager_person, null);
 
         }else{
             view = View.inflate(mActivity, R.layout.pager_unlogin_tip, null);
             btnLogin = (Button) view.findViewById(R.id.pager_unlogin_btn_login);
-            btnRegest = (Button) view.findViewById(R.id.pager_unlogin_btn_regest);
+            btnSignUp = (Button) view.findViewById(R.id.pager_unlogin_btn_regest);
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -63,7 +74,7 @@ public class PersonPager extends BasePager {
                 }
             };
             btnLogin.setOnClickListener(listener);
-            btnRegest.setOnClickListener(listener);
+            btnSignUp.setOnClickListener(listener);
         }
 
         flContent.removeAllViews();

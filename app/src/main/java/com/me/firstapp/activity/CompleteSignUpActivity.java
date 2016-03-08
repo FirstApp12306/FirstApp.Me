@@ -1,7 +1,7 @@
 package com.me.firstapp.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,17 +9,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.me.firstapp.R;
-import com.me.firstapp.activity.settings.SettingsActivity;
+import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.utils.DatabaseUtils;
 import com.me.firstapp.utils.DialogUtils;
+import com.me.firstapp.utils.Event;
+import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SoftInputUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 作者： FirstApp.Me.
@@ -50,9 +59,7 @@ public class CompleteSignUpActivity extends BaseActivity {
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //judgeEdit();
-                Intent intent = new Intent(CompleteSignUpActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                judgeEdit();
             }
         });
 
@@ -96,7 +103,7 @@ public class CompleteSignUpActivity extends BaseActivity {
         SoftInputUtils.hideSoftInputWindow(this);
         loadingDialog = DialogUtils.creatLoadingDialog(this, "请稍后...");
         loadingDialog.show();
-        RequestParams params = new RequestParams(GlobalContants.REGEST_URL);
+        RequestParams params = new RequestParams(GlobalContants.SIGN_UP_URL);
         //params.setSslSocketFactory();
         params.addQueryStringParameter("phone", phone);
         params.addQueryStringParameter("password", psdEditText.getText().toString());
@@ -105,24 +112,75 @@ public class CompleteSignUpActivity extends BaseActivity {
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-
+                LogUtils.d("result", result);
+                parseData(result);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Toast.makeText(x.app(), "无法连接服务器", Toast.LENGTH_LONG).show();
+                LogUtils.d("",ex.getMessage());
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-
+                Toast.makeText(x.app(), "已取消", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFinished() {
-
+                LogUtils.d("","访问服务器结束");
+                loadingDialog.cancel();
             }
         });
 
+    }
+
+    /**
+     * 解析服务器JSON数据
+     * @param result
+     */
+    private void parseData(String result){
+        try {
+            Gson gson = new Gson();
+            JSONObject object1 = new JSONObject(result);
+            JSONObject object2 = object1.getJSONObject("resultMap");
+            String returnCode = object2.getString("return_code");
+            if("000000".equals(returnCode)){
+                JSONObject object3 = object2.getJSONObject("user");
+                LogUtils.d("object3", object3.toString());
+                User user = gson.fromJson(object3.toString(),User.class);
+                LogUtils.d("user", user.toString());
+                saveUserData(user);
+                PrefUtils.setBoolean(this, "login_flag", true);
+                EventBus.getDefault().post(new Event.SignUpEvent(user));
+                finish();
+            }else{
+                Toast.makeText(x.app(), "数据异常，返回码："+returnCode, Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 保存用户数据
+     * @param user
+     */
+    private void saveUserData(User user){
+        ContentValues cv = new ContentValues();
+        cv.put("id", user.id);
+        cv.put("name", user.name);
+        cv.put("phone", user.phone);
+        cv.put("avatar", user.avatar);
+        cv.put("password", user.password);
+        cv.put("signature", user.signature);
+        cv.put("sex", user.sex);
+        cv.put("level", user.level);
+        cv.put("points", user.points);
+        cv.put("sts", user.sts);
+        cv.put("city", user.city);
+        new DatabaseUtils(this).insert("user", cv);
     }
 }

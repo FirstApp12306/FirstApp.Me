@@ -2,6 +2,7 @@ package com.me.firstapp.pager;
 
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
@@ -16,6 +17,7 @@ public class BasePager {
     public MainActivity mActivity;
     public View mRootView;// 布局对象
     public FrameLayout flContent;
+    public RelativeLayout mRl;
 
     public BasePager(MainActivity activity) {
         mActivity = activity;
@@ -28,6 +30,7 @@ public class BasePager {
     public void initViews() {
         mRootView = View.inflate(mActivity, R.layout.pager_base, null);
         flContent = (FrameLayout) mRootView.findViewById(R.id.pager_base_content);
+        mRl = (RelativeLayout) mRootView.findViewById(R.id.pager_base_rl);
     }
 
     /**

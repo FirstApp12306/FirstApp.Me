@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#3f80dc" >
+
+            <Button
+                android:id="@+id/person_pager_btn_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="18dp"
+                android:background="@null"
+                android:text="设置"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+            <com.me.firstapp.view.CircleImageView
+                android:id="@+id/person_pager_avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/take_photo_me"/>
+            <Button
+                android:id="@+id/person_pager_btn_edit_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_person_pager_edit_person_data"
+                android:text="编辑资料"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/person_pager_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@id/header_person_pager_second_rl"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:text="FirstApp"/>
+        <RelativeLayout
+            android:id="@+id/person_pager_third_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_pager_nickname">
+
+            <TextView
+                android:id="@+id/person_pager_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:text="等级：15"/>
+
+            <TextView
+                android:id="@+id/person_pager_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="ID:123456"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/person_pager_level" />
+
+            <TextView
+                android:id="@+id/person_pager_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="陕西西安"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/person_pager_level" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/person_pager_forth_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_pager_third_rl">
+            <TextView
+                android:id="@+id/person_pager_attention"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关注：9"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/person_pager_fans"
+                android:layout_marginEnd="33dp" />
+
+            <Button
+                android:id="@+id/person_pager_btn_favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_collect"
+                android:padding="5dp"
+                android:text="收藏夹"
+                android:layout_marginEnd="69dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/person_pager_fans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="粉丝：9"
+                android:layout_below="@id/person_pager_attention"
+                android:layout_toStartOf="@id/person_pager_btn_favourite"
+                android:layout_marginEnd="33dp" />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/person_pager_sign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_pager_forth_rl"
+            android:maxLength="30"
+            android:gravity="center"
+            android:text="理想很丰满，现实很骨感"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_pager_sign">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:drawableRight="@drawable/icon_expand_select"
+                android:text="话题"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icon_expand_select"
+                android:text="帖子"/>
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
+        </ListView>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -20,6 +20,8 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * 作者： FirstApp.Me.
  * 博客: WWW.FirstApp.Me
@@ -40,6 +42,7 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //EventBus.getDefault().register(this);
     }
 
     @Override
@@ -108,5 +111,11 @@ public class ContentFragment extends BaseFragment {
         });
 
         mPagerList.get(0).initData();//初始化首页数据
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //EventBus.getDefault().unregister(this);
     }
 }
