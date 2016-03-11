@@ -152,7 +152,8 @@ public class CompleteSignUpActivity extends BaseActivity {
                 User user = gson.fromJson(object3.toString(),User.class);
                 LogUtils.d("user", user.toString());
                 saveUserData(user);
-                PrefUtils.setBoolean(this, "login_flag", true);
+                PrefUtils.setBoolean(this, "login_flag", true);//记录登陆状态
+                PrefUtils.setString(this, "loginUser", user.id);//记录登陆用户
                 EventBus.getDefault().post(new Event.SignUpEvent(user));
                 finish();
             }else{

@@ -2,7 +2,10 @@ package com.me.firstapp.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.me.firstapp.entity.User;
 
 /**
  * 作者： FirstApp.Me.
@@ -78,5 +81,33 @@ public class DatabaseUtils {
     //删除表数据
     public void delete(String table_name) {
         deleteWhere(table_name, null, null);
+    }
+
+    public User queryUser(String userID){
+        User user = new User();
+        Cursor cursor = null;
+        try{
+            opendb(context);
+            cursor = sqlitedatabase.rawQuery("select * from user where id = '"+userID+"'", null);
+            while (cursor.moveToNext()) {
+                user.id = userID;
+                user.avatar = cursor.getString(cursor.getColumnIndex("avatar"));
+                user.city = cursor.getString(cursor.getColumnIndex("city"));
+                user.level = cursor.getString(cursor.getColumnIndex("level"));
+                user.name = cursor.getString(cursor.getColumnIndex("name"));
+                user.password = cursor.getString(cursor.getColumnIndex("password"));
+                user.phone = cursor.getString(cursor.getColumnIndex("phone"));
+                user.points = cursor.getString(cursor.getColumnIndex("points"));
+                user.sex = cursor.getString(cursor.getColumnIndex("sex"));
+                user.signature = cursor.getString(cursor.getColumnIndex("signature"));
+                user.sts = cursor.getString(cursor.getColumnIndex("sts"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            cursor.close();
+            closedb(context);
+        }
+        return user;
     }
 }

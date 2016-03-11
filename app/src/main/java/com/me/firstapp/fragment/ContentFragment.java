@@ -45,6 +45,7 @@ public class ContentFragment extends BaseFragment {
         //EventBus.getDefault().register(this);
     }
 
+
     @Override
     public View initViews() {
         View view = View.inflate(mActivity, R.layout.fragment_content, null);

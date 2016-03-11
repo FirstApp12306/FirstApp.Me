@@ -38,6 +38,7 @@ public abstract class BaseFragment extends Fragment {
         initData();
     }
 
+
     // 子类必须实现初始化布局的方法
     public abstract View initViews();
 

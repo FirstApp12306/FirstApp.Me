@@ -1,6 +1,7 @@
 package com.me.firstapp.pager;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -18,6 +19,7 @@ public class BasePager {
     public View mRootView;// 布局对象
     public FrameLayout flContent;
     public RelativeLayout mRl;
+    public Button btnCreateTopic;
 
     public BasePager(MainActivity activity) {
         mActivity = activity;
@@ -31,6 +33,7 @@ public class BasePager {
         mRootView = View.inflate(mActivity, R.layout.pager_base, null);
         flContent = (FrameLayout) mRootView.findViewById(R.id.pager_base_content);
         mRl = (RelativeLayout) mRootView.findViewById(R.id.pager_base_rl);
+        btnCreateTopic = (Button) mRootView.findViewById(R.id.pager_base_btn_create_topic);
     }
 
     /**

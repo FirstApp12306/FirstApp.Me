@@ -2,9 +2,11 @@ package com.me.firstapp.pager;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
@@ -12,6 +14,7 @@ import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.SignUpActivity;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
+import com.me.firstapp.view.MyScrollView;
 
 /**
  * 作者： FirstApp.Me.
@@ -36,6 +39,16 @@ public class PersonPager extends BasePager {
     private TextView fans;
     private TextView signature;
 
+    //测试控件
+    private TextView pager_person_test;
+    private MyScrollView myScrollView;
+    private LinearLayout pager_person_ll_one;
+    private LinearLayout pager_person_ll_two;
+    private LinearLayout pager_person_ll_layout;
+    private LinearLayout pager_person_ll_three;
+    private Button pager_person_btn_topic;
+    private int height;
+
     public PersonPager(MainActivity activity) {
         super(activity);
     }
@@ -52,6 +65,30 @@ public class PersonPager extends BasePager {
         boolean isLogin = PrefUtils.getBoolean(mActivity, "login_flag", false);
         if (isLogin){
             view = View.inflate(mActivity, R.layout.pager_person, null);
+            pager_person_test = (TextView) view.findViewById(R.id.pager_person_test);
+            myScrollView = (MyScrollView) view.findViewById(R.id.pager_person_scrollview);
+            pager_person_ll_one = (LinearLayout) view.findViewById(R.id.pager_person_ll_one);
+            pager_person_ll_two = (LinearLayout) view.findViewById(R.id.pager_person_ll_two);
+            pager_person_ll_layout = (LinearLayout) view.findViewById(R.id.pager_person_ll_layout);
+//            pager_person_btn_topic = (Button) view.findViewById(R.id.pager_person_btn_topic);
+//            pager_person_ll_three = (LinearLayout) view.findViewById(R.id.pager_person_ll_three);
+
+            //height = pager_person_ll_layout.getBottom();
+
+            mActivity.setOnMyWindowFocusChangedListener(new MainActivity.OnMyWindowFocusChanged() {
+                @Override
+                public void onWindowFocusChanged(boolean hasFocus) {
+                    LogUtils.d("hasFocus",hasFocus+"");
+                }
+            });
+
+            myScrollView.setOnScrollListener(new MyScrollView.OnScrollListener() {
+                @Override
+                public void onScroll(int l, int t, int oldl, int oldt) {
+                    height = pager_person_ll_two.getTop();
+                    //LogUtils.d("height", height+"");
+                }
+            });
 
         }else{
             view = View.inflate(mActivity, R.layout.pager_unlogin_tip, null);
@@ -80,4 +117,6 @@ public class PersonPager extends BasePager {
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
     }
+
+
 }

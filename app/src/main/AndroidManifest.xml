@@ -37,6 +37,8 @@
             android:theme="@style/NoToolBarTheme"/>
         <activity android:name=".activity.settings.SettingsActivity"
             android:theme="@style/NoToolBarTheme"/>
+        <activity android:name=".activity.CreateTopicFirstActivity"/>
+        <activity android:name=".activity.CreateTopicSecondActivity"/>
         <!-- Mob短信SDK开始-->
         <activity
             android:name="com.mob.tools.MobUIShell"

@@ -22,12 +22,29 @@ import org.xutils.x;
 public class MainActivity extends FragmentActivity {
 
     private static final String FRAGMENT_CONTENT = "fragment_content";
+    private OnMyWindowFocusChanged onMyWindowFocusChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         initFragment();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (onMyWindowFocusChanged != null){
+            onMyWindowFocusChanged.onWindowFocusChanged(hasFocus);
+        }
+    }
+
+    public interface  OnMyWindowFocusChanged{
+        public  void onWindowFocusChanged(boolean hasFocus);
+    }
+
+    public void setOnMyWindowFocusChangedListener(OnMyWindowFocusChanged onMyWindowFocusChanged){
+        this.onMyWindowFocusChanged = onMyWindowFocusChanged;
     }
 
     /**

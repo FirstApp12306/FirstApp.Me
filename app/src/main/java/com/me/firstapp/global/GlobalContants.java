@@ -16,8 +16,12 @@ public class GlobalContants {
     // public static final String APP_ID = "ee252ba63500463cb59edea481b54291";
     //主url
     public static final String SERVER_URL = "http://192.168.191.1:8080/fundSys/";
-    //服务器系统登录接口
+    //服务器用户登录接口
     public static final String SERVER_LOGIN_URL = SERVER_URL + "automake/controller/system/login/LoginAction.do";
     //客户端用户注册接口
     public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/system/signup/SignUpController";
+    //客户端用户发布话题接口
+    public static final String PUB_TOPIC_URL = SERVER_URL + "/automake/controller/firstapp/TopicInsertController";
+    //客户端获取话题列表接口
+    public static final String TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/TopicsListController";
 }

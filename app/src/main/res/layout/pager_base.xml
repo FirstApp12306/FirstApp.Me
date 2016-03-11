@@ -7,7 +7,17 @@
         android:id="@+id/pager_base_rl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#3f80dc" >
+        android:background="#ffffff" >
+
+        <Button
+            android:id="@+id/pager_base_btn_create_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@null"
+            android:textColor="#435356"
+            android:textSize="18sp"
+            android:text="创建话题"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -44,6 +54,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="选择" />
