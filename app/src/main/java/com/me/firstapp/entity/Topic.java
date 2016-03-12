@@ -14,7 +14,7 @@ public class Topic{
     public String user_id;
     public String pub_date;
     public String pub_time;
-    public long brows_counts;
+    public long browse_counts;
 
     @Override
     public String toString() {

@@ -72,18 +72,12 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         this.addHeaderView(mHeaderView);
 
         tvTitle = (TextView) mHeaderView.findViewById(R.id.listview_refresh_header_tv_title);
-        tvTime = (TextView) mHeaderView.findViewById(R.id.listview_refresh_header_tv_time);
-        ivArrow = (ImageView) mHeaderView.findViewById(R.id.listview_refresh_header_iv_arr);
         pbProgress = (ProgressBar) mHeaderView.findViewById(R.id.listview_refresh_header_pb_progress);
 
         mHeaderView.measure(0, 0);
         mHeaderViewHeight = mHeaderView.getMeasuredHeight();
 
         mHeaderView.setPadding(0, -mHeaderViewHeight, 0, 0);// 隐藏头布局
-
-        initArrowAnim();
-
-        tvTime.setText("最后刷新时间:" + getCurrentTime());
     }
 
     /**
@@ -162,22 +156,12 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         switch (mCurrrentState) {
             case STATE_PULL_REFRESH:
                 tvTitle.setText("下拉刷新");
-                ivArrow.setVisibility(View.VISIBLE);
-                pbProgress.setVisibility(View.INVISIBLE);
-                ivArrow.startAnimation(animDown);
                 break;
             case STATE_RELEASE_REFRESH:
                 tvTitle.setText("松开刷新");
-                ivArrow.setVisibility(View.VISIBLE);
-                pbProgress.setVisibility(View.INVISIBLE);
-                ivArrow.startAnimation(animUp);
                 break;
             case STATE_REFRESHING:
                 tvTitle.setText("正在刷新...");
-                ivArrow.clearAnimation();// 必须先清除动画,才能隐藏
-                ivArrow.setVisibility(View.INVISIBLE);
-                pbProgress.setVisibility(View.VISIBLE);
-
                 if (mListener != null) {
                     mListener.onRefresh();
                 }
@@ -193,9 +177,9 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     }
 
     public interface OnRefreshListener {
-        public void onRefresh();
+        void onRefresh();
 
-        public void onLoadMore();// 加载下一页数据
+        void onLoadMore();// 加载下一页数据
     }
 
     /**
@@ -209,41 +193,10 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         } else {
             mCurrrentState = STATE_PULL_REFRESH;
             tvTitle.setText("下拉刷新");
-            ivArrow.setVisibility(View.VISIBLE);
-            pbProgress.setVisibility(View.INVISIBLE);
 
             mHeaderView.setPadding(0, -mHeaderViewHeight, 0, 0);// 隐藏
 
-            if (success) {
-                tvTime.setText("最后刷新时间:" + getCurrentTime());
-            }
         }
-    }
-
-    /**
-     * 初始化箭头动画
-     */
-    private void initArrowAnim() {
-        // 箭头向上动画
-        animUp = new RotateAnimation(0, -180, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        animUp.setDuration(200);
-        animUp.setFillAfter(true);
-
-        // 箭头向下动画
-        animDown = new RotateAnimation(-180, 0, Animation.RELATIVE_TO_SELF,
-                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animDown.setDuration(200);
-        animDown.setFillAfter(true);
-
-    }
-
-    /**
-     * 获取当前时间
-     */
-    public String getCurrentTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(new Date());
     }
 
     OnItemClickListener mItemClickListener;

@@ -6,11 +6,6 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#d9d9d9"/>
-
     <TextView
         android:id="@+id/pager_topic_listview_item_topic_title"
         android:layout_width="match_parent"
@@ -26,13 +21,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:textSize="12sp"
-        android:textColor="#435356"
+        android:textColor="#918b8a"
         android:text="2345 次浏览"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="10dp"
-        android:background="#d9d9d9"/>
 
 </LinearLayout>

@@ -6,13 +6,13 @@
     android:toDegrees="360" >
 
     <shape
-        android:innerRadius="12dp"
+        android:innerRadius="10dp"
         android:shape="ring"
-        android:thickness="3dp"
+        android:thickness="2dp"
         android:useLevel="false" >
         <gradient
-            android:centerColor="#3f00"
-            android:endColor="#f00"
+            android:centerColor="#ebebeb"
+            android:endColor="#999999"
             android:startColor="#fff" />
     </shape>
 
