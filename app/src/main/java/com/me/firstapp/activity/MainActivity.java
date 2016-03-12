@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.me.firstapp.R;
 import com.me.firstapp.fragment.ContentFragment;
+import com.me.firstapp.utils.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
@@ -58,10 +59,17 @@ public class MainActivity extends FragmentActivity {
         // Fragment leftMenuFragment = fm.findFragmentByTag(FRAGMENT_LEFT_MENU);
     }
 
-    // 获取主页面fragment
-    public ContentFragment getContentFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        ContentFragment fragment = (ContentFragment) fm.findFragmentByTag(FRAGMENT_CONTENT);
-        return fragment;
+//    // 获取主页面fragment
+//    public ContentFragment getContentFragment() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        ContentFragment fragment = (ContentFragment) fm.findFragmentByTag(FRAGMENT_CONTENT);
+//        return fragment;
+//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PrefUtils.setBoolean(this, "topic_pager_init_flag0", false);
+        PrefUtils.setBoolean(this, "topic_pager_init_flag1", false);
     }
 }

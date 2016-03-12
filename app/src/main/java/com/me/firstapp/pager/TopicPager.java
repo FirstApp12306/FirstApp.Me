@@ -99,6 +99,8 @@ public class TopicPager extends BasePager {
                     mRadioGroup.check(R.id.pager_base_rbtn_new);
                     break;
             }
+            mPagerList.get(position).initData();
+
         }
 
         @Override

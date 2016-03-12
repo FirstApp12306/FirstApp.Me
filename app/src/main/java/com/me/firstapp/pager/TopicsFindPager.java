@@ -11,6 +11,7 @@ import com.me.firstapp.entity.Topic;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.RefreshListView;
 
 import org.json.JSONArray;
@@ -52,11 +53,12 @@ public class TopicsFindPager extends TopicsBasePager {
     }
 
     private void initTopicData(){
-        String cache = CacheUtils.getCache(GlobalContants.TOPICS_LIST_URL, mActivity);
+        String cache = CacheUtils.getCache(GlobalContants.FIND_TOPICS_LIST_URL, mActivity);
         if (!TextUtils.isEmpty(cache)) {
             parseData(cache,false);
         }
-        getDataFromServer(false, true);
+        LogUtils.d("initTopicData", "!!!!!!!!!!!!!");
+        getDataFromServer(false, true, true);
     }
 
     private void refreshAndLoad(){
@@ -64,7 +66,7 @@ public class TopicsFindPager extends TopicsBasePager {
             @Override
             public void onRefresh() {
                 page = 1;
-                getDataFromServer(false, false);
+                getDataFromServer(false, false, false);
                 isMoreNext = false;
             }
 
@@ -72,7 +74,7 @@ public class TopicsFindPager extends TopicsBasePager {
             public void onLoadMore() {
                 if (isMoreNext == false) {
                     page++;
-                    getDataFromServer(true, false);
+                    getDataFromServer(true, false, false);
                 } else {
                     Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
                     mListView.onRefreshComplete(false);// 收起加载更多的布局
@@ -81,23 +83,28 @@ public class TopicsFindPager extends TopicsBasePager {
         });
     }
 
-    private void getDataFromServer(final boolean isMoreNext, final boolean loadingFlag){
+    private void getDataFromServer(final boolean isMoreNext, final boolean loadingFlag, final boolean isHttpCache){
         if (loadingFlag == true){
             loadingView.setVisibility(View.VISIBLE);
         }
-
-        RequestParams params = new RequestParams(GlobalContants.TOPICS_LIST_URL);
+        LogUtils.d("isHttpCache", isHttpCache+"");
+        //下拉刷新和加载更多不设置缓存
+        RequestParams params = new RequestParams(GlobalContants.FIND_TOPICS_LIST_URL);
         params.addQueryStringParameter("page", page+"");
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        params.setCacheMaxAge(1000 * 60);
+        x.http().get(params, new Callback.CacheCallback<String>() {
+
+            @Override
+            public boolean onCache(String result) {
+                LogUtils.d("++++cache", result);
+                afterHttp(result);
+                return isHttpCache;
+            }
 
             @Override
             public void onSuccess(String result) {
-                LogUtils.d("result", result);
-                parseData(result, isMoreNext);
-                mListView.onRefreshComplete(true);
-                if (page == 1) {//缓存第一页的数据
-                    CacheUtils.setCache(GlobalContants.TOPICS_LIST_URL, result, mActivity);
-                }
+                LogUtils.d("++++result", result);
+                afterHttp(result);
             }
 
             @Override
@@ -116,9 +123,18 @@ public class TopicsFindPager extends TopicsBasePager {
                 if (loadingFlag == true){
                     loadingView.setVisibility(View.GONE);
                 }
-
                 LogUtils.d("", "访问服务器结束");
+
             }
+
+            public void afterHttp(String result){
+                parseData(result, isMoreNext);
+                mListView.onRefreshComplete(true);
+                if (page == 1) {//缓存第一页的数据
+                    CacheUtils.setCache(GlobalContants.FIND_TOPICS_LIST_URL, result, mActivity);
+                }
+            }
+
         });
     }
 

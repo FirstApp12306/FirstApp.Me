@@ -104,6 +104,8 @@ public class CreateTopicSecondActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
+                Toast.makeText(x.app(), "话题发布成功", Toast.LENGTH_LONG).show();
+                finish();
             }
 
             @Override

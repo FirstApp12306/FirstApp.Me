@@ -22,6 +22,8 @@ public class GlobalContants {
     public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/system/signup/SignUpController";
     //客户端用户发布话题接口
     public static final String PUB_TOPIC_URL = SERVER_URL + "/automake/controller/firstapp/TopicInsertController";
-    //客户端获取话题列表接口
-    public static final String TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/TopicsListController";
+    //客户端获取发现话题列表接口
+    public static final String FIND_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/FindTopicsListController";
+    //客户端获取最新话题列表接口
+    public static final String NEW_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NewTopicsListController";
 }
