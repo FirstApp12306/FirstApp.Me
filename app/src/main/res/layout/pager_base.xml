@@ -20,7 +20,7 @@
             android:text="创建话题"/>
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/pager_base_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -31,21 +31,24 @@
             android:textSize="22sp" />
 
         <RadioGroup
+            android:id="@+id/pager_base_rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:orientation="horizontal">
             <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/pager_base_rbtn_find"
+                android:layout_width="80dp"
+                android:layout_height="35dp"
                 android:button="@null"
-                android:background="@drawable/topic_tab_find_unselect"/>
+                android:background="@drawable/rbtn_pager_base_find_selector"/>
             <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/pager_base_rbtn_new"
+                android:layout_width="80dp"
+                android:layout_height="35dp"
                 android:button="@null"
-                android:background="@drawable/topic_tab_new_select"/>
+                android:background="@drawable/rbtn_pager_base_new_selector"/>
         </RadioGroup>
 
         <Button
