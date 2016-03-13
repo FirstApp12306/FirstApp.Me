@@ -11,6 +11,8 @@ public class Topic{
     public String topic_key;
     public String topic_title;
     public String topic_detail;
+    public String top_topic_yn;
+    public String image_url;
     public String user_id;
     public String pub_date;
     public String pub_time;

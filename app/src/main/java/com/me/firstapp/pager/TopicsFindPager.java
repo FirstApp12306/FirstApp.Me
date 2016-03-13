@@ -1,11 +1,15 @@
 package com.me.firstapp.pager;
 
+import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.adapter.ToTopicsAdapter;
 import com.me.firstapp.adapter.TopicsAdapter;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.global.GlobalContants;
@@ -13,6 +17,7 @@ import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.RefreshListView;
+import com.viewpagerindicator.LinePageIndicator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,9 +38,14 @@ import java.util.ArrayList;
 public class TopicsFindPager extends TopicsBasePager {
 
     private ArrayList<Topic> mTopics;
+    private ArrayList<Topic> mTopTopics;
     private TopicsAdapter topicsAdapter;
     private boolean isMoreNext;//加载下一页标志
     private long page = 1;//页数，默认为1
+
+    private ViewPager mViewPager;
+    private LinePageIndicator mIndicator;
+    private Handler mHandler;
 
     public TopicsFindPager(MainActivity mActivity) {
         super(mActivity);
@@ -44,6 +54,10 @@ public class TopicsFindPager extends TopicsBasePager {
     @Override
     public void initViews() {
         super.initViews();
+        View headerView = View.inflate(mActivity, R.layout.list_header_toptopics,null);
+        mViewPager = (ViewPager) headerView.findViewById(R.id.list_header_toptopics_viewpager);
+        mIndicator = (LinePageIndicator) headerView.findViewById(R.id.list_header_toptopics_indicator);
+        mListView.addHeaderView(headerView);
     }
 
     @Override
@@ -57,7 +71,6 @@ public class TopicsFindPager extends TopicsBasePager {
         if (!TextUtils.isEmpty(cache)) {
             parseData(cache,false);
         }
-        LogUtils.d("initTopicData", "!!!!!!!!!!!!!");
         getDataFromServer(false, true, true);
     }
 
@@ -145,6 +158,7 @@ public class TopicsFindPager extends TopicsBasePager {
             String returnCode = object1.getString("return_code");
             if("000000".equals(returnCode)){
                 mTopics = new ArrayList<>();
+                mTopTopics = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("rows");
                 LogUtils.d("array", array.toString());
                 JSONObject object = null;
@@ -156,11 +170,24 @@ public class TopicsFindPager extends TopicsBasePager {
                     object = null;
                     topic = null;
                 }
-
+                //遍历出顶部话题
+                for (Topic thisTopic : mTopics) {
+                    if ("Y".equals(thisTopic.top_topic_yn)){
+                        mTopTopics.add(thisTopic);
+                    }
+                }
                 if (!isMore){
                     if (mTopics.size() != 0){
                         topicsAdapter = new TopicsAdapter(mActivity, mTopics);
                         mListView.setAdapter(topicsAdapter);
+                    }
+                    if (mTopTopics.size() != 0){
+                        mViewPager.setAdapter(new ToTopicsAdapter(mActivity, mTopTopics));
+                        mIndicator.setViewPager(mViewPager);
+                        //mIndicator.setSnap(true);// 支持快照显示
+                        //mIndicator.setOnPageChangeListener(this);
+
+                        mIndicator.onPageSelected(0);// 让指示器重新定位到第一个点
                     }
                 }else{
                     ArrayList<Topic> moreTopicsList = mTopics;
@@ -172,7 +199,25 @@ public class TopicsFindPager extends TopicsBasePager {
                         mListView.onRefreshComplete(false);// 收起加载更多的布局
                     }
                 }
+                // 自动轮播条显示
+                if (mHandler == null) {
+                    mHandler = new Handler() {
+                        public void handleMessage(android.os.Message msg) {
+                            int currentItem = mViewPager.getCurrentItem();
 
+                            if (currentItem < mTopTopics.size() - 1) {
+                                currentItem++;
+                            } else {
+                                currentItem = 0;
+                            }
+
+                            mViewPager.setCurrentItem(currentItem);// 切换到下一个页面
+                            mHandler.sendEmptyMessageDelayed(0, 3000);// 继续延时3秒发消息,
+                            // 形成循环
+                        };
+                    };
+                    mHandler.sendEmptyMessageDelayed(0, 3000);// 延时3秒后发消息
+                }
 
             }else{
                 Toast.makeText(x.app(), "数据异常，返回码：" + returnCode, Toast.LENGTH_LONG).show();
