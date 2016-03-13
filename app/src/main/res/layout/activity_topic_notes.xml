@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ffffff" >
+
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_returnback_bg"
+            android:src="@drawable/return_back_btn" />
+
+        <TextView
+            android:id="@+id/activity_topic_note_tab_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="钱夹里的照片"
+            android:textColor="#435356"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <com.viewpagerindicator.TabPageIndicator
+        android:id="@+id/activity_topic_note_tab_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff">
+
+    </com.viewpagerindicator.TabPageIndicator>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_topic_note_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/activity_topic_notes_img_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/add_photo_default"/>
+        <TextView
+            android:id="@+id/activity_topic_notes_tv_put"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:text="点此输入文字"
+            android:textColor="#b1b4b3"
+            android:textSize="16sp"/>
+        <Button
+            android:id="@+id/activity_topic_notes_btn_send_note"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:padding="10dp"
+            android:text="发帖"
+            android:textColor="#435356"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

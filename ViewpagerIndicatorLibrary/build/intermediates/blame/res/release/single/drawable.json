@@ -2,5 +2,9 @@
     {
         "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\release\\drawable\\vpi__tab_indicator.xml",
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable\\vpi__tab_indicator.xml"
+    },
+    {
+        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\release\\drawable\\shape_tab_indicator_line.xml",
+        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable\\shape_tab_indicator_line.xml"
     }
 ]

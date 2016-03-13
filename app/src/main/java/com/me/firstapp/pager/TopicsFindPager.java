@@ -1,14 +1,17 @@
 package com.me.firstapp.pager;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.adapter.ToTopicsAdapter;
 import com.me.firstapp.adapter.TopicsAdapter;
 import com.me.firstapp.entity.Topic;
@@ -62,8 +65,9 @@ public class TopicsFindPager extends TopicsBasePager {
 
     @Override
     public void initData() {
-        initTopicData();
-        refreshAndLoad();
+        initTopicData();//初始化数据
+        refreshAndLoad();//监听刷新和加载更多
+        listItemClick();//item点击事件
     }
 
     private void initTopicData(){
@@ -72,6 +76,17 @@ public class TopicsFindPager extends TopicsBasePager {
             parseData(cache,false);
         }
         getDataFromServer(false, true, true);
+    }
+
+    private void listItemClick(){
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mActivity, TopicNoteActivity.class);
+                intent.putExtra("topic_key", mTopics.get(position).topic_key);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     private void refreshAndLoad(){

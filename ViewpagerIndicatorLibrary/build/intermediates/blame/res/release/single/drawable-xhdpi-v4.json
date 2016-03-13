@@ -12,6 +12,10 @@
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-xhdpi\\vpi__tab_unselected_focused_holo.9.png"
     },
     {
+        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\topic_note_tab_indicator_text_selector.xml",
+        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-xhdpi\\topic_note_tab_indicator_text_selector.xml"
+    },
+    {
         "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\vpi__tab_unselected_pressed_holo.9.png",
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-xhdpi\\vpi__tab_unselected_pressed_holo.9.png"
     },
