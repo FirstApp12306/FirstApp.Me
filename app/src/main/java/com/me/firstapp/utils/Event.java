@@ -23,4 +23,11 @@ public class Event {
             return user;
         }
     }
+
+    /**
+     * 完成帖子新增图片的事件
+     */
+    public static class CompleteNoteAddimageEvent{
+
+    }
 }

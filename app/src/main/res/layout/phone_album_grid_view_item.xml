@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.me.firstapp.view.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+    <ImageView
+        android:id="@+id/phone_album_grid_view_item_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/album_no_pictures"
+        android:scaleType="fitXY" />
+
+    <RelativeLayout
+        android:id="@+id/phone_album_grid_view_item_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ToggleButton
+            android:id="@+id/phone_album_grid_view_item_toggle_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/album_pic_choose_selector"
+            android:textOff="@null"
+            android:textOn="@null" />
+
+        <Button
+            android:id="@+id/phone_album_grid_view_item_choose_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/album_choosed"
+            android:visibility="gone" />
+    </RelativeLayout>
+</com.me.firstapp.view.SquareLayout>

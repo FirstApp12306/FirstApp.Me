@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E1E0DE">
+
+    <RelativeLayout
+        android:id="@+id/activity_phone_photo_file_rl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ffffff"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/activity_phone_photo_file_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="选择相册"
+            android:textColor="#435356"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/activity_phone_photo_file_btn_cancel"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:text="取消"
+            android:textColor="#435356"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/activity_phone_photo_file_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activity_phone_photo_file_rl"
+        android:layout_centerInParent="true"
+        android:background="#E1E0DE"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:verticalSpacing="10dp" />
+
+</RelativeLayout>

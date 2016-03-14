@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.me.firstapp.view.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/pub_note_grid_view_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY">
+    </ImageView>
+</com.me.firstapp.view.SquareLayout>

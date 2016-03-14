@@ -41,6 +41,10 @@
         <activity android:name=".activity.CreateTopicSecondActivity"/>
         <activity android:name=".activity.TopicNoteActivity"
             android:theme="@style/Theme.PageIndicatorDefaults"/>
+        <activity android:name=".activity.SendNoteActivity"/>
+        <activity android:name=".activity.ImagesGalleryActivity"/>
+        <activity android:name=".activity.PhoneAlbumActivity"/>
+        <activity android:name=".activity.PhonePhotoFileActivity"/>
         <!-- Mob短信SDK开始-->
         <activity
             android:name="com.mob.tools.MobUIShell"

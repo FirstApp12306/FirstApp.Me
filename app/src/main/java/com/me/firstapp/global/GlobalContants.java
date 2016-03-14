@@ -26,4 +26,6 @@ public class GlobalContants {
     public static final String FIND_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/FindTopicsListController";
     //客户端获取最新话题列表接口
     public static final String NEW_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NewTopicsListController";
+    //客户端获取上传图片文件的凭证(token)
+    public static final String GET_TOKEN_URL = SERVER_URL + "/automake/controller/firstapp/MakeTokenController";
 }

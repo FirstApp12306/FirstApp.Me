@@ -19,6 +19,9 @@ import cn.smssdk.SMSSDK;
  * QQ: 1046566144
  */
 public class MyApplication extends Application {
+
+    public static final int REQUEST_CODE_TAKE_PHOTO = 1;
+
     @Override
     public void onCreate() {
         super.onCreate();

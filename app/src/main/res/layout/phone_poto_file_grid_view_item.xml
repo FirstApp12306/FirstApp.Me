@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/phone_poto_file_gridview_item_select_file"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/phone_poto_file_gridview_item_file_background"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="@drawable/album_file_background"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/phone_poto_file_gridview_item_file_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="@drawable/album_choosed_background"
+            android:scaleType="centerCrop" />
+
+
+        <TextView
+            android:id="@+id/phone_poto_file_gridview_item_file_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/album_select_file_num"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/phone_poto_file_gridview_item_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:singleLine="true"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+</LinearLayout>

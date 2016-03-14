@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#ffffff" >
 
         <Button
+            android:id="@+id/activity_send_note_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -19,6 +21,7 @@
             android:background="@null" />
 
         <TextView
+            android:id="@+id/activity_send_note_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -27,6 +30,7 @@
             android:textSize="20sp" />
 
         <Button
+            android:id="@+id/activity_send_note_btn_pub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -43,8 +47,9 @@
         android:background="#d9d9d9"/>
 
     <EditText
+        android:id="@+id/activity_send_note_edit"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:layout_margin="8dp"
         android:background="@null"
         android:gravity="left|top"
@@ -56,10 +61,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <com.me.firstapp.view.OptimizeGridView
+            android:id="@+id/activity_send_note_grid_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:layout_margin="5dp"
+            android:columnWidth="100dp"
+            android:horizontalSpacing="3dp"
+            android:numColumns="auto_fit"
+            android:scrollbars="none"
+            android:verticalSpacing="5dp"
+            >
+
+        </com.me.firstapp.view.OptimizeGridView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="添加图片"
+            android:textColor="#b5b5b5"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 </LinearLayout>
