@@ -30,6 +30,7 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 作者： FirstApp.Me.
@@ -42,6 +43,7 @@ public class TopicsFindPager extends TopicsBasePager {
 
     private ArrayList<Topic> mTopics;
     private ArrayList<Topic> mTopTopics;
+    private HashMap<String, Object> topicMap = new HashMap<>();
     private TopicsAdapter topicsAdapter;
     private boolean isMoreNext;//加载下一页标志
     private long page = 1;//页数，默认为1
@@ -82,9 +84,41 @@ public class TopicsFindPager extends TopicsBasePager {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mActivity, TopicNoteActivity.class);
-                intent.putExtra("topic_key", mTopics.get(position).topic_key);
-                mActivity.startActivity(intent);
+                Topic topic = (Topic) parent.getAdapter().getItem(position);
+                LogUtils.d("topic_det", topic.topic_title);
+                LogUtils.d("position", position + "");
+                handleItemClick(topic);
+            }
+        });
+    }
+
+    private void handleItemClick(final Topic topic){
+        RequestParams params = new RequestParams(GlobalContants.TOPIC_BROWSE_COUNT_URL);
+        params.addQueryStringParameter("topic_key", topic.topic_key);
+        x.http().post(params, new Callback.CommonCallback<String>(){
+
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+//                Intent intent = new Intent(mActivity, TopicNoteActivity.class);
+//                intent.putExtra("topic_key", topic.topic_key);
+//                intent.putExtra("topic_title", topic.topic_title);
+//                mActivity.startActivity(intent);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
             }
         });
     }
@@ -125,14 +159,14 @@ public class TopicsFindPager extends TopicsBasePager {
             @Override
             public boolean onCache(String result) {
                 LogUtils.d("++++cache", result);
-                afterHttp(result);
+                //afterHttp(result);
                 return isHttpCache;
             }
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("++++result", result);
-                afterHttp(result);
+                //afterHttp(result);
             }
 
             @Override
@@ -172,8 +206,8 @@ public class TopicsFindPager extends TopicsBasePager {
             JSONObject object1 = new JSONObject(result);
             String returnCode = object1.getString("return_code");
             if("000000".equals(returnCode)){
-                mTopics = new ArrayList<>();
-                mTopTopics = new ArrayList<>();
+                ArrayList<Topic> topics = new ArrayList<>();
+                ArrayList<Topic>  topTopics = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("rows");
                 LogUtils.d("array", array.toString());
                 JSONObject object = null;
@@ -181,33 +215,43 @@ public class TopicsFindPager extends TopicsBasePager {
                 for (int i = 0; i < array.length(); i++) {
                     object = array.getJSONObject(i);
                     topic = gson.fromJson(object.toString(), Topic.class);
-                    mTopics.add(topic);
+                    topics.add(topic);
                     object = null;
                     topic = null;
                 }
                 //遍历出顶部话题
-                for (Topic thisTopic : mTopics) {
+                for (Topic thisTopic : topics) {
                     if ("Y".equals(thisTopic.top_topic_yn)){
-                        mTopTopics.add(thisTopic);
+                        topTopics.add(thisTopic);
                     }
                 }
+
+                topicMap.put("topics", topics);
+                topicMap.put("topTopics", topTopics);
+
+                topics = null;
+                topTopics = null;
+
                 if (!isMore){
-                    if (mTopics.size() != 0){
+                    mTopics = (ArrayList<Topic>) topicMap.get("topics");
+                    mTopTopics = (ArrayList<Topic>) topicMap.get("topTopics");
+                    if (mTopics != null){
                         topicsAdapter = new TopicsAdapter(mActivity, mTopics);
                         mListView.setAdapter(topicsAdapter);
                     }
-                    if (mTopTopics.size() != 0){
+                    if (mTopTopics != null){
                         mViewPager.setAdapter(new ToTopicsAdapter(mActivity, mTopTopics));
                         mIndicator.setViewPager(mViewPager);
                         //mIndicator.setSnap(true);// 支持快照显示
                         //mIndicator.setOnPageChangeListener(this);
-
                         mIndicator.onPageSelected(0);// 让指示器重新定位到第一个点
                     }
                 }else{
-                    ArrayList<Topic> moreTopicsList = mTopics;
-                    if (!moreTopicsList.isEmpty()){
-                        topicsAdapter.addMore(moreTopicsList);
+                    ArrayList<Topic> moreTopics = (ArrayList<Topic>) topicMap.get("topics");
+                    LogUtils.d("moreTopics", moreTopics.size()+"");
+                    if (moreTopics.size() != 0){
+                      //  mTopics.addAll(moreTopics);
+                        topicsAdapter.addMore(moreTopics);
                     }else{
                         isMoreNext = true;
                         Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();

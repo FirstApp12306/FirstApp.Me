@@ -19,7 +19,7 @@ public class GlobalContants {
     //服务器用户登录接口
     public static final String SERVER_LOGIN_URL = SERVER_URL + "automake/controller/system/login/LoginAction.do";
     //客户端用户注册接口
-    public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/system/signup/SignUpController";
+    public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/firstapp/signup/SignUpController";
     //客户端用户发布话题接口
     public static final String PUB_TOPIC_URL = SERVER_URL + "/automake/controller/firstapp/TopicInsertController";
     //客户端获取发现话题列表接口
@@ -28,4 +28,8 @@ public class GlobalContants {
     public static final String NEW_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NewTopicsListController";
     //客户端获取上传图片文件的凭证(token)
     public static final String GET_TOKEN_URL = SERVER_URL + "/automake/controller/firstapp/MakeTokenController";
+    //客户端用户发布帖子接口
+    public static final String SEND_NOTE_URL = SERVER_URL + "/automake/controller/firstapp/NoteInsertController";
+    //记录话题浏览量的接口
+    public static final String TOPIC_BROWSE_COUNT_URL = SERVER_URL + "/automake/controller/firstapp/TopicBrowseController";
 }

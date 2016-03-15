@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.me.firstapp.R;
 import com.me.firstapp.adapter.PubNoteGridViewAdapter;
@@ -25,6 +27,7 @@ import com.me.firstapp.utils.DialogUtils;
 import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.OptimizeGridView;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
@@ -73,9 +76,17 @@ public class SendNoteActivity extends BaseActivity {
     private PubNoteGridViewAdapter gridAdapter;
     private Dialog loadingDialog;
 
+    private String topicKey;
+    private String topicTitle;
+    private String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        topicKey = getIntent().getStringExtra("topic_key");
+        topicTitle = getIntent().getStringExtra("topic_title");
+        userID = PrefUtils.getString(this, "loginUser", null);
+        tvTitle.setText(topicTitle);
         parentView = View.inflate(this, R.layout.activity_send_note, null);
         btnListen();
         showPopUpWindow();
@@ -107,7 +118,7 @@ public class SendNoteActivity extends BaseActivity {
                         finish();
                         break;
                     case R.id.activity_send_note_btn_pub :
-                        sendDataToServer();
+                        sendNote();
                         break;
                 }
             }
@@ -116,12 +127,20 @@ public class SendNoteActivity extends BaseActivity {
         btnPub.setOnClickListener(listener);
     }
 
-    private void sendDataToServer(){
+    private void sendNote(){
         loadingDialog = DialogUtils.creatLoadingDialog(this, "请稍后...");
         loadingDialog.show();
-        //获取token
-        getToken();
-        //上传图片
+        if (ImageUtils.tempSelectedImg.size() != 0){
+            //获取token
+            getToken();
+        }else{
+            if (!TextUtils.isEmpty(mEditText.getText().toString())){
+                sendDataToServer(null);
+            }else{
+                Toast.makeText(this, "发布的帖子不能为空", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     //获取token
@@ -134,7 +153,9 @@ public class SendNoteActivity extends BaseActivity {
                 try {
                     JSONObject object = new JSONObject(result);
                     String token = object.getString("token");
-                    upLoadFile(token);
+                    if (!TextUtils.isEmpty(token)) {
+                        upLoadFile(token);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -143,7 +164,7 @@ public class SendNoteActivity extends BaseActivity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                LogUtils.e("token_error", "获取token失败");
             }
 
             @Override
@@ -158,19 +179,58 @@ public class SendNoteActivity extends BaseActivity {
         });
     }
 
+    //上传图片
     private void upLoadFile(String token){
             LogUtils.d("token", token);
-            LogUtils.d("imagePath", ImageUtils.tempSelectedImg.get(0).imagePath+"#######");
+            LogUtils.d("imagePath", ImageUtils.tempSelectedImg.get(0).imagePath + "#######");
             UploadManager uploadManager = new UploadManager();
             uploadManager.put(ImageUtils.tempSelectedImg.get(0).imagePath, null, token,
                     new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject res) {
                             //  res 包含hash、key等信息，具体字段取决于上传策略的设置。
-                            LogUtils.d("qiniu", key + ",\r\n " + info + ",\r\n " + res);
-                            loadingDialog.cancel();
+                            LogUtils.d("qiniu", res.toString());
+                            try {
+                                String image_key = res.getString("key");
+                                if (!TextUtils.isEmpty(image_key)){
+                                    sendDataToServer(image_key);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }, null);
+    }
+
+    //发送数据到服务器
+    private void sendDataToServer(String key){
+        RequestParams params = new RequestParams(GlobalContants.SEND_NOTE_URL);
+        params.addQueryStringParameter("image_key", key);//图片的key
+        params.addQueryStringParameter("content", mEditText.getText().toString());
+        params.addQueryStringParameter("topic_key", topicKey);
+        params.addQueryStringParameter("user_id", userID);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtils.d("error", ex.toString());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+                loadingDialog.cancel();
+            }
+        });
     }
 
     private void showPopUpWindow() {

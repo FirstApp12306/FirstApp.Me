@@ -51,6 +51,7 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
 
     private ArrayList<View> views = new ArrayList<>();;
     private String topicKey;
+    private String topicTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,11 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
         activityManager.pushActivity(this);
 
         topicKey = getIntent().getStringExtra("topic_key");
+        topicTitle = getIntent().getStringExtra("topic_title");
         LogUtils.d("topicKey", topicKey);
-        //mIndicator.setOnPageChangeListener(this);
+        mIndicator.setOnPageChangeListener(this);
 
-
+        tvTitle.setText(topicTitle);
         views.add(View.inflate(this, R.layout.view_topic_notes_pager_new, null));
         views.add(View.inflate(this, R.layout.view_topic_notes_pager_hot, null));
         LogUtils.d("views", views.size() + "");
@@ -83,6 +85,8 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
                         break;
                     case R.id.activity_topic_notes_tv_put :
                         Intent intent = new Intent(TopicNoteActivity.this, SendNoteActivity.class);
+                        intent.putExtra("topic_key", topicKey);
+                        intent.putExtra("topic_title", topicTitle);
                         startActivity(intent);
                         break;
                     case R.id.activity_topic_notes_btn_send_note :
@@ -116,5 +120,9 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
     protected void onDestroy() {
         super.onDestroy();
         activityManager.popActivity(this);
+    }
+
+    private void initData(){
+
     }
 }
