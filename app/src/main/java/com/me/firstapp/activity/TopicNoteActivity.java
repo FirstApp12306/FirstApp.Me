@@ -10,18 +10,29 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.me.firstapp.R;
+import com.me.firstapp.adapter.NotePagerListAdapter;
 import com.me.firstapp.adapter.TopicNotesViewAdapter;
+import com.me.firstapp.entity.Note;
+import com.me.firstapp.entity.User;
+import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.manager.ActivityManager;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.view.RefreshListView;
 import com.viewpagerindicator.TabPageIndicator;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 作者： FirstApp.Me.
@@ -47,11 +58,17 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
     @ViewInject(R.id.activity_topic_notes_btn_send_note)
     private Button btnSendNote;
 
+    private View noteNewView;
+    private View noteHotView;
+    private RefreshListView mListView;
+
     private ActivityManager activityManager;
 
     private ArrayList<View> views = new ArrayList<>();;
     private String topicKey;
     private String topicTitle;
+
+    private HashMap<String, Object> dataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +85,21 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
         mIndicator.setOnPageChangeListener(this);
 
         tvTitle.setText(topicTitle);
-        views.add(View.inflate(this, R.layout.view_topic_notes_pager_new, null));
-        views.add(View.inflate(this, R.layout.view_topic_notes_pager_hot, null));
-        LogUtils.d("views", views.size() + "");
+
+        noteNewView = View.inflate(this, R.layout.view_topic_notes_pager_new, null);
+        noteHotView = View.inflate(this, R.layout.view_topic_notes_pager_hot, null);
+        mListView = (RefreshListView) noteNewView.findViewById(R.id.view_topic_notes_pager_new_list);
+        views.add(noteNewView);
+        views.add(noteHotView);
 
         mViewPager.setAdapter(new TopicNotesViewAdapter(views));
         mIndicator.setViewPager(mViewPager);
 
+        setViewClick();
+        initData();
+    }
+
+    private void setViewClick(){
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +148,83 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
     }
 
     private void initData(){
+        RequestParams params = new RequestParams(GlobalContants.NEW_NOTES_LIST_URL);
+        params.addQueryStringParameter("topic_key", topicKey);
+        params.setCacheMaxAge(1000 * 60);
+        x.http().get(params, new Callback.CacheCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+                parseData(result);
+            }
 
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+
+            @Override
+            public boolean onCache(String result) {
+                LogUtils.d("result", result);
+                parseData(result);
+                return true;
+            }
+        });
+    }
+
+    private void parseData(String result){
+        Gson gson = new Gson();
+        try {
+            JSONObject object1 = new JSONObject(result);
+            String returnCode = object1.getString("return_code");
+            if ("000000".equals(returnCode)){
+                ArrayList<Note> notes = new ArrayList<>();
+                ArrayList<User> users = new ArrayList<>();
+
+                JSONArray array = object1.getJSONArray("rows");
+                JSONObject object2;
+                Note note;
+                User user;
+                for (int i = 0; i < array.length(); i++) {
+                    object2 = array.getJSONObject(i);
+                    note = gson.fromJson(object2.toString(), Note.class);
+                    notes.add(note);
+
+                    user = gson.fromJson(object2.toString(), User.class);
+                    users.add(user);
+
+                    object2 = null;
+                    note = null;
+                    user = null;
+                }
+                dataMap.put("notes", notes);
+                dataMap.put("users", users);
+                LogUtils.d("notes", notes.toString());
+                LogUtils.d("users", users.toString());
+                setListView(dataMap);
+                notes = null;
+                users = null;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setListView(HashMap<String, Object> dataMap){
+        ArrayList<Note> notes = (ArrayList<Note>) dataMap.get("notes");
+        ArrayList<User> users = (ArrayList<User>) dataMap.get("users");
+        if (notes != null && users != null){
+            mListView.setAdapter(new NotePagerListAdapter(dataMap, this));
+        }
     }
 }

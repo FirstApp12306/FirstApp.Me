@@ -153,7 +153,7 @@ public class CompleteSignUpActivity extends BaseActivity {
                 LogUtils.d("user", user.toString());
                 saveUserData(user);
                 PrefUtils.setBoolean(this, "login_flag", true);//记录登陆状态
-                PrefUtils.setString(this, "loginUser", user.id);//记录登陆用户
+                PrefUtils.setString(this, "loginUser", user.user_id);//记录登陆用户
                 EventBus.getDefault().post(new Event.SignUpEvent(user));
                 finish();
             }else{
@@ -171,17 +171,16 @@ public class CompleteSignUpActivity extends BaseActivity {
      */
     private void saveUserData(User user){
         ContentValues cv = new ContentValues();
-        cv.put("id", user.id);
-        cv.put("name", user.name);
-        cv.put("phone", user.phone);
-        cv.put("avatar", user.avatar);
-        cv.put("password", user.password);
-        cv.put("signature", user.signature);
-        cv.put("sex", user.sex);
-        cv.put("level", user.level);
-        cv.put("points", user.points);
+        cv.put("id", user.user_id);
+        cv.put("name", user.user_name);
+        cv.put("phone", user.user_phone);
+        cv.put("avatar", user.user_avatar);
+        cv.put("signature", user.user_signature);
+        cv.put("sex", user.user_sex);
+        cv.put("level", user.user_level);
+        cv.put("points", user.user_points);
         cv.put("sts", user.sts);
-        cv.put("city", user.city);
+        cv.put("city", user.user_city);
         new DatabaseUtils(this).insert("user", cv);
     }
 }

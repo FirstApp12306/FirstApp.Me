@@ -90,16 +90,15 @@ public class DatabaseUtils {
             opendb(context);
             cursor = sqlitedatabase.rawQuery("select * from user where id = '"+userID+"'", null);
             while (cursor.moveToNext()) {
-                user.id = userID;
-                user.avatar = cursor.getString(cursor.getColumnIndex("avatar"));
-                user.city = cursor.getString(cursor.getColumnIndex("city"));
-                user.level = cursor.getString(cursor.getColumnIndex("level"));
-                user.name = cursor.getString(cursor.getColumnIndex("name"));
-                user.password = cursor.getString(cursor.getColumnIndex("password"));
-                user.phone = cursor.getString(cursor.getColumnIndex("phone"));
-                user.points = cursor.getString(cursor.getColumnIndex("points"));
-                user.sex = cursor.getString(cursor.getColumnIndex("sex"));
-                user.signature = cursor.getString(cursor.getColumnIndex("signature"));
+                user.user_id = userID;
+                user.user_avatar = cursor.getString(cursor.getColumnIndex("avatar"));
+                user.user_city = cursor.getString(cursor.getColumnIndex("city"));
+                user.user_level = cursor.getLong(cursor.getColumnIndex("level"));
+                user.user_name = cursor.getString(cursor.getColumnIndex("name"));
+                user.user_phone = cursor.getString(cursor.getColumnIndex("phone"));
+                user.user_points = cursor.getLong(cursor.getColumnIndex("points"));
+                user.user_sex = cursor.getString(cursor.getColumnIndex("sex"));
+                user.user_signature = cursor.getString(cursor.getColumnIndex("signature"));
                 user.sts = cursor.getString(cursor.getColumnIndex("sts"));
             }
         }catch (Exception e){

@@ -214,6 +214,7 @@ public class SendNoteActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
+                finish();
             }
 
             @Override

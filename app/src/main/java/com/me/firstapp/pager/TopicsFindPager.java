@@ -1,11 +1,13 @@
 package com.me.firstapp.pager;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -48,6 +50,7 @@ public class TopicsFindPager extends TopicsBasePager {
     private boolean isMoreNext;//加载下一页标志
     private long page = 1;//页数，默认为1
 
+    private View headerView;
     private ViewPager mViewPager;
     private LinePageIndicator mIndicator;
     private Handler mHandler;
@@ -59,7 +62,7 @@ public class TopicsFindPager extends TopicsBasePager {
     @Override
     public void initViews() {
         super.initViews();
-        View headerView = View.inflate(mActivity, R.layout.list_header_toptopics,null);
+        headerView = View.inflate(mActivity, R.layout.list_header_toptopics,null);
         mViewPager = (ViewPager) headerView.findViewById(R.id.list_header_toptopics_viewpager);
         mIndicator = (LinePageIndicator) headerView.findViewById(R.id.list_header_toptopics_indicator);
         mListView.addHeaderView(headerView);
@@ -84,26 +87,32 @@ public class TopicsFindPager extends TopicsBasePager {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Topic topic = (Topic) parent.getAdapter().getItem(position);
+               final Topic topic = (Topic) parent.getAdapter().getItem(position);
                 LogUtils.d("topic_det", topic.topic_title);
                 LogUtils.d("position", position + "");
-                handleItemClick(topic);
+
+                //异步执行记录话题浏览量
+                MyTask task = new MyTask();
+                task.execute(topic.topic_key);
+
+                Intent intent = new Intent(mActivity, TopicNoteActivity.class);
+                intent.putExtra("topic_key", topic.topic_key);
+                intent.putExtra("topic_title", topic.topic_title);
+                mActivity.startActivity(intent);
+
             }
         });
     }
 
-    private void handleItemClick(final Topic topic){
+    private void handleItemClick(String topic_key){
         RequestParams params = new RequestParams(GlobalContants.TOPIC_BROWSE_COUNT_URL);
-        params.addQueryStringParameter("topic_key", topic.topic_key);
+        params.addQueryStringParameter("topic_key", topic_key);
         x.http().post(params, new Callback.CommonCallback<String>(){
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-//                Intent intent = new Intent(mActivity, TopicNoteActivity.class);
-//                intent.putExtra("topic_key", topic.topic_key);
-//                intent.putExtra("topic_title", topic.topic_title);
-//                mActivity.startActivity(intent);
+
             }
 
             @Override
@@ -159,14 +168,14 @@ public class TopicsFindPager extends TopicsBasePager {
             @Override
             public boolean onCache(String result) {
                 LogUtils.d("++++cache", result);
-                //afterHttp(result);
+                afterHttp(result);
                 return isHttpCache;
             }
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("++++result", result);
-                //afterHttp(result);
+                afterHttp(result);
             }
 
             @Override
@@ -250,7 +259,6 @@ public class TopicsFindPager extends TopicsBasePager {
                     ArrayList<Topic> moreTopics = (ArrayList<Topic>) topicMap.get("topics");
                     LogUtils.d("moreTopics", moreTopics.size()+"");
                     if (moreTopics.size() != 0){
-                      //  mTopics.addAll(moreTopics);
                         topicsAdapter.addMore(moreTopics);
                     }else{
                         isMoreNext = true;
@@ -283,6 +291,16 @@ public class TopicsFindPager extends TopicsBasePager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    //异步执行记录话题浏览量
+    private class MyTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            handleItemClick(params[0]);
+            return null;
         }
     }
 }
