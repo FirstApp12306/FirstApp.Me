@@ -85,21 +85,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center|left"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:text="1小时前"
             android:textSize="14sp"
             android:textColor="#b3b3b3"/>
-        <Button
-            android:id="@+id/notes_pager_list_item_foward"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="2"
-            android:textColor="#b3b3b3"
-            android:layout_gravity="center_vertical"
-            android:drawableRight="@drawable/icon_post_unfoward"
-            android:background="@null"
-            />
+
         <Button
             android:id="@+id/notes_pager_list_item_comment"
             android:layout_width="0dp"

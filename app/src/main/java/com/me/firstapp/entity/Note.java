@@ -17,7 +17,6 @@ public class Note {
     public int myrownum;
     public long note_agree_counts;
     public long note_comment_counts;
-    public long note_forward_counts;
     public String note_content;
     public String report_sts;
     public String topic_key;

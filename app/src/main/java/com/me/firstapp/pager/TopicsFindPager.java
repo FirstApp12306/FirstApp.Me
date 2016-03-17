@@ -87,13 +87,14 @@ public class TopicsFindPager extends TopicsBasePager {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               final Topic topic = (Topic) parent.getAdapter().getItem(position);
+               Topic topic = (Topic) parent.getAdapter().getItem(position);
                 LogUtils.d("topic_det", topic.topic_title);
                 LogUtils.d("position", position + "");
 
                 //异步执行记录话题浏览量
-                MyTask task = new MyTask();
-                task.execute(topic.topic_key);
+//                MyTask task = new MyTask();
+//                task.execute(topic.topic_key);
+                handleItemClick(topic.topic_key);//请求网络本身就是异步了
 
                 Intent intent = new Intent(mActivity, TopicNoteActivity.class);
                 intent.putExtra("topic_key", topic.topic_key);
@@ -295,12 +296,12 @@ public class TopicsFindPager extends TopicsBasePager {
     }
 
     //异步执行记录话题浏览量
-    private class MyTask extends AsyncTask<String, Integer, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            handleItemClick(params[0]);
-            return null;
-        }
-    }
+//    private class MyTask extends AsyncTask<String, Integer, String> {
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            handleItemClick(params[0]);
+//            return null;
+//        }
+//    }
 }

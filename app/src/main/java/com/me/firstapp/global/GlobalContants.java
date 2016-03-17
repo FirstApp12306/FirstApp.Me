@@ -34,4 +34,6 @@ public class GlobalContants {
     public static final String TOPIC_BROWSE_COUNT_URL = SERVER_URL + "/automake/controller/firstapp/TopicBrowseController";
     //客户端获取最新帖子列表接口
     public static final String NEW_NOTES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NewNotesListController";
+    //客户端帖子点赞新增接口
+    public static final String NOTE_SUPPORT_ADD_URL = SERVER_URL + "/automake/controller/firstapp/SupportInsertController";
 }

@@ -60,7 +60,8 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
 
     private View noteNewView;
     private View noteHotView;
-    private RefreshListView mListView;
+    private RefreshListView newListView;
+    private RefreshListView hotListView;
 
     private ActivityManager activityManager;
 
@@ -88,7 +89,8 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
 
         noteNewView = View.inflate(this, R.layout.view_topic_notes_pager_new, null);
         noteHotView = View.inflate(this, R.layout.view_topic_notes_pager_hot, null);
-        mListView = (RefreshListView) noteNewView.findViewById(R.id.view_topic_notes_pager_new_list);
+        newListView = (RefreshListView) noteNewView.findViewById(R.id.view_topic_notes_pager_new_list);
+        hotListView = (RefreshListView) noteHotView.findViewById(R.id.view_topic_notes_pager_hot_list);
         views.add(noteNewView);
         views.add(noteHotView);
 
@@ -188,32 +190,56 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
             JSONObject object1 = new JSONObject(result);
             String returnCode = object1.getString("return_code");
             if ("000000".equals(returnCode)){
-                ArrayList<Note> notes = new ArrayList<>();
-                ArrayList<User> users = new ArrayList<>();
+                ArrayList<Note> new_notes = new ArrayList<>();
+                ArrayList<User> new_users = new ArrayList<>();
 
-                JSONArray array = object1.getJSONArray("rows");
+                JSONArray array = object1.getJSONArray("new_note_rows");
                 JSONObject object2;
                 Note note;
                 User user;
                 for (int i = 0; i < array.length(); i++) {
                     object2 = array.getJSONObject(i);
                     note = gson.fromJson(object2.toString(), Note.class);
-                    notes.add(note);
+                    new_notes.add(note);
 
                     user = gson.fromJson(object2.toString(), User.class);
-                    users.add(user);
+                    new_users.add(user);
 
                     object2 = null;
                     note = null;
                     user = null;
                 }
-                dataMap.put("notes", notes);
-                dataMap.put("users", users);
-                LogUtils.d("notes", notes.toString());
-                LogUtils.d("users", users.toString());
+                dataMap.put("new_notes", new_notes);
+                dataMap.put("new_users", new_users);
+                LogUtils.d("new_notes", new_notes.toString());
+                LogUtils.d("new_users", new_users.toString());
+                new_notes = null;
+                new_users = null;
+
+                ArrayList<Note> hot_notes = new ArrayList<>();
+                ArrayList<User> hot_users = new ArrayList<>();
+                array = object1.getJSONArray("hot_note_rows");
+                for (int i = 0; i < array.length(); i++) {
+                    object2 = array.getJSONObject(i);
+                    note = gson.fromJson(object2.toString(), Note.class);
+                    hot_notes.add(note);
+
+                    user = gson.fromJson(object2.toString(), User.class);
+                    hot_users.add(user);
+
+                    object2 = null;
+                    note = null;
+                    user = null;
+                }
+                dataMap.put("hot_notes", hot_notes);
+                dataMap.put("hot_users", hot_users);
+                LogUtils.d("hot_notes", hot_notes.toString());
+                LogUtils.d("hot_users", hot_users.toString());
+                hot_notes = null;
+                hot_users = null;
+
                 setListView(dataMap);
-                notes = null;
-                users = null;
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -221,10 +247,16 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
     }
 
     private void setListView(HashMap<String, Object> dataMap){
-        ArrayList<Note> notes = (ArrayList<Note>) dataMap.get("notes");
-        ArrayList<User> users = (ArrayList<User>) dataMap.get("users");
-        if (notes != null && users != null){
-            mListView.setAdapter(new NotePagerListAdapter(dataMap, this));
+        ArrayList<Note> new_notes = (ArrayList<Note>) dataMap.get("new_notes");
+        ArrayList<User> new_users = (ArrayList<User>) dataMap.get("new_users");
+        if (new_notes != null && new_users != null){
+            newListView.setAdapter(new NotePagerListAdapter(this, new_notes, new_users));
+        }
+
+        ArrayList<Note> hot_notes = (ArrayList<Note>) dataMap.get("hot_notes");
+        ArrayList<User> hot_users = (ArrayList<User>) dataMap.get("hot_users");
+        if (hot_notes != null && hot_users != null){
+            hotListView.setAdapter(new NotePagerListAdapter(this, hot_notes, hot_users));
         }
     }
 }
