@@ -3,8 +3,12 @@ package com.me.firstapp.view;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
+
+import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 
 /**
  * 作者： FirstApp.Me.
@@ -15,81 +19,68 @@ import android.widget.ScrollView;
  */
 public class MyScrollView extends ScrollView{
 
-    private int startY = -1;// 滑动起点的y坐标
-
-    private OnScrollListener onScrollListener;
-
-    //主要是用在用户手指离开MyScrollView，MyScrollView还在继续滑动，我们用来保存Y的距离，然后做比较
-    private int lastScrollY;
-
-    public MyScrollView(Context context) {
-        super(context);
-    }
+    private GestureDetector mGestureDetector;
+    private OnScrollToBottomListener onScrollToBottom;
+    private boolean isBottom;
+    private Context context;
 
     public MyScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
+        mGestureDetector = new GestureDetector(context, new YScrollDetector());
     }
-
-    public MyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    /**
-     * 设置滚动接口
-     * @param onScrollListener
-     */
-    public void setOnScrollListener(OnScrollListener onScrollListener){
-        this.onScrollListener = onScrollListener;
-    }
-
-
-    /**
-     * 重写onTouchEvent， 当用户的手在MyScrollView上面的时候，
-     * 直接将MyScrollView滑动的Y方向距离回调给onScroll方法中，当用户抬起手的时候，
-     * MyScrollView可能还在滑动，所以当用户抬起手我们隔5毫秒给handler发送消息，在handler处理
-     * MyScrollView滑动的距离
-     */
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                startY = (int) ev.getRawY();
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                if (startY == -1) {// 确保startY有效
-//                    startY = (int) ev.getRawY();
-//                }
-//                int endY = (int) ev.getRawY();
-//                int dy = endY - startY;// 移动便宜量
-//                if(onScrollListener != null){
-//                    onScrollListener.onScroll(dy);
-//                }
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                break;
-//            default:
-//                break;
-//        }
-//        return super.onTouchEvent(ev);
-//    }
 
 
     @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-        if(onScrollListener != null){
-            onScrollListener.onScroll(l, t, oldl, oldt);
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: {
+                //return !isBottom;
+                break;
+            }
+            case MotionEvent.ACTION_MOVE: {
+                //return !isBottom;
+                break;
+            }
+        }
+
+        //return super.onInterceptTouchEvent(ev) & mGestureDetector.onTouchEvent(ev);
+        return super.onInterceptTouchEvent(ev) & mGestureDetector.onTouchEvent(ev);
+    }
+
+    class YScrollDetector extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                float distanceX, float distanceY) {
+            /**
+             * 如果我们滚动更接近水平方向,返回false,让子视图来处理它
+             */
+            return (Math.abs(distanceY) > Math.abs(distanceX));
         }
     }
 
-    /**
-     * 滚动的回调接口
-     */
-    public interface OnScrollListener{
-        /**
-         * 回调方法， 返回MyScrollView滑动的Y方向距离
-         */
-        public void onScroll(int l, int t, int oldl, int oldt);
+
+    @Override
+    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX,
+                                  boolean clampedY) {
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+//        if(scrollY != 0){
+////            onScrollToBottom.onScrollBottomListener(clampedY);
+//        }
+        LogUtils.d("clampedY", clampedY+"");
+        isBottom = clampedY;
+        PrefUtils.setBoolean(context, "isBottom", isBottom);
+    }
+
+
+    public void setOnScrollToBottomLintener(OnScrollToBottomListener listener){
+        onScrollToBottom = listener;
+    }
+
+    public interface OnScrollToBottomListener{
+        public void onScrollBottomListener(boolean isBottom);
     }
 
 }

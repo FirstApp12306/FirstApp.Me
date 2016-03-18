@@ -42,7 +42,7 @@ import java.util.HashMap;
  * 描述:
  */
 @ContentView(R.layout.activity_topic_notes)
-public class TopicNoteActivity extends Activity implements ViewPager.OnPageChangeListener {
+public class TopicNoteActivity extends Activity {
     @ViewInject(R.id.activity_topic_note_btn_back)
     private ImageButton btnBack;
     @ViewInject(R.id.activity_topic_note_tab_title)
@@ -83,7 +83,6 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
         topicKey = getIntent().getStringExtra("topic_key");
         topicTitle = getIntent().getStringExtra("topic_title");
         LogUtils.d("topicKey", topicKey);
-        mIndicator.setOnPageChangeListener(this);
 
         tvTitle.setText(topicTitle);
 
@@ -128,31 +127,15 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         activityManager.popActivity(this);
     }
 
     private void initData(){
-        RequestParams params = new RequestParams(GlobalContants.NEW_NOTES_LIST_URL);
+        RequestParams params = new RequestParams(GlobalContants.NOTES_LIST_URL);
         params.addQueryStringParameter("topic_key", topicKey);
-        params.setCacheMaxAge(1000 * 60);
+        params.setCacheMaxAge(1000 * 60 * 60);
         x.http().get(params, new Callback.CacheCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -250,13 +233,13 @@ public class TopicNoteActivity extends Activity implements ViewPager.OnPageChang
         ArrayList<Note> new_notes = (ArrayList<Note>) dataMap.get("new_notes");
         ArrayList<User> new_users = (ArrayList<User>) dataMap.get("new_users");
         if (new_notes != null && new_users != null){
-            newListView.setAdapter(new NotePagerListAdapter(this, new_notes, new_users));
+            newListView.setAdapter(new NotePagerListAdapter(this, new_notes, new_users, topicTitle));
         }
 
         ArrayList<Note> hot_notes = (ArrayList<Note>) dataMap.get("hot_notes");
         ArrayList<User> hot_users = (ArrayList<User>) dataMap.get("hot_users");
         if (hot_notes != null && hot_users != null){
-            hotListView.setAdapter(new NotePagerListAdapter(this, hot_notes, hot_users));
+            hotListView.setAdapter(new NotePagerListAdapter(this, hot_notes, hot_users, topicTitle));
         }
     }
 }

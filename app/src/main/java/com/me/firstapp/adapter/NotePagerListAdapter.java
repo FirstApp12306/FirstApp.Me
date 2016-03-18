@@ -2,6 +2,7 @@ package com.me.firstapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
+import com.me.firstapp.activity.NoteDetailActivity;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
@@ -41,12 +43,14 @@ public class NotePagerListAdapter extends BaseAdapter {
     private ArrayList<Note> notes;
     private ArrayList<User> users;
     private boolean loginFlag;
+    private String topicTitle;
 
-    public NotePagerListAdapter(Context context,ArrayList<Note> notes,ArrayList<User> users) {
+    public NotePagerListAdapter(Context context,ArrayList<Note> notes,ArrayList<User> users, String topicTitle) {
         this.context = context;
         this.mActivity = (Activity) context;
         this.notes = notes;
         this.users = users;
+        this.topicTitle = topicTitle;
         loginFlag = PrefUtils.getBoolean(context, "login_flag", false);
     }
 
@@ -96,7 +100,7 @@ public class NotePagerListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        User user = users.get(position);
+        final User user = users.get(position);
         final Note note = notes.get(position);
         holder.tvUserName.setText(user.user_name);
         if ("#".equals(user.user_avatar) || TextUtils.isEmpty(user.user_avatar)){
@@ -136,13 +140,14 @@ public class NotePagerListAdapter extends BaseAdapter {
         }
         holder.btnComment.setText(note.note_comment_counts+"");
         holder.btnAgree.setText(note.note_agree_counts+"");
-        final boolean agreeFlag = PrefUtils.getBoolean(context, "agree_flag_" + note.note_key, false);
+        boolean agreeFlag = PrefUtils.getBoolean(context, "agree_flag_" + note.note_key, false);
         if (agreeFlag == true ){
+            holder.btnAgree.setClickable(false);
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_post_like);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.btnAgree.setCompoundDrawables(null, null, drawable, null);
         }else{
-
+            holder.btnAgree.setClickable(true);
         }
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -159,9 +164,20 @@ public class NotePagerListAdapter extends BaseAdapter {
                     case R.id.notes_pager_list_item_note_image :
                         break;
                     case R.id.notes_pager_list_item_comment :
+                        Intent intent = new Intent(context, NoteDetailActivity.class);
+                        intent.putExtra("topic_key", note.topic_key);
+                        intent.putExtra("topic_title", topicTitle);
+                        intent.putExtra("user_avatar", user.user_avatar);
+                        intent.putExtra("user_name", user.user_name);
+                        intent.putExtra("note_key", note.note_key);
+                        intent.putExtra("note_image", note.image_key);
+                        intent.putExtra("note_content", note.note_content);
+                        intent.putExtra("note_agree_counts", note.note_agree_counts);
+                        intent.putExtra("note_comment_counts", note.note_comment_counts);
+                        context.startActivity(intent);
                         break;
                     case R.id.notes_pager_list_item_agree :
-                        if (loginFlag == true && agreeFlag == false){
+                        if (loginFlag == true){
                             PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
                             doNotify();
                             sendSupportDataToServer(note);
@@ -191,7 +207,6 @@ public class NotePagerListAdapter extends BaseAdapter {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-
             }
 
             @Override

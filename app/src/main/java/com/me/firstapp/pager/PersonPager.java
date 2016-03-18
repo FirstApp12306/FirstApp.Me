@@ -82,13 +82,6 @@ public class PersonPager extends BasePager {
                 }
             });
 
-            myScrollView.setOnScrollListener(new MyScrollView.OnScrollListener() {
-                @Override
-                public void onScroll(int l, int t, int oldl, int oldt) {
-                    height = pager_person_ll_two.getTop();
-                    //LogUtils.d("height", height+"");
-                }
-            });
 
         }else{
             view = View.inflate(mActivity, R.layout.pager_unlogin_tip, null);

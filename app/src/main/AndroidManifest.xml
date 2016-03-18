@@ -45,6 +45,10 @@
         <activity android:name=".activity.ImagesGalleryActivity"/>
         <activity android:name=".activity.PhoneAlbumActivity"/>
         <activity android:name=".activity.PhonePhotoFileActivity"/>
+        <activity android:name=".activity.NoteDetailActivity"
+            android:theme="@style/Theme.PageIndicatorDefaults"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
+
         <!-- Mob短信SDK开始-->
         <activity
             android:name="com.mob.tools.MobUIShell"
