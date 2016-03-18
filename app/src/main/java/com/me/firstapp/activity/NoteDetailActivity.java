@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,11 +22,13 @@ import com.google.gson.Gson;
 import com.me.firstapp.R;
 import com.me.firstapp.adapter.NoteDetailListAdapter;
 import com.me.firstapp.adapter.NoteDetailPagerAdapter;
+import com.me.firstapp.entity.Comment;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.Support;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
+import com.me.firstapp.utils.SoftInputUtils;
 import com.me.firstapp.view.CircleImageView;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -52,7 +55,7 @@ import java.util.ArrayList;
 public class NoteDetailActivity extends Activity implements View.OnLayoutChangeListener {
 
     @ViewInject(R.id.activity_note_detail_rootview)
-    private RelativeLayout mRootView;
+    private LinearLayout mRootView;
     @ViewInject(R.id.activity_note_detail_indicator)
     private TabPageIndicator mIndicator;
     @ViewInject(R.id.activity_note_detail_viewpager)
@@ -77,6 +80,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private Button btnPub;
 
     private ListView agreeListview;
+    private ListView commentListView;
 
     //屏幕高度
     private int screenHeight = 0;
@@ -91,6 +95,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private String topic_key;
     private String note_key;
     private ArrayList<Support> supports;
+    private ArrayList<Comment> comments;
+    private Comment comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +115,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         agreeView = View.inflate(this, R.layout.note_detail_view_pager_agree, null);
         commentView = View.inflate(this, R.layout.note_detail_view_pager_comment, null);
         agreeListview = (ListView) agreeView.findViewById(R.id.note_detail_view_pager_agree_listview);
+        commentListView = (ListView) commentView.findViewById(R.id.note_detail_view_pager_comment_listview);
         views.add(agreeView);
         views.add(commentView);
 
@@ -121,14 +128,56 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                 LogUtils.d("OnItemClick", "item被点击");
             }
         });
-        agreeListview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        commentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                LogUtils.d("ItemLongClick", "item被长按");
-                return false;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LogUtils.d("OnItemClick", "item被点击");
+                comment = (Comment) parent.getAdapter().getItem(position);
+                mEditText.setHint("回复:"+comment.user_name);
+                SoftInputUtils.showSoftInputWindow(NoteDetailActivity.this);
             }
         });
 
+    }
+
+    private void sendCommentDataToServer(){
+        btnPub.setText("....");
+        String user_id = PrefUtils.getString(this, "loginUser", null);
+        RequestParams params = new RequestParams(GlobalContants.NOTE_COMMENT_ADD_URL);
+        params.addQueryStringParameter("content", mEditText.getText().toString());
+        params.addQueryStringParameter("topic_key", topic_key);
+        params.addQueryStringParameter("note_key", note_key);
+        params.addQueryStringParameter("user_id", user_id);
+        if (comment != null){
+            params.addQueryStringParameter("to_user_id", comment.user_id);
+        }
+
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+                btnPub.setText("发布");
+                Toast.makeText(NoteDetailActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                mEditText.setText(null);
+                SoftInputUtils.hideSoftInputWindow(NoteDetailActivity.this);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     //初始化本地数据
@@ -233,7 +282,20 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                     object2 = null;
                     support = null;
                 }
-                setListView(supports);
+                LogUtils.d("supports", supports.toString());
+
+                comments = new ArrayList<>();
+                Comment comment;
+                array = object1.getJSONArray("comment_rows");
+                for (int i = 0; i < array.length(); i++) {
+                    object2 = array.getJSONObject(i);
+                    comment = gson.fromJson(object2.toString(), Comment.class);
+                    comments.add(comment);
+                    object2 = null;
+                    comment = null;
+                }
+                LogUtils.d("comments", comments.toString());
+                setListView(supports, comments);
             }
 
         } catch (JSONException e) {
@@ -241,9 +303,12 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         }
     }
 
-    private void setListView(ArrayList<Support> supports){
+    private void setListView(ArrayList<Support> supports, ArrayList<Comment> comments){
         if (supports != null){
-            agreeListview.setAdapter(new NoteDetailListAdapter(this, supports, true));
+            agreeListview.setAdapter(new NoteDetailListAdapter(this, supports));
+        }
+        if (comments != null){
+            commentListView.setAdapter(new NoteDetailListAdapter(this, comments));
         }
     }
 
@@ -263,6 +328,16 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                         sendSupportDataToServer();
                         break;
                     case R.id.activity_note_detail_btn_pub :
+                        boolean loginFlag = PrefUtils.getBoolean(NoteDetailActivity.this, "login_flag", false);
+                        if (loginFlag == false){
+                            //未登陆
+                            return;
+                        }
+                        if (TextUtils.isEmpty(mEditText.getText().toString())){
+                            Toast.makeText(NoteDetailActivity.this, "没发现任何内容哦", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        sendCommentDataToServer();
                         break;
                 }
             }
@@ -317,10 +392,14 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
             //软键盘弹起
             btnAgree.setVisibility(View.GONE);
             btnPub.setVisibility(View.VISIBLE);
+            String temp_edit_comment = PrefUtils.getString(this, "temp_edit_comment", null);
+            mEditText.setText(temp_edit_comment);
         }else if(oldBottom != 0 && bottom != 0 &&(bottom - oldBottom > keyHeight)){
             //软件盘关闭
             btnAgree.setVisibility(View.VISIBLE);
             btnPub.setVisibility(View.GONE);
+            PrefUtils.setString(this, "temp_edit_comment", mEditText.getText().toString());
+            mEditText.setText(null);
         }
     }
 }

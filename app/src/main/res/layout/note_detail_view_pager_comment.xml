@@ -3,6 +3,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00ffff">
+    android:background="#ffffff">
+
+    <com.me.firstapp.view.NoteDetailListView
+        android:id="@+id/note_detail_view_pager_comment_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#ffffff"
+        android:divider="#d9d9d9"
+        android:dividerHeight="0.8dp">
+
+    </com.me.firstapp.view.NoteDetailListView>
 
 </LinearLayout>

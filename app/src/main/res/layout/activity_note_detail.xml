@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_note_detail_rootview"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -37,115 +37,128 @@
 
     </RelativeLayout>
 
-    <com.me.firstapp.view.MyScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:layout_below="@id/this_rl">
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <TextView
-            android:id="@+id/activity_note_detail_topic_title"
+        android:layout_height="wrap_content">
+        <com.me.firstapp.view.MyScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="单发摄影"
-            android:textSize="18sp"
-            android:textColor="#435356"/>
-
-        <com.me.firstapp.view.CircleImageView
-            android:id="@+id/activity_note_detail_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/test"/>
-        <TextView
-            android:id="@+id/activity_note_detail_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="黑暗系少年"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/activity_note_detail_note_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/test"
-            android:scaleType="centerCrop"/>
-
-        <TextView
-            android:id="@+id/activity_note_detail_note_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="得不到的放不下啊啊啊啊啊啊"
-            android:textSize="18sp"
-            android:textColor="#435356"/>
-
-        <com.viewpagerindicator.TabPageIndicator
-            android:id="@+id/activity_note_detail_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff">
-
-        </com.viewpagerindicator.TabPageIndicator>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/activity_note_detail_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="400dp" />
-
-    </LinearLayout>
-    </com.me.firstapp.view.MyScrollView>
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#f6f6f6"
-        android:gravity="center">
-
-        <EditText
-            android:id="@+id/activity_note_detail_edit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:background="@null"
-            android:hint="点此输入文字"
-            android:padding="10dp"
-            android:textColorHint="#808080"
-            android:textSize="18sp"/>
-        <ImageButton
-            android:id="@+id/activity_note_detail_btn_agree"
-            android:layout_width="wrap_content"
+            android:fillViewport="true"
+            android:layout_below="@id/this_rl">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/activity_note_detail_topic_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="单发摄影"
+                    android:textSize="18sp"
+                    android:textColor="#435356"/>
+
+                <com.me.firstapp.view.CircleImageView
+                    android:id="@+id/activity_note_detail_avatar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/test"/>
+                <TextView
+                    android:id="@+id/activity_note_detail_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="黑暗系少年"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/activity_note_detail_note_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/test"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/activity_note_detail_note_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="得不到的放不下啊啊啊啊啊啊"
+                    android:textSize="18sp"
+                    android:textColor="#435356"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#d9d9d9"/>
+
+                <com.viewpagerindicator.TabPageIndicator
+                    android:id="@+id/activity_note_detail_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff">
+
+                </com.viewpagerindicator.TabPageIndicator>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/activity_note_detail_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp" />
+
+            </LinearLayout>
+        </com.me.firstapp.view.MyScrollView>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:padding="10dp"
-            android:src="@drawable/icon_post_unlike" />
+            android:background="#f6f6f6"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/activity_note_detail_btn_pub"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:padding="10dp"
-            android:text="发布"
-            android:textSize="18sp"
-            android:textColor="#435356"
-            android:visibility="gone"/>
+            <EditText
+                android:id="@+id/activity_note_detail_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:background="@null"
+                android:hint="点此输入文字"
+                android:padding="10dp"
+                android:textColorHint="#808080"
+                android:textSize="18sp"/>
+            <ImageButton
+                android:id="@+id/activity_note_detail_btn_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:padding="10dp"
+                android:src="@drawable/icon_post_unlike" />
 
+            <Button
+                android:id="@+id/activity_note_detail_btn_pub"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:padding="10dp"
+                android:text="发布"
+                android:textSize="18sp"
+                android:textColor="#435356"
+                android:visibility="gone"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+
+
+</LinearLayout>

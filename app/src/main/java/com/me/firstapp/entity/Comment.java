@@ -7,16 +7,21 @@ package com.me.firstapp.entity;
  * QQ: 1046566144
  * 描述:
  */
-public class Support {
-    public String support_key;
+public class Comment {
+    public String comment_content;
+    public String comment_key;
     public String user_avatar;
     public String user_city;
     public String user_id;
     public String user_name;
     public String user_signature;
+    public String reply_yn;
+    public String reply_to_user_id;
+    public String reply_to_user_name;
+    public String time_stamp;
 
     @Override
     public String toString() {
-        return "support_key:"+support_key;
+        return "comment_key:"+comment_key;
     }
 }

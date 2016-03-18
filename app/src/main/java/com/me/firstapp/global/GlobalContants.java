@@ -38,4 +38,6 @@ public class GlobalContants {
     public static final String NOTE_SUPPORT_ADD_URL = SERVER_URL + "/automake/controller/firstapp/SupportInsertController";
     //客户端获取帖子点赞和评论列表接口
     public static final String NOTE_SUPPORT_COMMENT_LIST_URL = SERVER_URL + "/automake/controller/firstapp/SupportAndCommController";
+    //客户端帖子评论新增接口
+    public static final String NOTE_COMMENT_ADD_URL = SERVER_URL + "/automake/controller/firstapp/CommentInsertController";
 }

@@ -81,7 +81,7 @@ public class NotePagerListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = View.inflate(context, R.layout.notes_pager_list_item, null);
@@ -180,7 +180,7 @@ public class NotePagerListAdapter extends BaseAdapter {
                         if (loginFlag == true){
                             PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
                             doNotify();
-                            sendSupportDataToServer(note);
+                            sendSupportDataToServer(holder, note);
                         }else{
                             //跳转到登陆页
                         }
@@ -196,7 +196,7 @@ public class NotePagerListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void sendSupportDataToServer(final Note note){
+    private void sendSupportDataToServer(final ViewHolder holder, final Note note){
         RequestParams params = new RequestParams(GlobalContants.NOTE_SUPPORT_ADD_URL);
         String userID = PrefUtils.getString(context,"loginUser", null);
         params.addQueryStringParameter("user_id", userID);
@@ -207,6 +207,7 @@ public class NotePagerListAdapter extends BaseAdapter {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
+                holder.btnAgree.setClickable(false);
             }
 
             @Override

@@ -58,7 +58,9 @@ public class NoteDetailListView extends ListView {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startY = (int) ev.getRawY();
-
+                if (startY == -1) {// 确保startY有效
+                    startY = (int) ev.getRawY();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (startY == -1) {// 确保startY有效
@@ -70,9 +72,9 @@ public class NoteDetailListView extends ListView {
                 if (dy > 0 && getFirstVisiblePosition() == 0){
                     getParent().requestDisallowInterceptTouchEvent(false);
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
+                break;
         }
         return super.onTouchEvent(ev);
     }

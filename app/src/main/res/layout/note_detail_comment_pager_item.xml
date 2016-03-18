@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <com.me.firstapp.view.CircleImageView
+            android:id="@+id/note_detail_comment_pager_item_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/test"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/note_detail_comment_pager_item_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:paddingLeft="10dp"
+                android:text="哎呦啊哈"
+                android:textColor="#435356"
+                android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/note_detail_comment_pager_item_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:paddingLeft="10dp"
+                    android:text="2016-03-18 15:48:34"
+                    android:textColor="#b3b3b3"
+                    android:textSize="14sp"/>
+
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/note_detail_comment_pager_item_pop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:background="@drawable/topic_comments_unfold"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="40dp"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/note_detail_comment_pager_item_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:textColor="#435356"
+            android:text="回复 我不是菜刀:哈哈哈哈啊哈哈哈哈哈哈"/>
+    </LinearLayout>
+
+</LinearLayout>
