@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.me.firstapp.R;
@@ -18,6 +20,7 @@ import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.manager.ActivityManager;
+import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.view.RefreshListView;
 import com.viewpagerindicator.TabPageIndicator;
@@ -68,6 +71,8 @@ public class TopicNoteActivity extends Activity {
     private ArrayList<View> views = new ArrayList<>();;
     private String topicKey;
     private String topicTitle;
+    private boolean isMoreNext;//加载下一页标志
+    private long page = 1;//页数，默认为1
 
     private HashMap<String, Object> dataMap = new HashMap<>();
 
@@ -96,26 +101,77 @@ public class TopicNoteActivity extends Activity {
         mViewPager.setAdapter(new TopicNotesViewAdapter(views));
         mIndicator.setViewPager(mViewPager);
 
+        newListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getDataFromServer(false, false);
+                isMoreNext = false;
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (isMoreNext == false) {
+                    page++;
+                    getDataFromServer(true, false);
+                } else {
+                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                    newListView.onRefreshComplete(false);// 收起加载更多的布局
+                }
+            }
+        });
+        hotListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getDataFromServer(false, false);
+                isMoreNext = false;
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (isMoreNext == false) {
+                    page++;
+                    getDataFromServer(true, false);
+                } else {
+                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                    hotListView.onRefreshComplete(false);// 收起加载更多的布局
+                }
+            }
+        });
+
         setViewClick();
-        initData();
+        String cache = CacheUtils.getCache(GlobalContants.NOTES_LIST_URL + topicKey, this);
+        if (!TextUtils.isEmpty(cache)) {
+            parseData(cache,false);
+        }else{
+            getDataFromServer(false, true);
+        }
     }
 
     private void setViewClick(){
         View.OnClickListener listener = new View.OnClickListener() {
+            Intent intent = new Intent(TopicNoteActivity.this, SendNoteActivity.class);
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.activity_topic_note_btn_back :
+                        finish();
                         break;
                     case R.id.activity_topic_notes_img_btn :
+                        intent.putExtra("topic_key", topicKey);
+                        intent.putExtra("topic_title", topicTitle);
+                        startActivity(intent);
                         break;
                     case R.id.activity_topic_notes_tv_put :
-                        Intent intent = new Intent(TopicNoteActivity.this, SendNoteActivity.class);
                         intent.putExtra("topic_key", topicKey);
                         intent.putExtra("topic_title", topicTitle);
                         startActivity(intent);
                         break;
                     case R.id.activity_topic_notes_btn_send_note :
+                        intent.putExtra("topic_key", topicKey);
+                        intent.putExtra("topic_title", topicTitle);
+                        startActivity(intent);
                         break;
                 }
             }
@@ -132,42 +188,54 @@ public class TopicNoteActivity extends Activity {
         activityManager.popActivity(this);
     }
 
-    private void initData(){
+    private void getDataFromServer(final boolean isMore, final boolean isHttpCache){
         RequestParams params = new RequestParams(GlobalContants.NOTES_LIST_URL);
+        params.addQueryStringParameter("page", page+"");
         params.addQueryStringParameter("topic_key", topicKey);
-        params.setCacheMaxAge(1000 * 60 * 60);
+        params.setCacheMaxAge(1000 * 60);
         x.http().get(params, new Callback.CacheCallback<String>() {
+
+            @Override
+            public boolean onCache(String result) {
+                LogUtils.d("CacheResult", result);
+                afterHttp(result, isMore);
+                return isHttpCache;
+            }
+
             @Override
             public void onSuccess(String result) {
-                LogUtils.d("result", result);
-                parseData(result);
+                LogUtils.d("SuccessResult", result);
+                afterHttp(result, isMore);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Toast.makeText(x.app(), "无法连接服务器", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-
+                Toast.makeText(x.app(), "已取消", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFinished() {
-
+                LogUtils.d("", "访问服务器结束");
             }
 
-            @Override
-            public boolean onCache(String result) {
-                LogUtils.d("result", result);
-                parseData(result);
-                return true;
+            public void afterHttp(String result, boolean isMore){
+                parseData(result, isMore);
+                newListView.onRefreshComplete(true);
+                hotListView.onRefreshComplete(true);
+                if (page == 1) {//缓存第一页的数据
+                    CacheUtils.setCache(GlobalContants.NOTES_LIST_URL + topicKey, result, TopicNoteActivity.this);
+                }
             }
+
         });
     }
 
-    private void parseData(String result){
+    private void parseData(String result, boolean isMore){
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
@@ -221,7 +289,7 @@ public class TopicNoteActivity extends Activity {
                 hot_notes = null;
                 hot_users = null;
 
-                setListView(dataMap);
+                setListView(dataMap, isMore);
 
             }
         } catch (JSONException e) {
@@ -229,17 +297,51 @@ public class TopicNoteActivity extends Activity {
         }
     }
 
-    private void setListView(HashMap<String, Object> dataMap){
-        ArrayList<Note> new_notes = (ArrayList<Note>) dataMap.get("new_notes");
-        ArrayList<User> new_users = (ArrayList<User>) dataMap.get("new_users");
-        if (new_notes != null && new_users != null){
-            newListView.setAdapter(new NotePagerListAdapter(this, new_notes, new_users, topicTitle));
+    ArrayList<Note> new_notes;
+    ArrayList<User> new_users;
+    ArrayList<Note> hot_notes;
+    ArrayList<User> hot_users;
+
+    NotePagerListAdapter newNotePagerListAdapter;
+
+    NotePagerListAdapter hotNotePagerListAdapter;
+
+    private void setListView(HashMap<String, Object> dataMap, boolean isMore){
+        if (!isMore){
+            new_notes = (ArrayList<Note>) dataMap.get("new_notes");
+            new_users = (ArrayList<User>) dataMap.get("new_users");
+            if (new_notes != null && new_users != null){
+                newNotePagerListAdapter = new NotePagerListAdapter(this, new_notes, new_users, topicTitle);
+                newListView.setAdapter(newNotePagerListAdapter);
+            }
+
+            hot_notes = (ArrayList<Note>) dataMap.get("hot_notes");
+            hot_users = (ArrayList<User>) dataMap.get("hot_users");
+            if (hot_notes != null && hot_users != null){
+                hotNotePagerListAdapter = new NotePagerListAdapter(this, hot_notes, hot_users, topicTitle);
+                hotListView.setAdapter(hotNotePagerListAdapter);
+            }
+        }else{
+            ArrayList<Note> moreNewNotes = (ArrayList<Note>) dataMap.get("new_notes");
+            ArrayList<User> moreNewUsers = (ArrayList<User>) dataMap.get("new_users");
+            if (moreNewNotes != null && moreNewUsers != null){
+                newNotePagerListAdapter.addMore(moreNewNotes, moreNewUsers);
+            }else{
+                isMoreNext = true;
+                //Toast.makeText(this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                newListView.onRefreshComplete(false);// 收起加载更多的布局
+            }
+            ArrayList<Note> moreHotNotes = (ArrayList<Note>) dataMap.get("hot_notes");
+            ArrayList<User> moreHotUsers = (ArrayList<User>) dataMap.get("hot_users");
+            if (moreHotNotes != null && moreHotUsers != null){
+                hotNotePagerListAdapter.addMore(moreHotNotes, moreHotUsers);
+            }else{
+                isMoreNext = true;
+                //Toast.makeText(this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                hotListView.onRefreshComplete(false);// 收起加载更多的布局
+            }
+
         }
 
-        ArrayList<Note> hot_notes = (ArrayList<Note>) dataMap.get("hot_notes");
-        ArrayList<User> hot_users = (ArrayList<User>) dataMap.get("hot_users");
-        if (hot_notes != null && hot_users != null){
-            hotListView.setAdapter(new NotePagerListAdapter(this, hot_notes, hot_users, topicTitle));
-        }
     }
 }

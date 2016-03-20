@@ -79,8 +79,9 @@ public class TopicsFindPager extends TopicsBasePager {
         String cache = CacheUtils.getCache(GlobalContants.FIND_TOPICS_LIST_URL, mActivity);
         if (!TextUtils.isEmpty(cache)) {
             parseData(cache,false);
+        }else{
+            getDataFromServer(false, true, true);
         }
-        getDataFromServer(false, true, true);
     }
 
     private void listItemClick(){
@@ -91,9 +92,6 @@ public class TopicsFindPager extends TopicsBasePager {
                 LogUtils.d("topic_det", topic.topic_title);
                 LogUtils.d("position", position + "");
 
-                //异步执行记录话题浏览量
-//                MyTask task = new MyTask();
-//                task.execute(topic.topic_key);
                 handleItemClick(topic.topic_key);//请求网络本身就是异步了
 
                 Intent intent = new Intent(mActivity, TopicNoteActivity.class);
@@ -148,17 +146,17 @@ public class TopicsFindPager extends TopicsBasePager {
                     page++;
                     getDataFromServer(true, false, false);
                 } else {
-                    Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
                     mListView.onRefreshComplete(false);// 收起加载更多的布局
                 }
             }
         });
     }
 
-    private void getDataFromServer(final boolean isMoreNext, final boolean loadingFlag, final boolean isHttpCache){
-        if (loadingFlag == true){
-            loadingView.setVisibility(View.VISIBLE);
-        }
+    private void getDataFromServer(final boolean isMore, final boolean loadingFlag, final boolean isHttpCache){
+//        if (loadingFlag == true){
+//            loadingView.setVisibility(View.VISIBLE);
+//        }
         LogUtils.d("isHttpCache", isHttpCache+"");
         //下拉刷新和加载更多不设置缓存
         RequestParams params = new RequestParams(GlobalContants.FIND_TOPICS_LIST_URL);
@@ -169,14 +167,14 @@ public class TopicsFindPager extends TopicsBasePager {
             @Override
             public boolean onCache(String result) {
                 LogUtils.d("++++cache", result);
-                afterHttp(result);
+                afterHttp(result, isMore);
                 return isHttpCache;
             }
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("++++result", result);
-                afterHttp(result);
+                afterHttp(result, isMore);
             }
 
             @Override
@@ -199,8 +197,8 @@ public class TopicsFindPager extends TopicsBasePager {
 
             }
 
-            public void afterHttp(String result){
-                parseData(result, isMoreNext);
+            public void afterHttp(String result, boolean isMore){
+                parseData(result, isMore);
                 mListView.onRefreshComplete(true);
                 if (page == 1) {//缓存第一页的数据
                     CacheUtils.setCache(GlobalContants.FIND_TOPICS_LIST_URL, result, mActivity);
@@ -263,7 +261,7 @@ public class TopicsFindPager extends TopicsBasePager {
                         topicsAdapter.addMore(moreTopics);
                     }else{
                         isMoreNext = true;
-                        Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
                         mListView.onRefreshComplete(false);// 收起加载更多的布局
                     }
                 }
@@ -295,13 +293,4 @@ public class TopicsFindPager extends TopicsBasePager {
         }
     }
 
-    //异步执行记录话题浏览量
-//    private class MyTask extends AsyncTask<String, Integer, String> {
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            handleItemClick(params[0]);
-//            return null;
-//        }
-//    }
 }

@@ -79,6 +79,12 @@ public class NotePagerListAdapter extends BaseAdapter {
         });
     }
 
+    public void addMore( ArrayList<Note> notes, ArrayList<User> users){
+        this.notes.addAll(notes);
+        this.users.addAll(users);
+        doNotify();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
@@ -208,6 +214,7 @@ public class NotePagerListAdapter extends BaseAdapter {
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 holder.btnAgree.setClickable(false);
+                doNotify();
             }
 
             @Override

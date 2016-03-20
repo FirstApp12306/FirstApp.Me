@@ -5,7 +5,10 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
@@ -20,13 +23,9 @@ import com.me.firstapp.utils.PrefUtils;
 public class MyScrollView extends ScrollView{
 
     private GestureDetector mGestureDetector;
-    private OnScrollToBottomListener onScrollToBottom;
-    private boolean isBottom;
-    private Context context;
 
     public MyScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         mGestureDetector = new GestureDetector(context, new YScrollDetector());
     }
 
@@ -36,16 +35,12 @@ public class MyScrollView extends ScrollView{
         int action = ev.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
-                //return !isBottom;
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
-                //return !isBottom;
                 break;
             }
         }
-
-        //return super.onInterceptTouchEvent(ev) & mGestureDetector.onTouchEvent(ev);
         return super.onInterceptTouchEvent(ev) & mGestureDetector.onTouchEvent(ev);
     }
 
@@ -62,25 +57,5 @@ public class MyScrollView extends ScrollView{
     }
 
 
-    @Override
-    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX,
-                                  boolean clampedY) {
-        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-//        if(scrollY != 0){
-////            onScrollToBottom.onScrollBottomListener(clampedY);
-//        }
-        LogUtils.d("clampedY", clampedY+"");
-        isBottom = clampedY;
-        PrefUtils.setBoolean(context, "isBottom", isBottom);
-    }
-
-
-    public void setOnScrollToBottomLintener(OnScrollToBottomListener listener){
-        onScrollToBottom = listener;
-    }
-
-    public interface OnScrollToBottomListener{
-        public void onScrollBottomListener(boolean isBottom);
-    }
 
 }

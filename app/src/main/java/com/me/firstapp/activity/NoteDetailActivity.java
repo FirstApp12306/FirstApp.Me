@@ -26,10 +26,12 @@ import com.me.firstapp.entity.Comment;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.Support;
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SoftInputUtils;
 import com.me.firstapp.view.CircleImageView;
+import com.me.firstapp.view.NoteDetailListView;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.json.JSONArray;
@@ -79,8 +81,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     @ViewInject(R.id.activity_note_detail_btn_pub)
     private Button btnPub;
 
-    private ListView agreeListview;
-    private ListView commentListView;
+    private NoteDetailListView agreeListview;
+    private NoteDetailListView commentListView;
 
     //屏幕高度
     private int screenHeight = 0;
@@ -97,6 +99,9 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private ArrayList<Support> supports;
     private ArrayList<Comment> comments;
     private Comment comment;
+    private long page = 1;
+
+    private boolean isMoreNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,23 +109,32 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         x.view().inject(this);
 
+        agreeView = View.inflate(this, R.layout.note_detail_view_pager_agree, null);
+        commentView = View.inflate(this, R.layout.note_detail_view_pager_comment, null);
+        agreeListview = (NoteDetailListView) agreeView.findViewById(R.id.note_detail_view_pager_agree_listview);
+        commentListView = (NoteDetailListView) commentView.findViewById(R.id.note_detail_view_pager_comment_listview);
+
         //获取屏幕高度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
         //阀值设置为屏幕高度的1/3
         keyHeight = screenHeight/3;
 
         initLocalData();
-        initServerData();
+        String cache = PrefUtils.getString(this, GlobalContants.NOTE_SUPPORT_COMMENT_LIST_URL + note_key, null);
+        if (!TextUtils.isEmpty(cache)){
+            parseData(cache, false);
+        }else{
+            initServerData(false);
+        }
         setViewClick();
-        agreeView = View.inflate(this, R.layout.note_detail_view_pager_agree, null);
-        commentView = View.inflate(this, R.layout.note_detail_view_pager_comment, null);
-        agreeListview = (ListView) agreeView.findViewById(R.id.note_detail_view_pager_agree_listview);
-        commentListView = (ListView) commentView.findViewById(R.id.note_detail_view_pager_comment_listview);
+
         views.add(agreeView);
         views.add(commentView);
 
+
         mViewPager.setAdapter(new NoteDetailPagerAdapter(views, titles));
         mIndicator.setViewPager(mViewPager);
+        mViewPager.setCurrentItem(1);
 
         agreeListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -128,12 +142,37 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                 LogUtils.d("OnItemClick", "item被点击");
             }
         });
+        agreeListview.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
+            @Override
+            public void onLoadMore() {
+                if (isMoreNext == false) {
+                    page++;
+                    initServerData(true);
+                } else {
+                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                    agreeListview.onRefreshComplete(false);// 收起加载更多的布局
+                }
+
+            }
+        });
+        commentListView.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
+            @Override
+            public void onLoadMore() {
+                if (isMoreNext == false) {
+                    page++;
+                    initServerData(true);
+                } else {
+                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                    commentListView.onRefreshComplete(false);// 收起加载更多的布局
+                }
+            }
+        });
         commentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LogUtils.d("OnItemClick", "item被点击");
                 comment = (Comment) parent.getAdapter().getItem(position);
-                mEditText.setHint("回复:"+comment.user_name);
+                mEditText.setHint("回复:" + comment.user_name);
                 SoftInputUtils.showSoftInputWindow(NoteDetailActivity.this);
             }
         });
@@ -237,15 +276,25 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         }
     }
 
-    private void initServerData(){
+    private void initServerData(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NOTE_SUPPORT_COMMENT_LIST_URL);
         params.addQueryStringParameter("note_key", note_key);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        params.addQueryStringParameter("page", page+"");
+        params.setCacheMaxAge(1000 * 60);
+        x.http().get(params, new Callback.CacheCallback<String>() {
+
+            @Override
+            public boolean onCache(String result) {
+                return false;
+            }
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                parseData(result);
+                parseData(result, isMore);
+                if (page == 1) {//缓存第一页的数据
+                    CacheUtils.setCache(GlobalContants.NOTE_SUPPORT_COMMENT_LIST_URL + note_key, result, NoteDetailActivity.this);
+                }
             }
 
             @Override
@@ -265,7 +314,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         });
     }
 
-    private void parseData(String result){
+    private void parseData(String result, boolean isMore){
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
@@ -295,7 +344,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                     comment = null;
                 }
                 LogUtils.d("comments", comments.toString());
-                setListView(supports, comments);
+                setListView(supports, comments, isMore);
             }
 
         } catch (JSONException e) {
@@ -303,13 +352,34 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         }
     }
 
-    private void setListView(ArrayList<Support> supports, ArrayList<Comment> comments){
-        if (supports != null){
-            agreeListview.setAdapter(new NoteDetailListAdapter(this, supports));
+    private NoteDetailListAdapter adapter1;
+    private NoteDetailListAdapter adapter2;
+    private void setListView(ArrayList<Support> supports, ArrayList<Comment> comments, boolean isMore){
+        if (!isMore){
+            if (supports != null){
+                adapter1 = new NoteDetailListAdapter(this, supports);
+                agreeListview.setAdapter(adapter1);
+            }
+            if (comments != null){
+                adapter2 = new NoteDetailListAdapter(this, comments);
+                commentListView.setAdapter(adapter2);
+            }
+        }else{
+            if (supports.size() != 0){
+                adapter1.addMoreSup(supports);
+            }else{
+                isMoreNext = true;
+                agreeListview.onRefreshComplete(false);
+            }
+            if (comments.size() != 0){
+                adapter2.addMoreCom(comments);
+            }else{
+                isMoreNext = true;
+                commentListView.onRefreshComplete(false);
+            }
+
         }
-        if (comments != null){
-            commentListView.setAdapter(new NoteDetailListAdapter(this, comments));
-        }
+
     }
 
     private void setViewClick(){

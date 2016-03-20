@@ -39,14 +39,14 @@
             android:orientation="horizontal">
             <RadioButton
                 android:id="@+id/pager_base_rbtn_find"
-                android:layout_width="80dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:button="@null"
                 android:background="@drawable/rbtn_pager_base_find_selector"/>
             <RadioButton
                 android:id="@+id/pager_base_rbtn_new"
-                android:layout_width="80dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:button="@null"
                 android:background="@drawable/rbtn_pager_base_new_selector"/>
         </RadioGroup>

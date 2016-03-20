@@ -1,11 +1,14 @@
 package com.me.firstapp.pager;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.adapter.TopicsAdapter;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.global.GlobalContants;
@@ -50,14 +53,63 @@ public class TopicsNewPager extends TopicsBasePager {
     public void initData() {
         initTopicData();
         refreshAndLoad();
+        listItemClick();
     }
 
     private void initTopicData(){
         String cache = CacheUtils.getCache(GlobalContants.NEW_TOPICS_LIST_URL, mActivity);
         if (!TextUtils.isEmpty(cache)) {
             parseData(cache,false);
+        }else{
+            getDataFromServer(false, true, true);
         }
-        getDataFromServer(false, true, true);
+    }
+
+    private void listItemClick(){
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Topic topic = (Topic) parent.getAdapter().getItem(position);
+                LogUtils.d("topic_det", topic.topic_title);
+                LogUtils.d("position", position + "");
+
+                handleItemClick(topic.topic_key);//请求网络本身就是异步了
+
+                Intent intent = new Intent(mActivity, TopicNoteActivity.class);
+                intent.putExtra("topic_key", topic.topic_key);
+                intent.putExtra("topic_title", topic.topic_title);
+                mActivity.startActivity(intent);
+
+            }
+        });
+    }
+
+    private void handleItemClick(String topic_key){
+        RequestParams params = new RequestParams(GlobalContants.TOPIC_BROWSE_COUNT_URL);
+        params.addQueryStringParameter("topic_key", topic_key);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     private void refreshAndLoad(){
@@ -82,10 +134,10 @@ public class TopicsNewPager extends TopicsBasePager {
         });
     }
 
-    private void getDataFromServer(final boolean isMoreNext, final boolean loadingFlag, final boolean isHttpCache){
-        if (loadingFlag == true){
-            loadingView.setVisibility(View.VISIBLE);
-        }
+    private void getDataFromServer(final boolean isMore, final boolean loadingFlag, final boolean isHttpCache){
+//        if (loadingFlag == true){
+//            loadingView.setVisibility(View.VISIBLE);
+//        }
         LogUtils.d("isHttpCache", isHttpCache+"");
         //下拉刷新和加载更多不设置缓存
         RequestParams params = new RequestParams(GlobalContants.NEW_TOPICS_LIST_URL);
@@ -127,7 +179,7 @@ public class TopicsNewPager extends TopicsBasePager {
             }
 
             public void afterHttp(String result) {
-                parseData(result, isMoreNext);
+                parseData(result, isMore);
                 mListView.onRefreshComplete(true);
                 if (page == 1) {//缓存第一页的数据
                     CacheUtils.setCache(GlobalContants.NEW_TOPICS_LIST_URL, result, mActivity);
@@ -167,12 +219,10 @@ public class TopicsNewPager extends TopicsBasePager {
                         topicsAdapter.addMore(moreTopicsList);
                     }else{
                         isMoreNext = true;
-                        Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
                         mListView.onRefreshComplete(false);// 收起加载更多的布局
                     }
                 }
-
-
             }else{
                 Toast.makeText(x.app(), "数据异常，返回码：" + returnCode, Toast.LENGTH_LONG).show();
             }

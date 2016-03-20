@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -14,9 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * 作者： FirstApp.Me.
@@ -38,11 +34,7 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
 
     private int mCurrrentState = STATE_PULL_REFRESH;// 当前状态
     private TextView tvTitle;
-    private TextView tvTime;
-    private ImageView ivArrow;
     private ProgressBar pbProgress;
-    private RotateAnimation animUp;
-    private RotateAnimation animDown;
     private boolean isLoadingMore;
     OnRefreshListener mListener;
 
@@ -125,10 +117,9 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
                         mCurrrentState = STATE_PULL_REFRESH;
                         refreshState();
                     }
-
+                    super.onTouchEvent(ev);//调用父类方法，防止滑动时触发点击事件
                     return true;
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
                 startY = -1;// 重置

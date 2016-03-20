@@ -1,5 +1,6 @@
 package com.me.firstapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import java.util.List;
  * 描述:
  */
 public class NoteDetailListAdapter extends BaseAdapter {
+    private Activity mActivity;
     private Context context;
     private ArrayList<Support> supports;
     private List<Comment> comments;
@@ -37,6 +39,7 @@ public class NoteDetailListAdapter extends BaseAdapter {
 
     public NoteDetailListAdapter(Context context, ArrayList<Support> supports) {
         this.context = context;
+        this.mActivity = (Activity) context;
         this.supports = supports;
         typeFlag = true;
     }
@@ -68,6 +71,26 @@ public class NoteDetailListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public void addMoreSup(ArrayList<Support> supports){
+        this.supports.addAll(supports);
+        doNotify();
+    }
+
+    public void addMoreCom(ArrayList<Comment> comments){
+        this.comments.addAll(comments);
+        doNotify();
+    }
+
+    public void doNotify(){
+        mActivity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
