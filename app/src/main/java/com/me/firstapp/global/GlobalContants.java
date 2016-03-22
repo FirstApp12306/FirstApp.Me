@@ -19,7 +19,9 @@ public class GlobalContants {
     //服务器用户登录接口
     public static final String SERVER_LOGIN_URL = SERVER_URL + "automake/controller/system/login/LoginAction.do";
     //客户端用户注册接口
-    public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/firstapp/signup/SignUpController";
+    public static final String SIGN_UP_URL = SERVER_URL + "automake/controller/firstapp/SignUpController";
+    //客户端用户登陆接口
+    public static final String LOGIN_URL = SERVER_URL + "automake/controller/firstapp/LoginController";
     //客户端用户发布话题接口
     public static final String PUB_TOPIC_URL = SERVER_URL + "/automake/controller/firstapp/TopicInsertController";
     //客户端获取发现话题列表接口

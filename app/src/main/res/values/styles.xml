@@ -64,4 +64,76 @@
     </style>
     <!-- 设置页item左侧字体样式 结束-->
 
+    <!-- Jpush样式开始-->
+    <style name="JpushDialogStyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <!-- Jpush样式结束-->
+
+    <!-- 会话列表样式开始-->
+    <style name="drop_down_list_header_progress_bar_style">
+        <item name="android:minHeight">36dp</item>
+        <item name="android:maxHeight">36dp</item>
+    </style>
+    <declare-styleable name="drop_down_list_attr">
+        <attr name="isDropDownStyle" format="boolean" />
+        <attr name="isOnBottomStyle" format="boolean" />
+        <attr name="isAutoLoadOnBottom" format="boolean" />
+    </declare-styleable>
+    <!-- 会话列表样式结束-->
+
+    <!-- chat列表的item样式开始-->
+    <style name="chat_item_send_layout">
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">#f1f4f4</item>
+    </style>
+    <style name="chat_text_date_style">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textColor">#555756</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="msg_text_style">
+        <item name="android:maxWidth">225dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textColor">#373334</item>
+    </style>
+    <style name="chat_item_sender_avatar_style">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:src">@drawable/person_avatar_default_round</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+    <style name="chat_item_receive_layout">
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">#f1f4f4</item>
+    </style>
+    <style name="chat_item_receiver_avatar_style">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:src">@drawable/person_avatar_default_round</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+    <!-- chat列表的item样式结束-->
+
 </resources>

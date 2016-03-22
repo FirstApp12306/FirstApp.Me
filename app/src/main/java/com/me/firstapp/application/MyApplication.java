@@ -10,6 +10,8 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.im.android.api.JMessageClient;
 import cn.smssdk.SMSSDK;
 
 /**
@@ -35,6 +37,10 @@ public class MyApplication extends Application {
 
         //Mob短信SDK初始化
         SMSSDK.initSDK(this, "10035105a5291", "3fd5b3308ebc6ab7cf1f617b90b88eca");
+
+        //JMessage初始化
+        JMessageClient.init(getApplicationContext());
+        JPushInterface.setDebugMode(true);
     }
 
 //    private void firstAppInit(){

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
+import com.me.firstapp.activity.LoginActivity;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.SignUpActivity;
 import com.me.firstapp.utils.LogUtils;
@@ -93,10 +94,10 @@ public class PersonPager extends BasePager {
                 public void onClick(View v) {
                     switch (v.getId()){
                         case R.id.pager_unlogin_btn_login:
+                            mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
                             break;
                         case R.id.pager_unlogin_btn_regest:
-                            Intent intent = new Intent(mActivity, SignUpActivity.class);
-                            mActivity.startActivity(intent);
+                            mActivity.startActivity(new Intent(mActivity, SignUpActivity.class));
                             break;
                         default:
                             break;

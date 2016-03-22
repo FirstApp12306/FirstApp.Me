@@ -209,6 +209,8 @@ public class SendNoteActivity extends BaseActivity {
         params.addQueryStringParameter("content", mEditText.getText().toString());
         params.addQueryStringParameter("topic_key", topicKey);
         params.addQueryStringParameter("user_id", userID);
+        LogUtils.d("topic_key", topicKey);
+        LogUtils.d("user_id", userID);
         x.http().post(params, new Callback.CommonCallback<String>() {
 
             @Override

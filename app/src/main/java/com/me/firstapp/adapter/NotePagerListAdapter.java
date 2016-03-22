@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
+import com.me.firstapp.activity.ChatActivity;
 import com.me.firstapp.activity.NoteDetailActivity;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.User;
@@ -166,6 +167,9 @@ public class NotePagerListAdapter extends BaseAdapter {
                     case R.id.notes_pager_list_item_pop :
                         break;
                     case  R.id.notes_pager_list_item_avatar :
+                        Intent intent1 = new Intent(context, ChatActivity.class);
+                        intent1.putExtra("targetID", user.user_phone);
+                        context.startActivity(intent1);
                         break;
                     case R.id.notes_pager_list_item_note_image :
                         break;
@@ -198,6 +202,7 @@ public class NotePagerListAdapter extends BaseAdapter {
         holder.btnPop.setOnClickListener(listener);
         holder.btnComment.setOnClickListener(listener);
         holder.btnAgree.setOnClickListener(listener);
+        holder.ivAvatar.setOnClickListener(listener);
 
         return convertView;
     }

@@ -8,6 +8,9 @@ import com.me.firstapp.manager.ActivityManager;
 
 import org.xutils.x;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.im.android.api.JMessageClient;
+
 /**
  * 作者： FirstApp.Me.
  * 博客: WWW.FirstApp.Me

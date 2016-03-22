@@ -9,6 +9,7 @@ package com.me.firstapp.entity;
  */
 public class User {
     public String user_id;
+    public String password;
     public String user_avatar;
     public long user_level;
     public String user_city;

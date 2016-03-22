@@ -37,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " level NUMBER(50),"
                 + " points NUMBER(50),"
                 + " sts VARCHAR(2),"
+                + " login_sts VARCHAR(2),"//01代表登陆，02代表未登陆
                 + " city VARCHAR(30))";
         db.execSQL(sql);
     }
