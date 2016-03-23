@@ -169,6 +169,7 @@ public class NotePagerListAdapter extends BaseAdapter {
                     case  R.id.notes_pager_list_item_avatar :
                         Intent intent1 = new Intent(context, ChatActivity.class);
                         intent1.putExtra("targetID", user.user_phone);
+                        intent1.putExtra("user_name", user.user_name);
                         context.startActivity(intent1);
                         break;
                     case R.id.notes_pager_list_item_note_image :

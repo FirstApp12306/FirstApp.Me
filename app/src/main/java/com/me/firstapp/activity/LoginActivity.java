@@ -141,7 +141,9 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void gotResult(int i, String s) {
                         LogUtils.d("register", "状态码：" + i + "描述: " + s);
-                        finish();
+                        if (i == 0){
+                            finish();
+                        }
                     }
                 });
 

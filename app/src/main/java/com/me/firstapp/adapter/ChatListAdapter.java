@@ -15,10 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
+import com.me.firstapp.entity.User;
+import com.me.firstapp.utils.DatabaseUtils;
 import com.me.firstapp.utils.DialogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.TimeFormat;
 import com.me.firstapp.view.CircleImageView;
 
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.util.ArrayList;
@@ -62,7 +66,7 @@ public class ChatListAdapter extends BaseAdapter {
 
         reverse(mMsgList);
         mStart = mOffset;
-        List<String> userIDList = new ArrayList<String>();
+        List<String> userIDList = new ArrayList<>();
         userIDList.add(targetID);
         userIDList.add(JMessageClient.getMyInfo().getUserName());
 

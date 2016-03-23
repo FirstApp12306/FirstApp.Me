@@ -2,7 +2,10 @@ package com.me.firstapp.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -14,13 +17,9 @@ import com.me.firstapp.pager.FirstPager;
 import com.me.firstapp.pager.MsgPager;
 import com.me.firstapp.pager.PersonPager;
 import com.me.firstapp.pager.TopicPager;
-
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import com.me.firstapp.utils.DensityUtils;
 
 import java.util.ArrayList;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * 作者： FirstApp.Me.
@@ -30,29 +29,23 @@ import de.greenrobot.event.EventBus;
  */
 public class ContentFragment extends BaseFragment {
 
-//    @ViewInject(R.id.fragment_content_viewpager)
     private ViewPager mViewPager;
- //   @ViewInject(R.id.fragment_content_radio_group)
     private RadioGroup mRadioGroup;
-//    @ViewInject(R.id.fragment_content_new_msg_number)
-    private TextView newMsgNum;
-
+    private TextView redCircle;
     private ArrayList<BasePager> mPagerList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //EventBus.getDefault().register(this);
     }
 
 
     @Override
     public View initViews() {
         View view = View.inflate(mActivity, R.layout.fragment_content, null);
-//        x.view().inject(view);
         mViewPager = (ViewPager) view.findViewById(R.id.fragment_content_viewpager);
         mRadioGroup = (RadioGroup) view.findViewById(R.id.fragment_content_radio_group);
-        newMsgNum = (TextView) view.findViewById(R.id.fragment_content_new_msg_number);
+        redCircle = (TextView) view.findViewById(R.id.fragment_content_red_circle);
         return view;
     }
 
@@ -112,11 +105,20 @@ public class ContentFragment extends BaseFragment {
         });
 
         mPagerList.get(0).initData();//初始化首页数据
+
+        mRadioGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                FrameLayout.LayoutParams msgParams = new FrameLayout.LayoutParams(DensityUtils.dp2px(mActivity, 10), DensityUtils.dp2px(mActivity, 10));
+                msgParams.leftMargin = (mRadioGroup.getChildAt(2).getLeft())+((mRadioGroup.getChildAt(3).getLeft())-(mRadioGroup.getChildAt(2).getLeft()))*3/5;
+                redCircle.setLayoutParams(msgParams);
+                redCircle.setGravity(Gravity.CENTER);
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //EventBus.getDefault().unregister(this);
     }
 }

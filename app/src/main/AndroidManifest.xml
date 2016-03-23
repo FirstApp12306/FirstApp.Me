@@ -65,6 +65,7 @@
         <activity android:name=".activity.ChatActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
         <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".activity.notices.NoticeCommentActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity
@@ -138,6 +139,20 @@
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.im.android.action.IM_RESPONSE" />
                 <action android:name="cn.jpush.im.android.action.NOTIFICATION_CLICK_PROXY" />
+
+                <category android:name="com.me.firstapp" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 自定义receiver-->
+        <receiver
+            android:name=".receiver.MyReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
 
                 <category android:name="com.me.firstapp" />
             </intent-filter>

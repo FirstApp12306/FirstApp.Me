@@ -29,6 +29,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 import de.greenrobot.event.EventBus;
 
@@ -116,12 +117,6 @@ public class CompleteSignUpActivity extends BaseActivity {
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 parseData(result);
-                JMessageClient.register(phone, psdEditText.getText().toString(), new BasicCallback() {
-                    @Override
-                    public void gotResult(int i, String s) {
-                        LogUtils.d("register","状态码："+i+"描述: "+s);
-                    }
-                });
             }
 
             @Override
@@ -157,14 +152,32 @@ public class CompleteSignUpActivity extends BaseActivity {
             if("000000".equals(returnCode)){
                 JSONObject object3 = object2.getJSONObject("user");
                 LogUtils.d("object3", object3.toString());
-                User user = gson.fromJson(object3.toString(),User.class);
+                final User user = gson.fromJson(object3.toString(),User.class);
                 LogUtils.d("user", user.toString());
                 saveUserData(user);
                 PrefUtils.setBoolean(this, "login_flag", true);//记录登陆状态
                 LogUtils.d("user_iduser_id", user.user_id);
                 PrefUtils.setString(this, "loginUser", user.user_id);//记录登陆用户
                 EventBus.getDefault().post(new Event.SignUpEvent(user));
-                finish();
+                JMessageClient.register(phone, psdEditText.getText().toString(), new BasicCallback() {
+                    @Override
+                    public void gotResult(int i, String s) {
+                        LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                        if (i == 0) {
+                            UserInfo userInfo = JMessageClient.getMyInfo();
+                            userInfo.setNickname(user.user_name);
+                            JMessageClient.updateMyInfo(UserInfo.Field.nickname, userInfo, new BasicCallback() {
+                                @Override
+                                public void gotResult(int i, String s) {
+                                    if (i == 0) {
+                                        finish();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
             }else{
                 Toast.makeText(x.app(), "数据异常，返回码："+returnCode, Toast.LENGTH_LONG).show();
             }

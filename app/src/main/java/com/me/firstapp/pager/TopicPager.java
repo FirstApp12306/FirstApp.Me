@@ -41,6 +41,8 @@ public class TopicPager extends BasePager {
             }
         });
 
+        rbtLeft.setText("发现");
+        rbtRight.setText("最新");
     }
 
     @Override
@@ -66,10 +68,10 @@ public class TopicPager extends BasePager {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId){
-                case R.id.pager_base_rbtn_find :
+                case R.id.pager_base_rbtn_left :
                     mViewPager.setCurrentItem(0,false);
                     break;
-                case R.id.pager_base_rbtn_new :
+                case R.id.pager_base_rbtn_right :
                     mViewPager.setCurrentItem(1,false);
                     break;
             }
@@ -87,10 +89,10 @@ public class TopicPager extends BasePager {
             LogUtils.d("position", position+"");
             switch (position){
                 case 0 :
-                    mRadioGroup.check(R.id.pager_base_rbtn_find);
+                    mRadioGroup.check(R.id.pager_base_rbtn_left);
                     break;
                 case 1 :
-                    mRadioGroup.check(R.id.pager_base_rbtn_new);
+                    mRadioGroup.check(R.id.pager_base_rbtn_right);
                     break;
             }
             mPagerList.get(position).initData();

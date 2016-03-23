@@ -3,6 +3,7 @@ package com.me.firstapp.pager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
@@ -22,6 +23,8 @@ public class BasePager {
     public RelativeLayout mRl;
     public Button btnCreateTopic;
     public RadioGroup mRadioGroup;
+    public RadioButton rbtLeft;
+    public RadioButton rbtRight;
 
     public BasePager(MainActivity activity) {
         mActivity = activity;
@@ -37,8 +40,9 @@ public class BasePager {
         mRl = (RelativeLayout) mRootView.findViewById(R.id.pager_base_rl);
         btnCreateTopic = (Button) mRootView.findViewById(R.id.pager_base_btn_create_topic);
         mRadioGroup = (RadioGroup) mRootView.findViewById(R.id.pager_base_rg);
-
-        mRadioGroup.check(R.id.pager_base_rbtn_find);
+        rbtLeft = (RadioButton) mRootView.findViewById(R.id.pager_base_rbtn_left);
+        rbtRight = (RadioButton) mRootView.findViewById(R.id.pager_base_rbtn_right);
+        mRadioGroup.check(R.id.pager_base_rbtn_left);
     }
 
     /**

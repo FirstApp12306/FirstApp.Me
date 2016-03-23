@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 
@@ -20,8 +21,12 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者： FirstApp.Me.
@@ -34,12 +39,20 @@ public class MsgPager extends BasePager {
     private ViewPager mViewPager;
     private ArrayList<View> mViewList;
     private ListView convListView;
+    private LinearLayout llComment;
+    private LinearLayout llLike;
+    private LinearLayout llFans;
+    private LinearLayout llFirstApp;
+    private MainActivity activity;//必须用传过来的activity，不能用mActivity
 
     private List<Conversation> convDatas = new ArrayList<Conversation>();//私信列表数据
     private ConversationListAdapter convAdapter;
 
     public MsgPager(MainActivity activity) {
         super(activity);
+        this.activity = activity;
+        rbtLeft.setText("私信");
+        rbtRight.setText("提醒");
     }
 
     @Override
@@ -56,6 +69,12 @@ public class MsgPager extends BasePager {
         View convView = View.inflate(mActivity, R.layout.view_pager_message_conversation, null);
         View noticeView = View.inflate(mActivity, R.layout.view_pager_message_notice, null);
         convListView = (ListView) convView.findViewById(R.id.view_pager_message_conv_listview);
+
+        llComment = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_comment);
+        llLike = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_like);
+        llFans = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_fans);
+        llFirstApp = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_firstapp);
+
         mViewList.add(convView);
         mViewList.add(noticeView);
         mViewPager.setAdapter(new MsgViewPagerAdapter(mViewList));
@@ -72,9 +91,39 @@ public class MsgPager extends BasePager {
             }
         });
 
-
+        activity.setOnReceiveMsgListener(new MainActivity.OnReceiveMsgListener() {
+            @Override
+            public void receiveMsg(Message msg) {
+                if (convAdapter != null){
+                    convAdapter.setToTop(msg.getTargetID());
+                }
+            }
+        });
+        setClick();
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
+    }
+
+    private void setClick(){
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.view_pager_msg_notice_comment :
+                        break;
+                    case R.id.view_pager_msg_notice_like :
+                        break;
+                    case R.id.view_pager_msg_notice_fans :
+                        break;
+                    case R.id.view_pager_msg_notice_firstapp :
+                        break;
+                }
+            }
+        };
+        llComment.setOnClickListener(listener);
+        llLike.setOnClickListener(listener);
+        llFans.setOnClickListener(listener);
+        llFirstApp.setOnClickListener(listener);
     }
 
     // 得到会话列表
@@ -95,10 +144,10 @@ public class MsgPager extends BasePager {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId){
-                case R.id.pager_base_rbtn_find :
+                case R.id.pager_base_rbtn_left :
                     mViewPager.setCurrentItem(0,false);
                     break;
-                case R.id.pager_base_rbtn_new :
+                case R.id.pager_base_rbtn_right :
                     mViewPager.setCurrentItem(1,false);
                     break;
             }
@@ -116,10 +165,10 @@ public class MsgPager extends BasePager {
             LogUtils.d("position", position+"");
             switch (position){
                 case 0 :
-                    mRadioGroup.check(R.id.pager_base_rbtn_find);
+                    mRadioGroup.check(R.id.pager_base_rbtn_left);
                     break;
                 case 1 :
-                    mRadioGroup.check(R.id.pager_base_rbtn_new);
+                    mRadioGroup.check(R.id.pager_base_rbtn_right);
                     break;
             }
 

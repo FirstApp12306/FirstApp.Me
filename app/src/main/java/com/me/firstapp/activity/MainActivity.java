@@ -3,15 +3,19 @@ package com.me.firstapp.activity;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.me.firstapp.R;
 import com.me.firstapp.fragment.ContentFragment;
+import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.event.MessageEvent;
+import cn.jpush.im.android.api.model.Message;
 
 /**
  * 作者： FirstApp.Me.
@@ -24,12 +28,14 @@ public class MainActivity extends FragmentActivity {
 
     private static final String FRAGMENT_CONTENT = "fragment_content";
     private OnMyWindowFocusChanged onMyWindowFocusChanged;
+    OnReceiveMsgListener mReceiveMsgListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         initFragment();
+        JMessageClient.registerEventReceiver(this);
     }
 
     @Override
@@ -41,7 +47,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public interface  OnMyWindowFocusChanged{
-        public  void onWindowFocusChanged(boolean hasFocus);
+        void onWindowFocusChanged(boolean hasFocus);
     }
 
     public void setOnMyWindowFocusChangedListener(OnMyWindowFocusChanged onMyWindowFocusChanged){
@@ -56,20 +62,29 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction transaction = fm.beginTransaction();// 开启事务
         transaction.replace(R.id.fl_content, new ContentFragment(),FRAGMENT_CONTENT);
         transaction.commit();// 提交事务
-        // Fragment leftMenuFragment = fm.findFragmentByTag(FRAGMENT_LEFT_MENU);
     }
-
-//    // 获取主页面fragment
-//    public ContentFragment getContentFragment() {
-//        FragmentManager fm = getSupportFragmentManager();
-//        ContentFragment fragment = (ContentFragment) fm.findFragmentByTag(FRAGMENT_CONTENT);
-//        return fragment;
-//    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        JMessageClient.unRegisterEventReceiver(this);
         PrefUtils.setBoolean(this, "topic_pager_init_flag0", false);
         PrefUtils.setBoolean(this, "topic_pager_init_flag1", false);
+    }
+
+    public void onEvent(MessageEvent event) {
+        if (mReceiveMsgListener != null){
+            mReceiveMsgListener.receiveMsg(event.getMessage());
+        }
+    }
+
+    //接受聊天消息监听
+
+    public void setOnReceiveMsgListener(OnReceiveMsgListener listener){
+        mReceiveMsgListener = listener;
+    }
+
+    public interface OnReceiveMsgListener {
+        void receiveMsg(Message msg);
     }
 }

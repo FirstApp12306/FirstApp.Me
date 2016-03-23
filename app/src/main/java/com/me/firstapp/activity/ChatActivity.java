@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.me.firstapp.R;
 import com.me.firstapp.adapter.ChatListAdapter;
+import com.me.firstapp.utils.Event;
+import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.view.DropDownListView;
 
 import org.xutils.view.annotation.ContentView;
@@ -27,6 +29,8 @@ import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者： FirstApp.Me.
@@ -47,6 +51,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private Button btnSend;
 
     private String targetID;
+    private String userName;
+    private String userAvatar;
     private Conversation conv;
     private ChatListAdapter mChatAdapter;
     private static final int REFRESH_LAST_PAGE = 1023;
@@ -56,15 +62,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        JMessageClient.registerEventReceiver(this);
         btnSend.setOnClickListener(this);
         targetID = getIntent().getStringExtra("targetID");
+        userName = getIntent().getStringExtra("user_name");
         conv = JMessageClient.getSingleConversation(targetID); // 用targetID得到会话
         if(conv != null){
             UserInfo userInfo = (UserInfo) conv.getTargetInfo();
-            if (TextUtils.isEmpty(userInfo.getNickname())) {//无用户名则显示账号
+            if (TextUtils.isEmpty(userName)) {//无用户名则显示账号
                 tvTitle.setText(userInfo.getUserName());
             }else{
-                tvTitle.setText(userInfo.getNickname());
+                tvTitle.setText(userName);
             }
         }
         if (conv == null) {
@@ -116,12 +124,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.chat_activity_send_msg:
                 setListviewToBottom();
-//                String msgContent = chatEdit.getText().toString();//获取聊天内容
-//                chatEdit.setText("");
-//                setListviewToBottom();
-//                if (msgContent.equals("")) {
-//                    return;
-//                }
                 if (TextUtils.isEmpty(mEditText.getText().toString())){
                     Toast.makeText(this, "消息不能为空", Toast.LENGTH_SHORT).show();
                     return;
@@ -188,7 +190,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param event 消息事件
      */
+//    @Subscribe(threadMode = ThreadMode.MainThread) //在ui线程执行
     public void onEvent(MessageEvent event) {
+        LogUtils.d("MessageEvent", "MessageEvent");
         final Message msg = event.getMessage();
         //刷新消息
         runOnUiThread(new Runnable() {
@@ -208,4 +212,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         super.onPause();
         JMessageClient.exitConversaion();
     }
+
+
 }
