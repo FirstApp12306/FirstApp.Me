@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.entity.Topic;
+import com.me.firstapp.utils.LogUtils;
 
 import org.xutils.common.util.DensityUtil;
 import org.xutils.image.ImageOptions;
@@ -49,9 +50,19 @@ public class ToTopicsAdapter extends PagerAdapter {
 //                .setLoadingDrawableId(R.drawable.common_bg_image_loading)
 //                .setFailureDrawableId(R.drawable.common_bg_image_loadfail)
 //                .build();
+        ImageOptions imageOptions = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
         ImageView image = new ImageView(context);
-        image.setScaleType(ImageView.ScaleType.FIT_XY);// 基于控件大小填充图片
-        x.image().bind(image, mTopTopics.get(position).image_url);
+//        image.setScaleType(ImageView.ScaleType.FIT_XY);// 基于控件大小填充图片
+        LogUtils.d("mTopTopicsimage_url", mTopTopics.get(position).image_url);
+        x.image().bind(image, mTopTopics.get(position).image_url, imageOptions);
         container.addView(image);
         return image;
     }

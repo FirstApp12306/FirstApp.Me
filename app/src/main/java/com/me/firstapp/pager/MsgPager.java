@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.ChatActivity;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.activity.notices.NoticeCommentActivity;
 import com.me.firstapp.adapter.ConversationListAdapter;
 import com.me.firstapp.adapter.MsgViewPagerAdapter;
 import com.me.firstapp.utils.LogUtils;
@@ -110,6 +111,7 @@ public class MsgPager extends BasePager {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.view_pager_msg_notice_comment :
+                        mActivity.startActivity(new Intent(mActivity, NoticeCommentActivity.class));
                         break;
                     case R.id.view_pager_msg_notice_like :
                         break;

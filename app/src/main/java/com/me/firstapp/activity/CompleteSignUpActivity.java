@@ -28,6 +28,11 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
@@ -159,6 +164,8 @@ public class CompleteSignUpActivity extends BaseActivity {
                 LogUtils.d("user_iduser_id", user.user_id);
                 PrefUtils.setString(this, "loginUser", user.user_id);//记录登陆用户
                 EventBus.getDefault().post(new Event.SignUpEvent(user));
+                final Set<String> tags =  new HashSet<String>();
+                tags.add("common");
                 JMessageClient.register(phone, psdEditText.getText().toString(), new BasicCallback() {
                     @Override
                     public void gotResult(int i, String s) {
@@ -170,10 +177,27 @@ public class CompleteSignUpActivity extends BaseActivity {
                                 @Override
                                 public void gotResult(int i, String s) {
                                     if (i == 0) {
-                                        finish();
+                                        JMessageClient.login(user.user_phone, user.password, new BasicCallback() {
+                                            @Override
+                                            public void gotResult(int i, String s) {
+                                                LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                                                if (i == 0) {
+                                                    JPushInterface.setAliasAndTags(CompleteSignUpActivity.this, user.user_phone, tags, new TagAliasCallback() {
+                                                        @Override
+                                                        public void gotResult(int i, String s, Set<String> set) {
+                                                            LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                                                            if (i == 0) {
+                                                                finish();
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
                                     }
                                 }
                             });
+
                         }
                     }
                 });

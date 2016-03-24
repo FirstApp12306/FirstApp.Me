@@ -28,7 +28,7 @@
             android:paddingLeft="10dp"
             android:text="哎呦啊哈"
             android:textColor="#435356"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 android:paddingLeft="10dp"
                 android:text="ID:123456"
                 android:textColor="#b3b3b3"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/note_detail_agree_pager_item_city"
@@ -54,7 +54,7 @@
                 android:paddingLeft="10dp"
                 android:text="西安"
                 android:textColor="#b3b3b3"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
         </LinearLayout>
 
 

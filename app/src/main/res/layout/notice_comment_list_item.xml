@@ -7,9 +7,11 @@
 
     <com.me.firstapp.view.CircleImageView
         android:id="@+id/notice_comment_list_item_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:padding="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
         android:src="@drawable/person_avatar_default_round"
         />
 
@@ -57,8 +59,8 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="2016-03-28 23:13"
-                    android:textColor="#435356"
-                    android:textSize="16sp"/>
+                    android:textColor="#989392"
+                    android:textSize="14sp"/>
 
             </LinearLayout>
             <ImageView

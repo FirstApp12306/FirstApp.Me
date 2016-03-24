@@ -29,6 +29,12 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;
 import de.greenrobot.event.EventBus;
@@ -112,8 +118,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFinished() {
-                LogUtils.d("","访问服务器结束");
-                loadingDialog.cancel();
+                LogUtils.d("", "访问服务器结束");
             }
         });
     }
@@ -131,24 +136,36 @@ public class LoginActivity extends BaseActivity {
             if("000000".equals(returnCode)){
                 JSONObject object3 = object2.getJSONObject("user");
                 LogUtils.d("object3", object3.toString());
-                User user = gson.fromJson(object3.toString(),User.class);
+                final User user = gson.fromJson(object3.toString(),User.class);
                 LogUtils.d("user", user.toString());
                 updateUserData(user);
                 PrefUtils.setBoolean(this, "login_flag", true);//记录登陆状态
                 LogUtils.d("user_iduser_id", user.user_id);
                 PrefUtils.setString(this, "loginUser", user.user_id);//记录登陆用户
+                final Set<String> tags =  new HashSet<String>();
+                tags.add("common");
+
                 JMessageClient.login(user.user_phone, user.password, new BasicCallback() {
                     @Override
                     public void gotResult(int i, String s) {
                         LogUtils.d("register", "状态码：" + i + "描述: " + s);
                         if (i == 0){
-                            finish();
+                            JPushInterface.setAliasAndTags(LoginActivity.this, user.user_phone, tags, new TagAliasCallback() {
+                                @Override
+                                public void gotResult(int i, String s, Set<String> set) {
+                                    LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                                    if (i == 0) {
+                                        loadingDialog.cancel();
+                                        finish();
+                                    }
+                                }
+                            });
                         }
                     }
                 });
 
             }else{
-                Toast.makeText(x.app(), "数据异常，返回码："+returnCode, Toast.LENGTH_LONG).show();
+                Toast.makeText(x.app(), "数据异常，返回码：" +returnCode, Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
