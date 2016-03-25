@@ -19,20 +19,20 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:textSize="18sp"
-        android:textColor="#4e4e4e"/>
+        android:textColor="#435356"/>
 
 
     <LinearLayout
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/dialog_base_with_button_cancel_btn"
             android:layout_height="50dp"
-            android:layout_width="0dip"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="#28282a"
+            android:textColor="#435356"
             android:background="@drawable/dialog_bottom_left_btn"
             />
 
@@ -41,7 +41,7 @@
             android:layout_height="50dp"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="#28282a"
+            android:textColor="#435356"
             android:background="@drawable/dialog_bottom_right_btn"
             />
 

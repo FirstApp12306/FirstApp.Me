@@ -43,7 +43,7 @@ public class DialogUtils {
         Button cancelBtn = (Button) view.findViewById(R.id.dialog_base_with_button_cancel_btn);
         Button resendBtn = (Button) view.findViewById(R.id.dialog_base_with_button_commit_btn);
         Dialog dialog = builder.create();
-        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView title = (TextView) view.findViewById(R.id.dialog_base_with_button_title);
         title.setText("是否重新发送？");
         cancelBtn.setText("否");
         resendBtn.setText("是");

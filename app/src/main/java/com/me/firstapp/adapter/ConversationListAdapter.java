@@ -68,10 +68,10 @@ public class ConversationListAdapter extends BaseAdapter {
             }
         }
         // 如果是新的会话
-        addNewConversation(conv,targetID);
+        addNewConversation(conv, targetID);
     }
 
-    private void doNotify(){
+    public void doNotify(){
         mActivity.runOnUiThread(new Runnable() {//因为消息的接收事件是在子线程中的
 
             @Override
@@ -84,6 +84,23 @@ public class ConversationListAdapter extends BaseAdapter {
     //新增新的会话
     public void addNewConversation(final Conversation conv,final String targetID) {
         convDatas.add(0, conv);
+        doNotify();
+    }
+
+    //重置未读消息数量
+    public void setUnReadCount(Conversation conversation){
+        for(Conversation conv : convDatas ){
+            if (conv.getId().equals(conversation.getId())){
+                conv.resetUnreadCount();
+                break;
+            }
+        }
+        doNotify();
+    }
+
+    //刷新会话列表
+    public void refreshConv(List<Conversation> convDatas){
+        this.convDatas = convDatas;
         doNotify();
     }
 

@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.ChatActivity;
@@ -15,6 +17,7 @@ import com.me.firstapp.activity.notices.NoticeCommentActivity;
 import com.me.firstapp.adapter.ConversationListAdapter;
 import com.me.firstapp.adapter.MsgViewPagerAdapter;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SortConvList;
 
 import java.util.ArrayList;
@@ -44,6 +47,8 @@ public class MsgPager extends BasePager {
     private LinearLayout llLike;
     private LinearLayout llFans;
     private LinearLayout llFirstApp;
+    private TextView tvNewCommentNum;
+    private ImageView ivCommentArrow;
     private MainActivity activity;//必须用传过来的activity，不能用mActivity
 
     private List<Conversation> convDatas = new ArrayList<Conversation>();//私信列表数据
@@ -76,6 +81,11 @@ public class MsgPager extends BasePager {
         llFans = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_fans);
         llFirstApp = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_firstapp);
 
+        tvNewCommentNum = (TextView) noticeView.findViewById(R.id.view_pager_msg_notice_comment_new_num);
+        ivCommentArrow = (ImageView) noticeView.findViewById(R.id.view_pager_msg_notice_comment_arrow);
+
+        setNum();
+
         mViewList.add(convView);
         mViewList.add(noticeView);
         mViewPager.setAdapter(new MsgViewPagerAdapter(mViewList));
@@ -86,23 +96,77 @@ public class MsgPager extends BasePager {
         convListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (convAdapter != null) {
+//                    convAdapter.setUnReadCount(convDatas.get(position));
+//                }
                 Intent intent = new Intent(mActivity, ChatActivity.class);
                 intent.putExtra("targetID", ((UserInfo) convDatas.get(position).getTargetInfo()).getUserName());
                 mActivity.startActivity(intent);
             }
         });
 
+        //接收消息监听
         activity.setOnReceiveMsgListener(new MainActivity.OnReceiveMsgListener() {
             @Override
             public void receiveMsg(Message msg) {
-                if (convAdapter != null){
-                    convAdapter.setToTop(msg.getTargetID());
+                if (convAdapter != null) {
+//                    convAdapter.setToTop(msg.getTargetID());
+                    convDatas = JMessageClient.getConversationList();
+                    convAdapter.refreshConv(convDatas);
                 }
             }
         });
+        //接收评论监听
+        activity.setOnReceiveNewCommentListener(new MainActivity.OnReceiveNewCommentListener() {
+            @Override
+            public void receiveComment(String extraMsg, String extraExtra) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setNum();
+                    }
+                });
+            }
+        });
+
+        //刷新会话列表监听
+        activity.setOnRefreshConvListener(new MainActivity.OnRefreshConvListener() {
+            @Override
+            public void refreshConv() {
+                LogUtils.d("111111", "111111");
+                if (convAdapter != null) {
+                    convDatas = JMessageClient.getConversationList();
+                    convAdapter.refreshConv(convDatas);
+                }
+            }
+        });
+
+        //重置消息数量监听
+        activity.setOnResetNewMsgListener(new MainActivity.OnResetNewMsgListener() {
+            @Override
+            public void resetNewMsgNum(Conversation conv) {
+                if (convAdapter != null) {
+                    convAdapter.setUnReadCount(conv);
+                }
+            }
+        });
+
         setClick();
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
+    }
+
+    //设置各个提示的数量
+    private void setNum(){
+        String newCommentNum = PrefUtils.getString(mActivity, "new_comment_num", "0");
+        if ("0".equals(newCommentNum)){
+            tvNewCommentNum.setVisibility(View.GONE);
+            ivCommentArrow.setVisibility(View.VISIBLE);
+        }else {
+            ivCommentArrow.setVisibility(View.GONE);
+            tvNewCommentNum.setText(newCommentNum);
+            tvNewCommentNum.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setClick(){
@@ -112,6 +176,8 @@ public class MsgPager extends BasePager {
                 switch (v.getId()){
                     case R.id.view_pager_msg_notice_comment :
                         mActivity.startActivity(new Intent(mActivity, NoticeCommentActivity.class));
+                        PrefUtils.setString(mActivity, "new_comment_num", "0");
+                        setNum();
                         break;
                     case R.id.view_pager_msg_notice_like :
                         break;

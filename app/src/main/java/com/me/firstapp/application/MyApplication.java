@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.receiver.MsgNotificationClickEventReceiver;
 
 import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
@@ -41,6 +42,8 @@ public class MyApplication extends Application {
         //JMessage初始化
         JMessageClient.init(getApplicationContext());
         JPushInterface.setDebugMode(true);
+
+        new MsgNotificationClickEventReceiver(this);
     }
 
 //    private void firstAppInit(){

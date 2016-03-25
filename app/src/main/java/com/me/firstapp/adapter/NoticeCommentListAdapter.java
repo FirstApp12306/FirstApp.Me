@@ -1,6 +1,7 @@
 package com.me.firstapp.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -62,6 +63,7 @@ public class NoticeCommentListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         MyComment myComment = myComments.get(position);
+
         ImageOptions imageOptions1 = new ImageOptions.Builder()
                 // 加载中或错误图片的ScaleType
                 //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
@@ -75,16 +77,21 @@ public class NoticeCommentListAdapter extends BaseAdapter {
         holder.tvUserName.setText(myComment.comment_user_name);
         holder.tvContent.setText(myComment.comment_content);
         holder.tvTime.setText(myComment.time_stamp);
-        ImageOptions imageOptions2 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-        x.image().bind(holder.ivNoteImage, myComment.note_image, imageOptions2);
+        if ("#".equals(myComment.note_image) || TextUtils.isEmpty(myComment.note_image)){
+            holder.ivNoteImage.setVisibility(View.GONE);
+        }else {
+            ImageOptions imageOptions2 = new ImageOptions.Builder()
+                    // 加载中或错误图片的ScaleType
+                    //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                    // 默认自动适应大小
+                    // .setSize(...)
+                    .setIgnoreGif(true)
+                            // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                            //.setUseMemCache(false)
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
+            x.image().bind(holder.ivNoteImage, myComment.note_image, imageOptions2);
+        }
+
         return convertView;
     }
 

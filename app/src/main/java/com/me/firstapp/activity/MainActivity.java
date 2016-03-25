@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.me.firstapp.R;
 import com.me.firstapp.fragment.ContentFragment;
+import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 
@@ -15,7 +16,11 @@ import org.xutils.x;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.event.MessageEvent;
+import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者： FirstApp.Me.
@@ -29,6 +34,9 @@ public class MainActivity extends FragmentActivity {
     private static final String FRAGMENT_CONTENT = "fragment_content";
     private OnMyWindowFocusChanged onMyWindowFocusChanged;
     OnReceiveMsgListener mReceiveMsgListener;
+    OnReceiveNewCommentListener mReceiveNewCommentListener;
+    OnRefreshConvListener mOnRefreshConvListener;
+    OnResetNewMsgListener mOnResetNewMsgListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,7 @@ public class MainActivity extends FragmentActivity {
         x.view().inject(this);
         initFragment();
         JMessageClient.registerEventReceiver(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -68,13 +77,36 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         JMessageClient.unRegisterEventReceiver(this);
+        EventBus.getDefault().unregister(this);
         PrefUtils.setBoolean(this, "topic_pager_init_flag0", false);
         PrefUtils.setBoolean(this, "topic_pager_init_flag1", false);
     }
 
     public void onEvent(MessageEvent event) {
+        LogUtils.d("MessageEvent", "MessageEvent");
         if (mReceiveMsgListener != null){
             mReceiveMsgListener.receiveMsg(event.getMessage());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.NewCommentEvent event) {
+        if (mReceiveNewCommentListener != null){
+            mReceiveNewCommentListener.receiveComment(event.getExtraMsg(), event.getExtraExtra());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.UpdateConvEvent event){
+        if (mOnRefreshConvListener != null){
+            mOnRefreshConvListener.refreshConv();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.ResetNewMsgNumEvent event){
+        if (mOnResetNewMsgListener != null){
+            mOnResetNewMsgListener.resetNewMsgNum(event.getConv());
         }
     }
 
@@ -86,5 +118,32 @@ public class MainActivity extends FragmentActivity {
 
     public interface OnReceiveMsgListener {
         void receiveMsg(Message msg);
+    }
+
+    //接收评论监听
+    public void setOnReceiveNewCommentListener(OnReceiveNewCommentListener listener){
+        mReceiveNewCommentListener = listener;
+    }
+
+    public interface  OnReceiveNewCommentListener {
+        void receiveComment(String extraMsg, String extraExtra);
+    }
+
+    //刷新会话列表监听
+    public void setOnRefreshConvListener(OnRefreshConvListener listener){
+        mOnRefreshConvListener = listener;
+    }
+
+    public interface OnRefreshConvListener {
+        void refreshConv();
+    }
+
+    //重置新消息数量监听
+    public void setOnResetNewMsgListener(OnResetNewMsgListener listener){
+        mOnResetNewMsgListener = listener;
+    }
+
+    public interface OnResetNewMsgListener {
+        void resetNewMsgNum(Conversation conv);
     }
 }

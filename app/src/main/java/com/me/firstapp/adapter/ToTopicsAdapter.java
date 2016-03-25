@@ -61,7 +61,7 @@ public class ToTopicsAdapter extends PagerAdapter {
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
         ImageView image = new ImageView(context);
 //        image.setScaleType(ImageView.ScaleType.FIT_XY);// 基于控件大小填充图片
-        LogUtils.d("mTopTopicsimage_url", mTopTopics.get(position).image_url);
+//        LogUtils.d("mTopTopicsimage_url", mTopTopics.get(position).image_url);
         x.image().bind(image, mTopTopics.get(position).image_url, imageOptions);
         container.addView(image);
         return image;

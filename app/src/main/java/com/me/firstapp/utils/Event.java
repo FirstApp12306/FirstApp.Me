@@ -2,6 +2,8 @@ package com.me.firstapp.utils;
 
 import com.me.firstapp.entity.User;
 
+import cn.jpush.im.android.api.model.Conversation;
+
 /**
  * 作者： FirstApp.Me.
  * 博客: WWW.FirstApp.Me
@@ -29,5 +31,48 @@ public class Event {
      */
     public static class CompleteNoteAddimageEvent{
 
+    }
+
+    /**
+     * 新评论事件
+     */
+    public static class NewCommentEvent{
+        private String extraMsg;
+        private String extraExtra;
+
+        public NewCommentEvent(String extraMsg, String extraExtra) {
+            this.extraMsg = extraMsg;
+            this.extraExtra = extraExtra;
+        }
+
+        public String getExtraMsg() {
+            return extraMsg;
+        }
+
+        public String getExtraExtra() {
+            return extraExtra;
+        }
+    }
+
+    /**
+     * 更新会话列表事件
+     */
+    public static class UpdateConvEvent{
+
+    }
+
+    /**
+     * 重置新消息数量事件
+     */
+    public static class ResetNewMsgNumEvent{
+        private Conversation conv;
+
+        public ResetNewMsgNumEvent(Conversation conv) {
+            this.conv = conv;
+        }
+
+        public Conversation getConv() {
+            return conv;
+        }
     }
 }

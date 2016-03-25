@@ -1,7 +1,10 @@
 package com.me.firstapp.activity.notices;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -10,9 +13,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.BaseActivity;
+import com.me.firstapp.activity.NoteDetailActivity;
 import com.me.firstapp.adapter.NoticeCommentListAdapter;
 import com.me.firstapp.entity.MyComment;
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 
@@ -42,7 +47,7 @@ public class NoticeCommentActivity extends BaseActivity {
     private ListView mListView;
 
     private String userID;
-    private ArrayList<MyComment> myComments = new ArrayList<>();
+    private ArrayList<MyComment> myComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,29 @@ public class NoticeCommentActivity extends BaseActivity {
                 finish();
             }
         });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyComment myComment = (MyComment) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(NoticeCommentActivity.this, NoteDetailActivity.class);
+                intent.putExtra("topic_key", myComment.topic_key);
+                intent.putExtra("topic_title", myComment.topic_title);
+                intent.putExtra("user_avatar", myComment.note_user_avatar);
+                intent.putExtra("user_name", myComment.note_user_name);
+                intent.putExtra("note_key", myComment.note_key);
+                intent.putExtra("note_image", myComment.note_image);
+                intent.putExtra("note_content", myComment.note_content);
+                intent.putExtra("note_agree_counts", myComment.note_agree_counts);
+                intent.putExtra("note_comment_counts", myComment.note_comment_counts);
+                startActivity(intent);
+            }
+        });
+
+        String cache = CacheUtils.getCache(GlobalContants.NOTICE_COMMENTS_LIST_URL, this);
+        if (!TextUtils.isEmpty(cache)){
+            parseData(cache);
+        }
         getDataFromServer();
     }
 
@@ -66,6 +94,7 @@ public class NoticeCommentActivity extends BaseActivity {
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 parseData(result);
+                CacheUtils.setCache(GlobalContants.NOTICE_COMMENTS_LIST_URL, result, NoticeCommentActivity.this);
             }
 
             @Override
@@ -93,6 +122,7 @@ public class NoticeCommentActivity extends BaseActivity {
             JSONObject object1 = new JSONObject(result);
             String returnCode = object1.getString("return_code");
             if ("000000".equals(returnCode)){
+                myComments = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("rows");
                 JSONObject object = null;
                 MyComment myComment = null;

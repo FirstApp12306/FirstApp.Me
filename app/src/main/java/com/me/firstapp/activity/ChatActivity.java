@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ import de.greenrobot.event.ThreadMode;
  */
 @ContentView(R.layout.activity_chat)
 public class ChatActivity extends BaseActivity implements View.OnClickListener {
+    @ViewInject(R.id.activity_chat_btn_return)
+    private ImageButton btnReturn;
     @ViewInject(R.id.activity_chat_title)
     private TextView tvTitle;
     @ViewInject(R.id.chat_activity_chat_list)
@@ -64,6 +67,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         JMessageClient.registerEventReceiver(this);
         btnSend.setOnClickListener(this);
+        btnReturn.setOnClickListener(this);
         targetID = getIntent().getStringExtra("targetID");
         userName = getIntent().getStringExtra("user_name");
         conv = JMessageClient.getSingleConversation(targetID); // 用targetID得到会话
@@ -96,6 +100,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
         }
+        EventBus.getDefault().post(new Event.ResetNewMsgNumEvent(conv));
     }
 
     @Override
@@ -120,7 +125,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_chat_btn_return:
-
+                finish();
                 break;
             case R.id.chat_activity_send_msg:
                 setListviewToBottom();
@@ -139,8 +144,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                             customContent.setBooleanValue("blackList", true);
                             Message customMsg = conv.createSendMessage(customContent);
                             mChatAdapter.addMsgToList(customMsg);
-                        }else if(status != 0){
-                           // HandleResponseCode.onHandle(ChatActivity.this, status);
+                        } else if (status != 0) {
+                            // HandleResponseCode.onHandle(ChatActivity.this, status);
                         }
                         // 发送成功或失败都要刷新一次
                         myHandler.sendEmptyMessage(UPDATE_CHAT_LISTVIEW);
@@ -150,7 +155,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 JMessageClient.sendMessage(msg);
                 mEditText.setText("");
                 // 暂时使用EventBus更新会话列表，以后sdk会同步更新Conversation
-//                EventBus.getDefault().post(new MessageEvent(msg));
+                EventBus.getDefault().post(new Event.UpdateConvEvent());
                 break;
 
             default:
@@ -190,17 +195,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param event 消息事件
      */
-//    @Subscribe(threadMode = ThreadMode.MainThread) //在ui线程执行
     public void onEvent(MessageEvent event) {
         LogUtils.d("MessageEvent", "MessageEvent");
+        EventBus.getDefault().post(new Event.ResetNewMsgNumEvent(conv));
         final Message msg = event.getMessage();
         //刷新消息
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String targetID = ((UserInfo)msg.getTargetInfo()).getUserName();
+                String targetID = ((UserInfo) msg.getTargetInfo()).getUserName();
                 //判断消息是否在当前会话中
-                if ( targetID.equals(mChatAdapter.getTargetID())) {
+                if (targetID.equals(mChatAdapter.getTargetID())) {
                     mChatAdapter.addMsgToList(msg);
                 }
             }
