@@ -31,6 +31,7 @@ public class BasePager {
     public RadioButton rbtLeft;
     public RadioButton rbtRight;
     public TextView redCircle;
+    public TextView tvTitle;
 
     public BasePager(MainActivity activity) {
         mActivity = activity;
@@ -49,6 +50,7 @@ public class BasePager {
         rbtLeft = (RadioButton) mRootView.findViewById(R.id.pager_base_rbtn_left);
         rbtRight = (RadioButton) mRootView.findViewById(R.id.pager_base_rbtn_right);
         redCircle = (TextView) mRootView.findViewById(R.id.pager_base_red_circle);
+        tvTitle = (TextView) mRootView.findViewById(R.id.pager_base_tv_title);
         mRadioGroup.check(R.id.pager_base_rbtn_left);
 
         mRadioGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

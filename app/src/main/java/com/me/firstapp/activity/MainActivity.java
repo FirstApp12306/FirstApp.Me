@@ -38,6 +38,7 @@ public class MainActivity extends FragmentActivity {
     OnRefreshConvListener mOnRefreshConvListener;
     OnResetNewMsgListener mOnResetNewMsgListener;
     OnReceiveSupportListener mOnReceiveSupportListener;
+    OnReceiveFansListener mOnReceiveFansListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,12 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    public void onUserEvent(Event.NewFansEvent event){
+        if (mOnReceiveFansListener != null){
+            mOnReceiveFansListener.receiveFans(event.getExtraMsg(), event.getExtraExtra());
+        }
+    }
+
     //接受聊天消息监听
 
     public void setOnReceiveMsgListener(OnReceiveMsgListener listener){
@@ -162,5 +169,14 @@ public class MainActivity extends FragmentActivity {
 
     public interface OnReceiveSupportListener {
         void receiveSupport(String extraMsg, String extraExtra);
+    }
+
+    //接收新粉丝监听
+    public void setOnReceiveFansListener(OnReceiveFansListener listener){
+        mOnReceiveFansListener = listener;
+    }
+
+    public interface OnReceiveFansListener {
+        void receiveFans(String extraMsg, String extraExtra);
     }
 }

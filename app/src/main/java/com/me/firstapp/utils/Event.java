@@ -76,6 +76,27 @@ public class Event {
     }
 
     /**
+     * 新粉丝事件
+     */
+    public static class NewFansEvent{
+        private String extraMsg;
+        private String extraExtra;
+
+        public NewFansEvent(String extraMsg, String extraExtra) {
+            this.extraMsg = extraMsg;
+            this.extraExtra = extraExtra;
+        }
+
+        public String getExtraMsg() {
+            return extraMsg;
+        }
+
+        public String getExtraExtra() {
+            return extraExtra;
+        }
+    }
+
+    /**
      * 更新会话列表事件
      */
     public static class UpdateConvEvent{

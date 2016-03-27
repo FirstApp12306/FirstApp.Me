@@ -14,6 +14,7 @@ import com.me.firstapp.R;
 import com.me.firstapp.activity.ChatActivity;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.notices.NoticeCommentActivity;
+import com.me.firstapp.activity.notices.NoticeFansActivity;
 import com.me.firstapp.activity.notices.NoticeSupportActivity;
 import com.me.firstapp.adapter.ConversationListAdapter;
 import com.me.firstapp.adapter.MsgViewPagerAdapter;
@@ -52,6 +53,8 @@ public class MsgPager extends BasePager {
     private ImageView ivCommentArrow;
     private TextView tvNewSupportNum;
     private ImageView ivSupportArrow;
+    private TextView tvNewFansNum;
+    private ImageView ivFansArrow;
     private MainActivity activity;//必须用传过来的activity，不能用mActivity
 
     private List<Conversation> convDatas = new ArrayList<Conversation>();//私信列表数据
@@ -88,6 +91,8 @@ public class MsgPager extends BasePager {
         ivCommentArrow = (ImageView) noticeView.findViewById(R.id.view_pager_msg_notice_comment_arrow);
         tvNewSupportNum = (TextView) noticeView.findViewById(R.id.view_pager_msg_notice_support_new_num);
         ivSupportArrow = (ImageView) noticeView.findViewById(R.id.view_pager_msg_notice_support_arrow);
+        tvNewFansNum = (TextView) noticeView.findViewById(R.id.view_pager_msg_notice_fans_new_num);
+        ivFansArrow = (ImageView) noticeView.findViewById(R.id.view_pager_msg_notice_fans_arrow);
 
         setNum();
 
@@ -168,6 +173,19 @@ public class MsgPager extends BasePager {
             }
         });
 
+        //接收新粉丝监听
+        activity.setOnReceiveFansListener(new MainActivity.OnReceiveFansListener() {
+            @Override
+            public void receiveFans(String extraMsg, String extraExtra) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setNum();
+                    }
+                });
+            }
+        });
+
         setClick();
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
@@ -177,6 +195,7 @@ public class MsgPager extends BasePager {
     private void setNum(){
         String newCommentNum = PrefUtils.getString(mActivity, "new_comment_num", "0");
         String newSupportNum = PrefUtils.getString(mActivity, "new_support_num", "0");
+        String newFansNum = PrefUtils.getString(mActivity, "new_fans_num", "0");
         if ("0".equals(newCommentNum)){
             tvNewCommentNum.setVisibility(View.GONE);
             ivCommentArrow.setVisibility(View.VISIBLE);
@@ -192,6 +211,14 @@ public class MsgPager extends BasePager {
             ivSupportArrow.setVisibility(View.GONE);
             tvNewSupportNum.setText(newSupportNum);
             tvNewSupportNum.setVisibility(View.VISIBLE);
+        }
+        if ("0".equals(newFansNum)){
+            tvNewFansNum.setVisibility(View.GONE);
+            ivFansArrow.setVisibility(View.VISIBLE);
+        }else{
+            ivFansArrow.setVisibility(View.GONE);
+            tvNewFansNum.setText(newFansNum);
+            tvNewFansNum.setVisibility(View.VISIBLE);
         }
     }
 
@@ -211,6 +238,9 @@ public class MsgPager extends BasePager {
                         setNum();
                         break;
                     case R.id.view_pager_msg_notice_fans :
+                        mActivity.startActivity(new Intent(mActivity, NoticeFansActivity.class));
+                        PrefUtils.setString(mActivity, "new_fans_num", "0");
+                        setNum();
                         break;
                     case R.id.view_pager_msg_notice_firstapp :
                         break;

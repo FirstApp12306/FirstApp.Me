@@ -2,6 +2,7 @@ package com.me.firstapp.pager;
 
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.me.firstapp.activity.MainActivity;
@@ -22,6 +23,10 @@ public class FirstPager extends  BasePager {
     @Override
     public void initViews() {
         super.initViews();
+        mRadioGroup.setVisibility(View.GONE);
+        redCircle.setVisibility(View.GONE);
+        tvTitle.setVisibility(View.VISIBLE);
+        tvTitle.setText("动态");
     }
 
     @Override

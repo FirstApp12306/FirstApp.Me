@@ -1,10 +1,7 @@
 package com.me.firstapp.activity.notices;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -12,13 +9,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.BaseActivity;
-import com.me.firstapp.activity.NoteDetailActivity;
-import com.me.firstapp.adapter.NoticeCommentListAdapter;
+import com.me.firstapp.adapter.NoticeFansListAdapter;
 import com.me.firstapp.adapter.NoticeSupportListAdapter;
-import com.me.firstapp.entity.MyComment;
 import com.me.firstapp.entity.MySupport;
+import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
-import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 
@@ -40,49 +35,33 @@ import java.util.ArrayList;
  * QQ: 1046566144
  * 描述:
  */
-@ContentView(R.layout.activity_notice_support)
-public class NoticeSupportActivity extends BaseActivity {
+@ContentView(R.layout.activity_notice_fans)
+public class NoticeFansActivity extends BaseActivity {
 
-    @ViewInject(R.id.activity_notice_support_btn_back)
-    private ImageButton btnBack;
-    @ViewInject(R.id.activity_notice_support_listview)
+    @ViewInject(R.id.activity_notice_fans_btn_back)
+    private ImageButton btnReturn;
+    @ViewInject(R.id.activity_notice_fans_listview)
     private ListView mListView;
 
     private String userID;
-    private ArrayList<MySupport> mySupports;
+    private ArrayList<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userID = PrefUtils.getString(this, "loginUser", null);
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MySupport mySupport = (MySupport) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(NoticeSupportActivity.this, NoteDetailActivity.class);
-                intent.putExtra("topic_key", mySupport.topic_key);
-                intent.putExtra("topic_title", mySupport.topic_title);
-                intent.putExtra("user_avatar", mySupport.note_user_avatar);
-                intent.putExtra("user_name", mySupport.note_user_name);
-                intent.putExtra("note_key", mySupport.note_key);
-                intent.putExtra("note_image", mySupport.note_image);
-                intent.putExtra("note_content", mySupport.note_content);
-                intent.putExtra("note_agree_counts", mySupport.note_agree_counts);
-                intent.putExtra("note_comment_counts", mySupport.note_comment_counts);
-                startActivity(intent);
-            }
-        });
+
         getDataFromServer();
     }
 
     private void getDataFromServer(){
-        RequestParams params = new RequestParams(GlobalContants.NOTICE_SUPPORTS_LIST_URL);
+        RequestParams params = new RequestParams(GlobalContants.NOTICE_FANS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
         params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
@@ -117,20 +96,20 @@ public class NoticeSupportActivity extends BaseActivity {
             JSONObject object1 = new JSONObject(result);
             String returnCode = object1.getString("return_code");
             if ("000000".equals(returnCode)){
-                mySupports = new ArrayList<>();
+                users = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("rows");
                 JSONObject object = null;
-                MySupport mySupport = null;
+                User user = null;
                 for (int i = 0; i < array.length(); i++) {
                     object = array.getJSONObject(i);
-                    mySupport = gson.fromJson(object.toString(), MySupport.class);
-                    mySupports.add(mySupport);
+                    user = gson.fromJson(object.toString(), User.class);
+                    users.add(user);
                     object = null;
-                    mySupport = null;
+                    user = null;
                 }
-                LogUtils.d("mySupports", mySupports.toString());
-                if (mySupports != null){
-                    mListView.setAdapter(new NoticeSupportListAdapter(this, mySupports));
+                LogUtils.d("users", users.toString());
+                if (users != null){
+                    mListView.setAdapter(new NoticeFansListAdapter(this, users));
                 }
             }
         } catch (JSONException e) {

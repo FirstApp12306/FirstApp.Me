@@ -27,8 +27,8 @@
             android:layout_centerVertical="true"
             android:visibility="gone"
             android:text="测试"
-            android:textColor="#ffffff"
-            android:textSize="22sp" />
+            android:textColor="#435356"
+            android:textSize="18sp" />
 
         <FrameLayout
             android:layout_width="wrap_content"

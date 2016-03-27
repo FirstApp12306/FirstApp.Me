@@ -50,6 +50,14 @@ public class MyReceiver extends BroadcastReceiver {
                 PrefUtils.setString(context, "new_support_num", newSupportNum);
                 EventBus.getDefault().post(new Event.NewSupportEvent(bundle.getString(JPushInterface.EXTRA_MESSAGE), bundle.getString(JPushInterface.EXTRA_EXTRA)));
             }
+            //加粉丝消息
+            if ("fans".equals(bundle.getString(JPushInterface.EXTRA_TITLE))){
+                String newFansNum = PrefUtils.getString(context, "new_fans_num", "0");
+                newFansNum = (Long.parseLong(newFansNum)+1)+"";
+                LogUtils.d("newFansNum", newFansNum);
+                PrefUtils.setString(context, "new_support_num", newFansNum);
+                EventBus.getDefault().post(new Event.NewFansEvent(bundle.getString(JPushInterface.EXTRA_MESSAGE), bundle.getString(JPushInterface.EXTRA_EXTRA)));
+            }
 
             // 自定义消息不会展示在通知栏，完全要开发者写代码去处理
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {

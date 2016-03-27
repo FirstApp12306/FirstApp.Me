@@ -174,13 +174,26 @@
                     android:textSize="18sp" />
 
                 <ImageView
+                    android:id="@+id/view_pager_msg_notice_fans_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:padding="10dp"
                     android:src="@drawable/arrow"
                     android:layout_alignBottom="@+id/text_comment"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/view_pager_msg_notice_fans_new_num"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/red_circle"
+                    android:gravity="center"
+                    android:text="99"
+                    android:textColor="@android:color/white"
+                    android:visibility="visible" />
             </LinearLayout>
 
             <View
