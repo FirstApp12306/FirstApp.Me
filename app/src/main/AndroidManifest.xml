@@ -66,6 +66,8 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.notices.NoticeCommentActivity"/>
+        <activity android:name=".activity.notices.NoticeSupportActivity"/>
+        <activity android:name=".activity.ScanImageActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity

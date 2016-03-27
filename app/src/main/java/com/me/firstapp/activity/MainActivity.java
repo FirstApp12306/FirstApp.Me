@@ -37,6 +37,7 @@ public class MainActivity extends FragmentActivity {
     OnReceiveNewCommentListener mReceiveNewCommentListener;
     OnRefreshConvListener mOnRefreshConvListener;
     OnResetNewMsgListener mOnResetNewMsgListener;
+    OnReceiveSupportListener mOnReceiveSupportListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class MainActivity extends FragmentActivity {
     private void initFragment() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();// 开启事务
-        transaction.replace(R.id.fl_content, new ContentFragment(),FRAGMENT_CONTENT);
+        transaction.replace(R.id.fl_content, new ContentFragment(), FRAGMENT_CONTENT);
         transaction.commit();// 提交事务
     }
 
@@ -93,6 +94,13 @@ public class MainActivity extends FragmentActivity {
     public void onUserEvent(Event.NewCommentEvent event) {
         if (mReceiveNewCommentListener != null){
             mReceiveNewCommentListener.receiveComment(event.getExtraMsg(), event.getExtraExtra());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.NewSupportEvent event){
+        if (mOnReceiveSupportListener != null){
+            mOnReceiveSupportListener.receiveSupport(event.getExtraMsg(), event.getExtraExtra());
         }
     }
 
@@ -145,5 +153,14 @@ public class MainActivity extends FragmentActivity {
 
     public interface OnResetNewMsgListener {
         void resetNewMsgNum(Conversation conv);
+    }
+
+    //接收点赞监听
+    public void setOnReceiveSupportListener(OnReceiveSupportListener listener){
+        mOnReceiveSupportListener = listener;
+    }
+
+    public interface OnReceiveSupportListener {
+        void receiveSupport(String extraMsg, String extraExtra);
     }
 }

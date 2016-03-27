@@ -55,6 +55,27 @@ public class Event {
     }
 
     /**
+     * 新点赞事件
+     */
+    public static class NewSupportEvent{
+        private String extraMsg;
+        private String extraExtra;
+
+        public NewSupportEvent(String extraMsg, String extraExtra) {
+            this.extraMsg = extraMsg;
+            this.extraExtra = extraExtra;
+        }
+
+        public String getExtraMsg() {
+            return extraMsg;
+        }
+
+        public String getExtraExtra() {
+            return extraExtra;
+        }
+    }
+
+    /**
      * 更新会话列表事件
      */
     public static class UpdateConvEvent{

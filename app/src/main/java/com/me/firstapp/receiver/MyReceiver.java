@@ -34,12 +34,21 @@ public class MyReceiver extends BroadcastReceiver {
             System.out.println("收到了自定义消息。消息标题是：" + bundle.getString(JPushInterface.EXTRA_TITLE));
             System.out.println("消息内容是：" + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             System.out.println("附件字段是：" + bundle.getString(JPushInterface.EXTRA_EXTRA));
+            //评论消息
             if ("comment".equals(bundle.getString(JPushInterface.EXTRA_TITLE))){
                 String newCommentNum = PrefUtils.getString(context, "new_comment_num", "0");
                 newCommentNum = (Long.parseLong(newCommentNum)+1)+"";
                 LogUtils.d("newCommentNum", newCommentNum);
                 PrefUtils.setString(context, "new_comment_num", newCommentNum);
                 EventBus.getDefault().post(new Event.NewCommentEvent(bundle.getString(JPushInterface.EXTRA_MESSAGE), bundle.getString(JPushInterface.EXTRA_EXTRA)));
+            }
+            //点赞消息
+            if ("support".equals(bundle.getString(JPushInterface.EXTRA_TITLE))){
+                String newSupportNum = PrefUtils.getString(context, "new_support_num", "0");
+                newSupportNum = (Long.parseLong(newSupportNum)+1)+"";
+                LogUtils.d("newSupportNum", newSupportNum);
+                PrefUtils.setString(context, "new_support_num", newSupportNum);
+                EventBus.getDefault().post(new Event.NewSupportEvent(bundle.getString(JPushInterface.EXTRA_MESSAGE), bundle.getString(JPushInterface.EXTRA_EXTRA)));
             }
 
             // 自定义消息不会展示在通知栏，完全要开发者写代码去处理

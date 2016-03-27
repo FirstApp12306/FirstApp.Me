@@ -393,8 +393,9 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                     case R.id.activity_note_detail_avatar :
                         break;
                     case R.id.activity_note_detail_btn_agree :
-                        btnAgree.setClickable(false);
+                        PrefUtils.setBoolean(NoteDetailActivity.this, "agree_flag_" + note_key, true);
                         btnAgree.setImageResource(R.drawable.icon_post_like);
+                        btnAgree.setClickable(false);
                         sendSupportDataToServer();
                         break;
                     case R.id.activity_note_detail_btn_pub :

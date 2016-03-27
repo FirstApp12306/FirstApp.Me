@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,7 +14,9 @@ import com.me.firstapp.R;
 import com.me.firstapp.activity.BaseActivity;
 import com.me.firstapp.activity.NoteDetailActivity;
 import com.me.firstapp.adapter.NoticeCommentListAdapter;
+import com.me.firstapp.adapter.NoticeSupportListAdapter;
 import com.me.firstapp.entity.MyComment;
+import com.me.firstapp.entity.MySupport;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
@@ -39,15 +40,16 @@ import java.util.ArrayList;
  * QQ: 1046566144
  * 描述:
  */
-@ContentView(R.layout.activity_notice_comment)
-public class NoticeCommentActivity extends BaseActivity {
-    @ViewInject(R.id.activity_notice_comment_btn_back)
+@ContentView(R.layout.activity_notice_support)
+public class NoticeSupportActivity extends BaseActivity {
+
+    @ViewInject(R.id.activity_notice_support_btn_back)
     private ImageButton btnBack;
-    @ViewInject(R.id.activity_notice_comment_listview)
+    @ViewInject(R.id.activity_notice_support_listview)
     private ListView mListView;
 
     private String userID;
-    private ArrayList<MyComment> myComments;
+    private ArrayList<MySupport> mySupports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +61,24 @@ public class NoticeCommentActivity extends BaseActivity {
                 finish();
             }
         });
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MyComment myComment = (MyComment) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(NoticeCommentActivity.this, NoteDetailActivity.class);
-                intent.putExtra("topic_key", myComment.topic_key);
-                intent.putExtra("topic_title", myComment.topic_title);
-                intent.putExtra("user_avatar", myComment.note_user_avatar);
-                intent.putExtra("user_name", myComment.note_user_name);
-                intent.putExtra("note_key", myComment.note_key);
-                intent.putExtra("note_image", myComment.note_image);
-                intent.putExtra("note_content", myComment.note_content);
-                intent.putExtra("note_agree_counts", myComment.note_agree_counts);
-                intent.putExtra("note_comment_counts", myComment.note_comment_counts);
+                MySupport mySupport = (MySupport) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(NoticeSupportActivity.this, NoteDetailActivity.class);
+                intent.putExtra("topic_key", mySupport.topic_key);
+                intent.putExtra("topic_title", mySupport.topic_title);
+                intent.putExtra("user_avatar", mySupport.note_user_avatar);
+                intent.putExtra("user_name", mySupport.note_user_name);
+                intent.putExtra("note_key", mySupport.note_key);
+                intent.putExtra("note_image", mySupport.note_image);
+                intent.putExtra("note_content", mySupport.note_content);
+                intent.putExtra("note_agree_counts", mySupport.note_agree_counts);
+                intent.putExtra("note_comment_counts", mySupport.note_comment_counts);
                 startActivity(intent);
             }
         });
-
-//        String cache = CacheUtils.getCache(GlobalContants.NOTICE_COMMENTS_LIST_URL, this);
+//        String cache = CacheUtils.getCache(GlobalContants.NOTICE_SUPPORTS_LIST_URL, this);
 //        if (!TextUtils.isEmpty(cache)){
 //            parseData(cache);
 //        }
@@ -86,7 +86,7 @@ public class NoticeCommentActivity extends BaseActivity {
     }
 
     private void getDataFromServer(){
-        RequestParams params = new RequestParams(GlobalContants.NOTICE_COMMENTS_LIST_URL);
+        RequestParams params = new RequestParams(GlobalContants.NOTICE_SUPPORTS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
         params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
@@ -94,7 +94,7 @@ public class NoticeCommentActivity extends BaseActivity {
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 parseData(result);
-//                CacheUtils.setCache(GlobalContants.NOTICE_COMMENTS_LIST_URL, result, NoticeCommentActivity.this);
+//                CacheUtils.setCache(GlobalContants.NOTICE_SUPPORTS_LIST_URL, result, NoticeSupportActivity.this);
             }
 
             @Override
@@ -122,20 +122,20 @@ public class NoticeCommentActivity extends BaseActivity {
             JSONObject object1 = new JSONObject(result);
             String returnCode = object1.getString("return_code");
             if ("000000".equals(returnCode)){
-                myComments = new ArrayList<>();
+                mySupports = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("rows");
                 JSONObject object = null;
-                MyComment myComment = null;
+                MySupport mySupport = null;
                 for (int i = 0; i < array.length(); i++) {
                     object = array.getJSONObject(i);
-                    myComment = gson.fromJson(object.toString(), MyComment.class);
-                    myComments.add(myComment);
+                    mySupport = gson.fromJson(object.toString(), MySupport.class);
+                    mySupports.add(mySupport);
                     object = null;
-                    myComment = null;
+                    mySupport = null;
                 }
-                LogUtils.d("myComments", myComments.toString());
-                if (myComments != null){
-                    mListView.setAdapter(new NoticeCommentListAdapter(this, myComments));
+                LogUtils.d("mySupports", mySupports.toString());
+                if (mySupports != null){
+                    mListView.setAdapter(new NoticeSupportListAdapter(this, mySupports));
                 }
             }
         } catch (JSONException e) {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.ChatActivity;
 import com.me.firstapp.activity.NoteDetailActivity;
+import com.me.firstapp.activity.ScanImageActivity;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
@@ -86,6 +87,16 @@ public class NotePagerListAdapter extends BaseAdapter {
         doNotify();
     }
 
+    public void addSupport(Note note){
+        for (Note mNote : notes){
+            if (mNote.note_key.equals(note.note_key)){
+                mNote.note_agree_counts++;
+                break;
+            }
+        }
+        doNotify();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
@@ -111,7 +122,7 @@ public class NotePagerListAdapter extends BaseAdapter {
         final Note note = notes.get(position);
         holder.tvUserName.setText(user.user_name);
         if ("#".equals(user.user_avatar) || TextUtils.isEmpty(user.user_avatar)){
-
+            holder.ivAvatar.setImageResource(R.drawable.person_avatar_default_round);
         }else{
             ImageOptions imageOptions = new ImageOptions.Builder()
                     // 加载中或错误图片的ScaleType
@@ -147,14 +158,16 @@ public class NotePagerListAdapter extends BaseAdapter {
         }
         holder.btnComment.setText(note.note_comment_counts+"");
         holder.btnAgree.setText(note.note_agree_counts+"");
-        boolean agreeFlag = PrefUtils.getBoolean(context, "agree_flag_" + note.note_key, false);
+        final boolean agreeFlag = PrefUtils.getBoolean(context, "agree_flag_" + note.note_key, false);
+        LogUtils.d("agreeFlag", agreeFlag+"");
         if (agreeFlag == true ){
-            holder.btnAgree.setClickable(false);
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_post_like);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.btnAgree.setCompoundDrawables(null, null, drawable, null);
         }else{
-            holder.btnAgree.setClickable(true);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.icon_post_unlike);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            holder.btnAgree.setCompoundDrawables(null, null, drawable, null);
         }
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -173,6 +186,9 @@ public class NotePagerListAdapter extends BaseAdapter {
                         context.startActivity(intent1);
                         break;
                     case R.id.notes_pager_list_item_note_image :
+                        Intent intent2 = new Intent(context, ScanImageActivity.class);
+                        intent2.putExtra("image_url", note.image_key);
+                        context.startActivity(intent2);
                         break;
                     case R.id.notes_pager_list_item_comment :
                         Intent intent = new Intent(context, NoteDetailActivity.class);
@@ -188,12 +204,14 @@ public class NotePagerListAdapter extends BaseAdapter {
                         context.startActivity(intent);
                         break;
                     case R.id.notes_pager_list_item_agree :
-                        if (loginFlag == true){
-                            PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
-                            doNotify();
-                            sendSupportDataToServer(holder, note);
-                        }else{
-                            //跳转到登陆页
+                        if (agreeFlag == false ){
+                            if (loginFlag == true){
+                                PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
+                                addSupport(note);
+                                sendSupportDataToServer(holder, note);
+                            }else{
+                                //跳转到登陆页
+                            }
                         }
                         break;
                 }
@@ -204,6 +222,7 @@ public class NotePagerListAdapter extends BaseAdapter {
         holder.btnComment.setOnClickListener(listener);
         holder.btnAgree.setOnClickListener(listener);
         holder.ivAvatar.setOnClickListener(listener);
+        holder.ivNoteImage.setOnClickListener(listener);
 
         return convertView;
     }
