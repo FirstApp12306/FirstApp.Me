@@ -1,16 +1,23 @@
 package com.me.firstapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.me.firstapp.R;
+import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.entity.Topic;
+import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.LogUtils;
 
+import org.xutils.common.Callback;
 import org.xutils.common.util.DensityUtil;
+import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
@@ -26,7 +33,6 @@ import java.util.ArrayList;
 public class ToTopicsAdapter extends PagerAdapter {
     private ArrayList<Topic> mTopTopics;
     private Context context;
-    private ImageOptions imageOptions;
     public ToTopicsAdapter(Context context, ArrayList<Topic> mTopTopics) {
         this.context = context;
         this.mTopTopics = mTopTopics;
@@ -44,12 +50,7 @@ public class ToTopicsAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-//        imageOptions = new ImageOptions.Builder()
-//                .setSize(DensityUtil.dip2px(300), DensityUtil.dip2px(200))
-//                .setRadius(DensityUtil.dip2px(5))
-//                .setLoadingDrawableId(R.drawable.common_bg_image_loading)
-//                .setFailureDrawableId(R.drawable.common_bg_image_loadfail)
-//                .build();
+        final Topic topic = mTopTopics.get(position);
         ImageOptions imageOptions = new ImageOptions.Builder()
                 // 加载中或错误图片的ScaleType
                 //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
@@ -60,15 +61,51 @@ public class ToTopicsAdapter extends PagerAdapter {
                         //.setUseMemCache(false)
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
         ImageView image = new ImageView(context);
-//        image.setScaleType(ImageView.ScaleType.FIT_XY);// 基于控件大小填充图片
-//        LogUtils.d("mTopTopicsimage_url", mTopTopics.get(position).image_url);
-        x.image().bind(image, mTopTopics.get(position).image_url, imageOptions);
+        x.image().bind(image, topic.image_url, imageOptions);
         container.addView(image);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleItemClick(topic.topic_key);
+                Intent intent = new Intent(context, TopicNoteActivity.class);
+                intent.putExtra("topic_key", topic.topic_key);
+                intent.putExtra("topic_title", topic.topic_title);
+                context.startActivity(intent);
+            }
+        });
         return image;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+
+    private void handleItemClick(String topic_key){
+        RequestParams params = new RequestParams(GlobalContants.TOPIC_BROWSE_COUNT_URL);
+        params.addQueryStringParameter("topic_key", topic_key);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 }

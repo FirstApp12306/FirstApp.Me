@@ -16,6 +16,7 @@ import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.adapter.ToTopicsAdapter;
 import com.me.firstapp.adapter.TopicsAdapter;
+import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
@@ -47,7 +48,6 @@ public class TopicsFindPager extends TopicsBasePager {
     private ArrayList<Topic> mTopTopics;
     private HashMap<String, Object> topicMap = new HashMap<>();
     private TopicsAdapter topicsAdapter;
-    private boolean isMoreNext;//加载下一页标志
     private long page = 1;//页数，默认为1
 
     private View headerView;
@@ -66,6 +66,8 @@ public class TopicsFindPager extends TopicsBasePager {
         mViewPager = (ViewPager) headerView.findViewById(R.id.list_header_toptopics_viewpager);
         mIndicator = (LinePageIndicator) headerView.findViewById(R.id.list_header_toptopics_indicator);
         mListView.addHeaderView(headerView);
+
+
     }
 
     @Override
@@ -78,9 +80,11 @@ public class TopicsFindPager extends TopicsBasePager {
     private void initTopicData(){
         String cache = CacheUtils.getCache(GlobalContants.FIND_TOPICS_LIST_URL, mActivity);
         if (!TextUtils.isEmpty(cache)) {
-            parseData(cache,false);
-        }else{
-            getDataFromServer(false, true, true);
+            parseData(cache, false);
+        }
+        boolean refreshFlag = PrefUtils.getBoolean(mActivity, MyApplication.FIND_TOPICS_REFRESH_FLAG, false);
+        if (refreshFlag == false){
+            getDataFromServer(false);
         }
     }
 
@@ -88,7 +92,7 @@ public class TopicsFindPager extends TopicsBasePager {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               Topic topic = (Topic) parent.getAdapter().getItem(position);
+                Topic topic = (Topic) parent.getAdapter().getItem(position);
                 LogUtils.d("topic_det", topic.topic_title);
                 LogUtils.d("position", position + "");
 
@@ -136,45 +140,28 @@ public class TopicsFindPager extends TopicsBasePager {
             @Override
             public void onRefresh() {
                 page = 1;
-                getDataFromServer(false, false, false);
-                isMoreNext = false;
+                getDataFromServer(false);
             }
 
             @Override
             public void onLoadMore() {
-                if (isMoreNext == false) {
-                    page++;
-                    getDataFromServer(true, false, false);
-                } else {
-                    //Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                    mListView.onRefreshComplete(false);// 收起加载更多的布局
-                }
+                page++;
+                getDataFromServer(true);
             }
         });
     }
 
-    private void getDataFromServer(final boolean isMore, final boolean loadingFlag, final boolean isHttpCache){
-//        if (loadingFlag == true){
-//            loadingView.setVisibility(View.VISIBLE);
-//        }
-        LogUtils.d("isHttpCache", isHttpCache+"");
+    private void getDataFromServer(final boolean isMore){
         //下拉刷新和加载更多不设置缓存
         RequestParams params = new RequestParams(GlobalContants.FIND_TOPICS_LIST_URL);
-        params.addQueryStringParameter("page", page+"");
-        params.setCacheMaxAge(1000 * 60);
-        x.http().get(params, new Callback.CacheCallback<String>() {
-
-            @Override
-            public boolean onCache(String result) {
-                LogUtils.d("++++cache", result);
-                afterHttp(result, isMore);
-                return isHttpCache;
-            }
+        params.addQueryStringParameter("page", page + "");
+        x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("++++result", result);
                 afterHttp(result, isMore);
+                PrefUtils.setBoolean(mActivity, MyApplication.FIND_TOPICS_REFRESH_FLAG, true);
             }
 
             @Override
@@ -190,16 +177,12 @@ public class TopicsFindPager extends TopicsBasePager {
 
             @Override
             public void onFinished() {
-                if (loadingFlag == true){
-                    loadingView.setVisibility(View.GONE);
-                }
                 LogUtils.d("", "访问服务器结束");
 
             }
 
             public void afterHttp(String result, boolean isMore){
                 parseData(result, isMore);
-                mListView.onRefreshComplete(true);
                 if (page == 1) {//缓存第一页的数据
                     CacheUtils.setCache(GlobalContants.FIND_TOPICS_LIST_URL, result, mActivity);
                 }
@@ -250,19 +233,14 @@ public class TopicsFindPager extends TopicsBasePager {
                     if (mTopTopics != null){
                         mViewPager.setAdapter(new ToTopicsAdapter(mActivity, mTopTopics));
                         mIndicator.setViewPager(mViewPager);
-                        //mIndicator.setSnap(true);// 支持快照显示
-                        //mIndicator.setOnPageChangeListener(this);
                         mIndicator.onPageSelected(0);// 让指示器重新定位到第一个点
+
                     }
                 }else{
                     ArrayList<Topic> moreTopics = (ArrayList<Topic>) topicMap.get("topics");
                     LogUtils.d("moreTopics", moreTopics.size()+"");
                     if (moreTopics.size() != 0){
                         topicsAdapter.addMore(moreTopics);
-                    }else{
-                        isMoreNext = true;
-                        //Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                        mListView.onRefreshComplete(false);// 收起加载更多的布局
                     }
                 }
                 // 自动轮播条显示
@@ -288,9 +266,13 @@ public class TopicsFindPager extends TopicsBasePager {
             }else{
                 Toast.makeText(x.app(), "数据异常，返回码：" + returnCode, Toast.LENGTH_LONG).show();
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            mListView.onRefreshComplete(false);// 收起加载更多的布局
         }
+
     }
 
 }

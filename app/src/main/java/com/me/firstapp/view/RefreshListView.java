@@ -26,9 +26,9 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     private static final int STATE_RELEASE_REFRESH = 1;// 松开刷新
     private static final int STATE_REFRESHING = 2;// 正在刷新
 
-    private View mHeaderView;
+    public View mHeaderView;
     private int startY = -1;// 滑动起点的y坐标
-    private int mHeaderViewHeight;
+    public int mHeaderViewHeight;
     private View mFooterView;
     private int mFooterViewHeight;
 

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.receiver.MsgNotificationClickEventReceiver;
+import com.me.firstapp.utils.PrefUtils;
 
 import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
@@ -24,6 +25,9 @@ import cn.smssdk.SMSSDK;
 public class MyApplication extends Application {
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 1;
+    public static final String FIND_TOPICS_REFRESH_FLAG = "FIND_TOPICS_REFRESH_FLAG";//刷新发现话题页面的标志
+    public static final String NEW_TOPICS_REFRESH_FLAG = "NEW_TOPICS_REFRESH_FLAG";//刷新最新话题页面的标志
+    public static final String FIRST_PAGER_REFRESH_FLAG = "FIRST_PAGER_REFRESH_FLAG";//首页刷新标志
 
     @Override
     public void onCreate() {
@@ -32,9 +36,6 @@ public class MyApplication extends Application {
         //xUtils初始化
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志
-
-        //FirstApp服务初始化
-//        firstAppInit();
 
         //Mob短信SDK初始化
         SMSSDK.initSDK(this, "10035105a5291", "3fd5b3308ebc6ab7cf1f617b90b88eca");
@@ -45,31 +46,4 @@ public class MyApplication extends Application {
 
         new MsgNotificationClickEventReceiver(this);
     }
-
-//    private void firstAppInit(){
-//        RequestParams params = new RequestParams(GlobalContants.SERVER_LOGIN_URL);
-//        params.addQueryStringParameter("userno", GlobalContants.SERVER_USER_NO);
-//        params.addQueryStringParameter("pwd", GlobalContants.SERVER_USER_PASSWORD);
-//        x.http().post(params, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//                Log.d("FirstApp.Me","success");
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//
-//            }
-//        });
-//    }
 }

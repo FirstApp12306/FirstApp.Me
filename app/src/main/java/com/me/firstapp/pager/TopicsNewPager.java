@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.adapter.TopicsAdapter;
+import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
@@ -37,7 +38,6 @@ public class TopicsNewPager extends TopicsBasePager {
 
     private ArrayList<Topic> mTopics;
     private TopicsAdapter topicsAdapter;
-    private boolean isMoreNext;//加载下一页标志
     private long page = 1;//页数，默认为1
 
     public TopicsNewPager(MainActivity mActivity) {
@@ -60,8 +60,10 @@ public class TopicsNewPager extends TopicsBasePager {
         String cache = CacheUtils.getCache(GlobalContants.NEW_TOPICS_LIST_URL, mActivity);
         if (!TextUtils.isEmpty(cache)) {
             parseData(cache,false);
-        }else{
-            getDataFromServer(false, true, true);
+        }
+        boolean refreshFlag = PrefUtils.getBoolean(mActivity, MyApplication.NEW_TOPICS_REFRESH_FLAG, false);
+        if (refreshFlag == false){
+            getDataFromServer(false);
         }
     }
 
@@ -117,45 +119,27 @@ public class TopicsNewPager extends TopicsBasePager {
             @Override
             public void onRefresh() {
                 page = 1;
-                getDataFromServer(false, false, false);
-                isMoreNext = false;
+                getDataFromServer(false);
             }
 
             @Override
             public void onLoadMore() {
-                if (isMoreNext == false) {
-                    page++;
-                    getDataFromServer(true, false, false);
-                } else {
-                    Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                    mListView.onRefreshComplete(false);// 收起加载更多的布局
-                }
+                page++;
+                getDataFromServer(true);
             }
         });
     }
 
-    private void getDataFromServer(final boolean isMore, final boolean loadingFlag, final boolean isHttpCache){
-//        if (loadingFlag == true){
-//            loadingView.setVisibility(View.VISIBLE);
-//        }
-        LogUtils.d("isHttpCache", isHttpCache+"");
-        //下拉刷新和加载更多不设置缓存
+    private void getDataFromServer(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NEW_TOPICS_LIST_URL);
-        params.addQueryStringParameter("page", page+"");
-        params.setCacheMaxAge(1000 * 60);
-        x.http().get(params, new Callback.CacheCallback<String>() {
-
-            @Override
-            public boolean onCache(String result) {
-                LogUtils.d("++++cache", result);
-                afterHttp(result);
-                return isHttpCache;
-            }
+        params.addQueryStringParameter("page", page + "");
+        x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("++++result", result);
                 afterHttp(result);
+                PrefUtils.setBoolean(mActivity, MyApplication.NEW_TOPICS_REFRESH_FLAG, true);
             }
 
             @Override
@@ -171,16 +155,12 @@ public class TopicsNewPager extends TopicsBasePager {
 
             @Override
             public void onFinished() {
-                if (loadingFlag == true) {
-                    loadingView.setVisibility(View.GONE);
-                }
                 LogUtils.d("", "访问服务器结束");
 
             }
 
             public void afterHttp(String result) {
                 parseData(result, isMore);
-                mListView.onRefreshComplete(true);
                 if (page == 1) {//缓存第一页的数据
                     CacheUtils.setCache(GlobalContants.NEW_TOPICS_LIST_URL, result, mActivity);
                 }
@@ -217,10 +197,6 @@ public class TopicsNewPager extends TopicsBasePager {
                     ArrayList<Topic> moreTopicsList = mTopics;
                     if (!moreTopicsList.isEmpty()){
                         topicsAdapter.addMore(moreTopicsList);
-                    }else{
-                        isMoreNext = true;
-                        //Toast.makeText(mActivity, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                        mListView.onRefreshComplete(false);// 收起加载更多的布局
                     }
                 }
             }else{
@@ -228,6 +204,8 @@ public class TopicsNewPager extends TopicsBasePager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            mListView.onRefreshComplete(false);// 收起加载更多的布局
         }
     }
 }

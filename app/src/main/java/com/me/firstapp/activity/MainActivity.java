@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.me.firstapp.R;
+import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.fragment.ContentFragment;
 import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
@@ -80,8 +81,12 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
         JMessageClient.unRegisterEventReceiver(this);
         EventBus.getDefault().unregister(this);
-        PrefUtils.setBoolean(this, "topic_pager_init_flag0", false);
-        PrefUtils.setBoolean(this, "topic_pager_init_flag1", false);
+//        PrefUtils.setBoolean(this, "topic_pager_init_flag0", false);
+//        PrefUtils.setBoolean(this, "topic_pager_init_flag1", false);
+        PrefUtils.setBoolean(this, MyApplication.FIND_TOPICS_REFRESH_FLAG, false);
+        PrefUtils.setBoolean(this, MyApplication.NEW_TOPICS_REFRESH_FLAG, false);
+        PrefUtils.setBoolean(this, MyApplication.FIRST_PAGER_REFRESH_FLAG, false);
+
     }
 
     public void onEvent(MessageEvent event) {

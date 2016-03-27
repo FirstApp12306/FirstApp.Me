@@ -50,4 +50,6 @@ public class GlobalContants {
     public static final String ADD_FRIEND_URL = SERVER_URL + "/automake/controller/firstapp/FansInsertController";
     //客户端提示中我的粉丝列表数据接口
     public static final String NOTICE_FANS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NoticeFansListController";
+    //客户端首页数据获取接口
+    public static final String FRIEND_NOTIES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/FriendNotesListController";
 }

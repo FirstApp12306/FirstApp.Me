@@ -13,6 +13,7 @@ public class Note {
     public String approve_yn;
     public long create_date;
     public long create_time;
+    public String time_stamp;
     public String display_yn;
     public int myrownum;
     public long note_agree_counts;

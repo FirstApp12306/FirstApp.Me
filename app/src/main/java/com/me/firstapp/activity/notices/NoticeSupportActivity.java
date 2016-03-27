@@ -84,7 +84,7 @@ public class NoticeSupportActivity extends BaseActivity {
     private void getDataFromServer(){
         RequestParams params = new RequestParams(GlobalContants.NOTICE_SUPPORTS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
-        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
+//        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

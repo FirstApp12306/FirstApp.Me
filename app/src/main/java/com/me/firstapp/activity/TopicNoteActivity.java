@@ -106,18 +106,12 @@ public class TopicNoteActivity extends Activity {
             public void onRefresh() {
                 page = 1;
                 getDataFromServer(false, false);
-                isMoreNext = false;
             }
 
             @Override
             public void onLoadMore() {
-                if (isMoreNext == false) {
-                    page++;
-                    getDataFromServer(true, false);
-                } else {
-                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                    newListView.onRefreshComplete(false);// 收起加载更多的布局
-                }
+                page++;
+                getDataFromServer(true, false);
             }
         });
         hotListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
@@ -125,18 +119,12 @@ public class TopicNoteActivity extends Activity {
             public void onRefresh() {
                 page = 1;
                 getDataFromServer(false, false);
-                isMoreNext = false;
             }
 
             @Override
             public void onLoadMore() {
-                if (isMoreNext == false) {
-                    page++;
-                    getDataFromServer(true, false);
-                } else {
-                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                    hotListView.onRefreshComplete(false);// 收起加载更多的布局
-                }
+                page++;
+                getDataFromServer(true, false);
             }
         });
 
@@ -326,22 +314,15 @@ public class TopicNoteActivity extends Activity {
             ArrayList<User> moreNewUsers = (ArrayList<User>) dataMap.get("new_users");
             if (moreNewNotes != null && moreNewUsers != null){
                 newNotePagerListAdapter.addMore(moreNewNotes, moreNewUsers);
-            }else{
-                isMoreNext = true;
-                //Toast.makeText(this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                newListView.onRefreshComplete(false);// 收起加载更多的布局
             }
             ArrayList<Note> moreHotNotes = (ArrayList<Note>) dataMap.get("hot_notes");
             ArrayList<User> moreHotUsers = (ArrayList<User>) dataMap.get("hot_users");
             if (moreHotNotes != null && moreHotUsers != null){
                 hotNotePagerListAdapter.addMore(moreHotNotes, moreHotUsers);
-            }else{
-                isMoreNext = true;
-                //Toast.makeText(this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                hotListView.onRefreshComplete(false);// 收起加载更多的布局
             }
 
         }
-
+        newListView.onRefreshComplete(false);// 收起加载更多的布局
+        hotListView.onRefreshComplete(false);// 收起加载更多的布局
     }
 }

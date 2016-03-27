@@ -47,7 +47,7 @@ public class TopicPager extends BasePager {
 
     @Override
     public void initData() {
-        LogUtils.d("", "初始化Topic页面数据。。。。。。。");
+        LogUtils.d("fff", "初始化Topic页面数据。。。。。。。");
         view = View.inflate(mActivity, R.layout.pager_topic, null);
         mViewPager = (ViewPager) view.findViewById(R.id.pager_topic_viewpager);
         mPagerList = new ArrayList<>();

@@ -14,10 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
-import com.me.firstapp.activity.ChatActivity;
 import com.me.firstapp.activity.NoteDetailActivity;
 import com.me.firstapp.activity.ScanImageActivity;
+import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.entity.Note;
+import com.me.firstapp.entity.Topic;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.LogUtils;
@@ -30,8 +31,6 @@ import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * 作者： FirstApp.Me.
@@ -40,21 +39,22 @@ import java.util.Objects;
  * QQ: 1046566144
  * 描述:
  */
-public class NotePagerListAdapter extends BaseAdapter {
+public class FirstPagerListAdapter extends BaseAdapter {
+
     private Context context;
     private Activity mActivity;
     private ArrayList<Note> notes;
     private ArrayList<User> users;
+    private ArrayList<Topic> topics;
     private boolean loginFlag;
-    private String topicTitle;
     private String loginUserID;
 
-    public NotePagerListAdapter(Context context,ArrayList<Note> notes,ArrayList<User> users, String topicTitle) {
+    public FirstPagerListAdapter(Context context,ArrayList<Note> notes,ArrayList<User> users, ArrayList<Topic> topics) {
         this.context = context;
         this.mActivity = (Activity) context;
         this.notes = notes;
         this.users = users;
-        this.topicTitle = topicTitle;
+        this.topics = topics;
         loginFlag = PrefUtils.getBoolean(context, "login_flag", false);
         loginUserID = PrefUtils.getString(context,"loginUser", null);
     }
@@ -85,9 +85,10 @@ public class NotePagerListAdapter extends BaseAdapter {
     }
 
     //加载更多
-    public void addMore( ArrayList<Note> notes, ArrayList<User> users){
+    public void addMore( ArrayList<Note> notes, ArrayList<User> users, ArrayList<Topic> topics){
         this.notes.addAll(notes);
         this.users.addAll(users);
+        this.topics.addAll(topics);
         doNotify();
     }
 
@@ -107,17 +108,16 @@ public class NotePagerListAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = View.inflate(context, R.layout.notes_pager_list_item, null);
-            holder.btnAddFriend = (ImageButton) convertView.findViewById(R.id.notes_pager_list_item_btn_add_friend);
-            holder.btnPop = (ImageButton) convertView.findViewById(R.id.notes_pager_list_item_pop);
-            holder.ivAvatar = (CircleImageView) convertView.findViewById(R.id.notes_pager_list_item_avatar);
-            holder.tvUserName = (TextView) convertView.findViewById(R.id.notes_pager_list_item_username);
-            holder.ivNoteImage = (ImageView) convertView.findViewById(R.id.notes_pager_list_item_note_image);
-            holder.tvNoteContent = (TextView) convertView.findViewById(R.id.notes_pager_list_item_content);
-            holder.tvTime = (TextView) convertView.findViewById(R.id.notes_pager_list_item_time);
-            holder.btnComment = (Button) convertView.findViewById(R.id.notes_pager_list_item_comment);
-            holder.btnAgree = (Button) convertView.findViewById(R.id.notes_pager_list_item_agree);
-            holder.tvAddedFriend = (TextView) convertView.findViewById(R.id.notes_pager_list_item_added_friend);
+            convertView = View.inflate(context, R.layout.pager_friend_news_list_item, null);
+            holder.btnPop = (ImageButton) convertView.findViewById(R.id.pager_friend_news_list_item_pop);
+            holder.ivAvatar = (CircleImageView) convertView.findViewById(R.id.pager_friend_news_list_item_avatar);
+            holder.tvTopicTitle = (TextView) convertView.findViewById(R.id.pager_friend_news_list_item_topic_title);
+            holder.tvUserName = (TextView) convertView.findViewById(R.id.pager_friend_news_list_item_username);
+            holder.ivNoteImage = (ImageView) convertView.findViewById(R.id.pager_friend_news_list_item_note_image);
+            holder.tvNoteContent = (TextView) convertView.findViewById(R.id.pager_friend_news_list_item_content);
+            holder.tvTime = (TextView) convertView.findViewById(R.id.pager_friend_news_list_item_time);
+            holder.btnComment = (Button) convertView.findViewById(R.id.pager_friend_news_list_item_btn_comment);
+            holder.btnAgree = (Button) convertView.findViewById(R.id.pager_friend_news_list_item_btn_support);
 
             convertView.setTag(holder);
         }else{
@@ -126,8 +126,8 @@ public class NotePagerListAdapter extends BaseAdapter {
 
         final User user = users.get(position);
         final Note note = notes.get(position);
-        holder.tvUserName.setText(user.user_name);
-        holder.tvTime.setText(note.time_stamp);
+        final Topic topic = topics.get(position);
+
         if ("#".equals(user.user_avatar) || TextUtils.isEmpty(user.user_avatar)){
             holder.ivAvatar.setImageResource(R.drawable.person_avatar_default_round);
         }else{
@@ -141,12 +141,6 @@ public class NotePagerListAdapter extends BaseAdapter {
                             //.setUseMemCache(false)
                     .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
             x.image().bind(holder.ivAvatar, user.user_avatar, imageOptions);
-        }
-        if (TextUtils.isEmpty(note.note_content)){
-            holder.tvNoteContent.setVisibility(View.GONE);
-        }else{
-            holder.tvNoteContent.setVisibility(View.VISIBLE);
-            holder.tvNoteContent.setText(note.note_content);
         }
         if ("#".equals(note.image_key) || note.image_key == null){
             holder.ivNoteImage.setVisibility(View.GONE);
@@ -163,10 +157,16 @@ public class NotePagerListAdapter extends BaseAdapter {
                     .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
             x.image().bind(holder.ivNoteImage, note.image_key, imageOptions);
         }
+
+        holder.tvTopicTitle.setText(topic.topic_title);
+        holder.tvUserName.setText(user.user_name);
+        holder.tvNoteContent.setText(note.note_content);
+        holder.tvTime.setText(note.time_stamp);
         holder.btnComment.setText(note.note_comment_counts+"");
         holder.btnAgree.setText(note.note_agree_counts+"");
+
         final boolean agreeFlag = PrefUtils.getBoolean(context, "agree_flag_" + note.note_key, false);
-        LogUtils.d("agreeFlag", agreeFlag+"");
+        LogUtils.d("agreeFlag", agreeFlag + "");
         if (agreeFlag == true ){
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_post_like);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -177,92 +177,54 @@ public class NotePagerListAdapter extends BaseAdapter {
             holder.btnAgree.setCompoundDrawables(null, null, drawable, null);
         }
 
-        final boolean addFriendFlag = PrefUtils.getBoolean(context, "add_friend_flag_"+user.user_id, false);
-        if (user.user_id.equals(loginUserID)){
-            holder.btnAddFriend.setVisibility(View.GONE);
-            holder.tvAddedFriend.setVisibility(View.INVISIBLE);
-        }else{
-            if (addFriendFlag == true){
-                holder.btnAddFriend.setVisibility(View.GONE);
-                holder.tvAddedFriend.setVisibility(View.VISIBLE);
-            }else{
-                holder.tvAddedFriend.setVisibility(View.GONE);
-                holder.btnAddFriend.setVisibility(View.VISIBLE);
-            }
-        }
-
-
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 switch (v.getId()){
-                    case R.id.notes_pager_list_item_btn_add_friend :
-                        if (loginFlag == true){
-                            if (addFriendFlag == false){
-                                PrefUtils.setBoolean(context, "add_friend_flag_"+user.user_id, true);
-                                doNotify();
-                                sendAddFriendDataToServer(user);
-                            }
-                        }else{
-
-                        }
-
+                    case R.id.pager_friend_news_list_item_topic_title :
+                        Intent intent1 = new Intent(mActivity, TopicNoteActivity.class);
+                        intent1.putExtra("topic_key", topic.topic_key);
+                        intent1.putExtra("topic_title", topic.topic_title);
+                        mActivity.startActivity(intent1);
                         break;
-                    case R.id.notes_pager_list_item_pop :
+                    case R.id.pager_friend_news_list_item_pop :
                         break;
-                    case  R.id.notes_pager_list_item_avatar :
-                        Intent intent1 = new Intent(context, ChatActivity.class);
-                        intent1.putExtra("targetID", user.user_phone);
-                        intent1.putExtra("user_name", user.user_name);
-                        context.startActivity(intent1);
+                    case R.id.pager_friend_news_list_item_avatar :
                         break;
-                    case R.id.notes_pager_list_item_note_image :
+                    case R.id.pager_friend_news_list_item_note_image :
                         Intent intent2 = new Intent(context, ScanImageActivity.class);
                         intent2.putExtra("image_url", note.image_key);
                         context.startActivity(intent2);
                         break;
-                    case R.id.notes_pager_list_item_comment :
-                        if (loginFlag == true){
-                            Intent intent = new Intent(context, NoteDetailActivity.class);
-                            intent.putExtra("topic_key", note.topic_key);
-                            intent.putExtra("topic_title", topicTitle);
-                            intent.putExtra("user_avatar", user.user_avatar);
-                            intent.putExtra("user_name", user.user_name);
-                            intent.putExtra("note_key", note.note_key);
-                            intent.putExtra("note_image", note.image_key);
-                            intent.putExtra("note_content", note.note_content);
-                            intent.putExtra("note_agree_counts", note.note_agree_counts);
-                            intent.putExtra("note_comment_counts", note.note_comment_counts);
-                            context.startActivity(intent);
-                        }else{
-
-                        }
-
+                    case R.id.pager_friend_news_list_item_btn_comment :
+                        Intent intent = new Intent(context, NoteDetailActivity.class);
+                        intent.putExtra("topic_key", note.topic_key);
+                        intent.putExtra("topic_title", topic.topic_title);
+                        intent.putExtra("user_avatar", user.user_avatar);
+                        intent.putExtra("user_name", user.user_name);
+                        intent.putExtra("note_key", note.note_key);
+                        intent.putExtra("note_image", note.image_key);
+                        intent.putExtra("note_content", note.note_content);
+                        intent.putExtra("note_agree_counts", note.note_agree_counts);
+                        intent.putExtra("note_comment_counts", note.note_comment_counts);
+                        context.startActivity(intent);
                         break;
-                    case R.id.notes_pager_list_item_agree :
-                        if (loginFlag == true){
-                            if (agreeFlag == false ){
-                                PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
-                                addSupport(note);
-                                sendSupportDataToServer(holder, note);
-                            }
-                        }else{
-
+                    case R.id.pager_friend_news_list_item_btn_support :
+                        if (agreeFlag == false ){
+                            PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
+                            addSupport(note);
+                            sendSupportDataToServer(holder, note);
                         }
-
                         break;
                 }
             }
         };
-        holder.btnAddFriend.setOnClickListener(listener);
         holder.btnPop.setOnClickListener(listener);
+        holder.ivAvatar.setOnClickListener(listener);
+        holder.tvTopicTitle.setOnClickListener(listener);
+        holder.ivNoteImage.setOnClickListener(listener);
         holder.btnComment.setOnClickListener(listener);
         holder.btnAgree.setOnClickListener(listener);
-        holder.ivAvatar.setOnClickListener(listener);
-        holder.ivNoteImage.setOnClickListener(listener);
-
         return convertView;
     }
 
@@ -297,47 +259,15 @@ public class NotePagerListAdapter extends BaseAdapter {
         });
     }
 
-    private void sendAddFriendDataToServer(User user){
-        RequestParams params = new RequestParams(GlobalContants.ADD_FRIEND_URL);
-        params.addQueryStringParameter("user_id", user.user_id);
-        params.addQueryStringParameter("fans_id", loginUserID);
-
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                LogUtils.d("result", result);
-                doNotify();
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
-
-
     private class ViewHolder{
-        public ImageButton btnAddFriend;
         public ImageButton btnPop;
         public CircleImageView ivAvatar;
+        public TextView tvTopicTitle;
         public TextView tvUserName;
         public ImageView ivNoteImage;
         public TextView tvNoteContent;
         public TextView tvTime;
         public Button btnComment;
         public Button btnAgree;
-        public TextView tvAddedFriend;
     }
 }
