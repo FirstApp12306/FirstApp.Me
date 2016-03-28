@@ -16,6 +16,7 @@ import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
+import com.me.firstapp.view.RefreshListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,10 +42,11 @@ public class NoticeFansActivity extends BaseActivity {
     @ViewInject(R.id.activity_notice_fans_btn_back)
     private ImageButton btnReturn;
     @ViewInject(R.id.activity_notice_fans_listview)
-    private ListView mListView;
+    private RefreshListView mListView;
 
     private String userID;
     private ArrayList<User> users;
+    private int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +59,33 @@ public class NoticeFansActivity extends BaseActivity {
             }
         });
 
-        getDataFromServer();
+        mListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getDataFromServer(false);
+            }
+
+            @Override
+            public void onLoadMore() {
+                page++;
+                getDataFromServer(true);
+            }
+        });
+
+        getDataFromServer(false);
     }
 
-    private void getDataFromServer(){
+    private void getDataFromServer(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NOTICE_FANS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
-        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
+        params.addQueryStringParameter("page", page+"");
+//        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                parseData(result);
+                parseData(result, isMore);
             }
 
             @Override
@@ -90,7 +107,8 @@ public class NoticeFansActivity extends BaseActivity {
 
     }
 
-    private void parseData(String result){
+    NoticeFansListAdapter adapter;
+    private void parseData(String result, boolean isMore){
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
@@ -108,12 +126,20 @@ public class NoticeFansActivity extends BaseActivity {
                     user = null;
                 }
                 LogUtils.d("users", users.toString());
-                if (users != null){
-                    mListView.setAdapter(new NoticeFansListAdapter(this, users));
+                if (!isMore){
+                    if (users != null){
+                        adapter = new NoticeFansListAdapter(this, users);
+                        mListView.setAdapter(adapter);
+                    }
+                }else{
+                    adapter.addMore(users);
                 }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            mListView.onRefreshComplete(true);
         }
     }
 }

@@ -21,6 +21,7 @@ import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
+import com.me.firstapp.view.RefreshListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,10 +47,11 @@ public class NoticeSupportActivity extends BaseActivity {
     @ViewInject(R.id.activity_notice_support_btn_back)
     private ImageButton btnBack;
     @ViewInject(R.id.activity_notice_support_listview)
-    private ListView mListView;
+    private RefreshListView mListView;
 
     private String userID;
     private ArrayList<MySupport> mySupports;
+    private int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +80,32 @@ public class NoticeSupportActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        getDataFromServer();
+        mListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getDataFromServer(false);
+            }
+
+            @Override
+            public void onLoadMore() {
+                page++;
+                getDataFromServer(true);
+            }
+        });
+        getDataFromServer(false);
     }
 
-    private void getDataFromServer(){
+    private void getDataFromServer(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NOTICE_SUPPORTS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
+        params.addQueryStringParameter("page", page+"");
 //        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                parseData(result);
+                parseData(result, isMore);
             }
 
             @Override
@@ -111,7 +127,8 @@ public class NoticeSupportActivity extends BaseActivity {
 
     }
 
-    private void parseData(String result){
+    NoticeSupportListAdapter adapter;
+    private void parseData(String result, boolean isMore){
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
@@ -129,12 +146,20 @@ public class NoticeSupportActivity extends BaseActivity {
                     mySupport = null;
                 }
                 LogUtils.d("mySupports", mySupports.toString());
-                if (mySupports != null){
-                    mListView.setAdapter(new NoticeSupportListAdapter(this, mySupports));
+                if (!isMore){
+                    if (mySupports != null){
+                        adapter = new NoticeSupportListAdapter(this, mySupports);
+                        mListView.setAdapter(adapter);
+                    }
+                }else{
+                    adapter.addMore(mySupports);
                 }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            mListView.onRefreshComplete(true);
         }
     }
 }

@@ -9,6 +9,7 @@
         android:id="@+id/view_topic_notes_pager_new_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
         android:divider="#d9d9d9"
         android:dividerHeight="0.8dp">
 

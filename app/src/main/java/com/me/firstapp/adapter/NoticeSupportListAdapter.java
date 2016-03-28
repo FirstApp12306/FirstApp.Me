@@ -1,5 +1,6 @@
 package com.me.firstapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,9 +28,11 @@ import java.util.ArrayList;
  */
 public class NoticeSupportListAdapter extends BaseAdapter {
     private Context context;
+    private Activity mActivity;
     private ArrayList<MySupport> mySupports;
     public NoticeSupportListAdapter(Context context, ArrayList<MySupport> mySupports) {
         this.context = context;
+        this.mActivity = (Activity) context;
         this.mySupports = mySupports;
     }
 
@@ -46,6 +49,21 @@ public class NoticeSupportListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public void doNotify(){
+        mActivity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void addMore(ArrayList<MySupport> moreSupports){
+        this.mySupports.addAll(moreSupports);
+        doNotify();
     }
 
     @Override

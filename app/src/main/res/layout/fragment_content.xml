@@ -30,7 +30,7 @@
                 android:id="@+id/fragment_content_rb_first_page"
                 style="@style/BottomTabStyle"
                 android:drawableTop="@drawable/btn_tab_firstpage_selector"
-                android:text="首页" />
+                android:text="动态" />
 
             <RadioButton
                 android:id="@+id/fragment_content_rb_topic"
@@ -48,7 +48,7 @@
                 android:id="@+id/fragment_content_rb_find"
                 style="@style/BottomTabStyle"
                 android:drawableTop="@drawable/btn_tab_find_selector"
-                android:text="盒子" />
+                android:text="精选" />
 
             <RadioButton
                 android:id="@+id/fragment_content_rb_person"

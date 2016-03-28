@@ -1,5 +1,6 @@
 package com.me.firstapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,9 +29,11 @@ import java.util.ArrayList;
  */
 public class NoticeFansListAdapter extends BaseAdapter {
     private Context context;
+    private Activity mActivity;
     private ArrayList<User> users;
     public NoticeFansListAdapter(Context context, ArrayList<User> users) {
         this.context = context;
+        this.mActivity = (Activity) context;
         this.users = users;
     }
 
@@ -47,6 +50,21 @@ public class NoticeFansListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public void doNotify(){
+        mActivity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void addMore(ArrayList<User> moreUsers){
+        this.users.addAll(moreUsers);
+        doNotify();
     }
 
     @Override

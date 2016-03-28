@@ -40,6 +40,7 @@ public class MainActivity extends FragmentActivity {
     OnResetNewMsgListener mOnResetNewMsgListener;
     OnReceiveSupportListener mOnReceiveSupportListener;
     OnReceiveFansListener mOnReceiveFansListener;
+    OnRefreshTopicsListener mOnRefreshTopicsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,13 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.RefreshTopicsEvent event){
+        if (mOnRefreshTopicsListener != null){
+            mOnRefreshTopicsListener.refreshTopics();
+        }
+    }
+
     public void onUserEvent(Event.NewFansEvent event){
         if (mOnReceiveFansListener != null){
             mOnReceiveFansListener.receiveFans(event.getExtraMsg(), event.getExtraExtra());
@@ -183,5 +191,14 @@ public class MainActivity extends FragmentActivity {
 
     public interface OnReceiveFansListener {
         void receiveFans(String extraMsg, String extraExtra);
+    }
+
+    //刷新话题监听
+    public void setOnRefreshTopicsListener(OnRefreshTopicsListener listener){
+        mOnRefreshTopicsListener = listener;
+    }
+
+    public interface OnRefreshTopicsListener {
+        void refreshTopics();
     }
 }

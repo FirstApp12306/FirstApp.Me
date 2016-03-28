@@ -117,4 +117,11 @@ public class Event {
             return conv;
         }
     }
+
+    /**
+     * 刷新话题事件
+     */
+    public static class RefreshTopicsEvent{
+
+    }
 }

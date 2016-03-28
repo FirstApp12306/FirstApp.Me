@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.me.firstapp.R;
 
@@ -20,6 +21,8 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_create_topic_first)
 public class CreateTopicFirstActivity extends BaseActivity {
 
+    @ViewInject(R.id.activity_regest_returnback)
+    private ImageButton btnBack;
     @ViewInject(R.id.activity_create_topic_first_btn_create)
     private Button btnCreate;
 
@@ -32,7 +35,15 @@ public class CreateTopicFirstActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CreateTopicFirstActivity.this, CreateTopicSecondActivity.class);
                 startActivity(intent);
-                finish();;
+                finish();
+                ;
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

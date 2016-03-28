@@ -1,5 +1,6 @@
 package com.me.firstapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,10 +26,12 @@ import java.util.ArrayList;
  * 描述:
  */
 public class NoticeCommentListAdapter extends BaseAdapter {
+    private Activity mActivity;
     private Context context;
     private ArrayList<MyComment> myComments;
     public NoticeCommentListAdapter(Context context, ArrayList<MyComment> myComments) {
         this.context = context;
+        mActivity = (Activity) context;
         this.myComments = myComments;
     }
 
@@ -45,6 +48,21 @@ public class NoticeCommentListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public void doNotify(){
+        mActivity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void addMore(ArrayList<MyComment> moreComments){
+        this.myComments.addAll(moreComments);
+        doNotify();
     }
 
     @Override

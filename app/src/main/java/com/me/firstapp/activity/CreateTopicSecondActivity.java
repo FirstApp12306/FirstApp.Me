@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.me.firstapp.R;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.DialogUtils;
+import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SoftInputUtils;
@@ -24,6 +26,8 @@ import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 作者： FirstApp.Me.
@@ -35,6 +39,8 @@ import org.xutils.x;
 @ContentView(R.layout.activity_create_topic_second)
 public class CreateTopicSecondActivity extends BaseActivity {
 
+    @ViewInject(R.id.activity_regest_returnback)
+    private ImageButton btnBack;
     @ViewInject(R.id.activity_create_topic_second_topic_title)
     private EditText etTopicTitle;
     @ViewInject(R.id.activity_create_topic_second_topic_detail)
@@ -74,6 +80,12 @@ public class CreateTopicSecondActivity extends BaseActivity {
                 judgeEdit();
             }
         });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void judgeEdit(){
@@ -105,6 +117,7 @@ public class CreateTopicSecondActivity extends BaseActivity {
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 Toast.makeText(x.app(), "话题发布成功", Toast.LENGTH_LONG).show();
+                EventBus.getDefault().post(new Event.RefreshTopicsEvent());
                 finish();
             }
 

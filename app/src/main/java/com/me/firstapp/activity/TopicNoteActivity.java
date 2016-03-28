@@ -71,7 +71,6 @@ public class TopicNoteActivity extends Activity {
     private ArrayList<View> views = new ArrayList<>();;
     private String topicKey;
     private String topicTitle;
-    private boolean isMoreNext;//加载下一页标志
     private long page = 1;//页数，默认为1
 
     private HashMap<String, Object> dataMap = new HashMap<>();
@@ -105,26 +104,26 @@ public class TopicNoteActivity extends Activity {
             @Override
             public void onRefresh() {
                 page = 1;
-                getDataFromServer(false, false);
+                getDataFromServer(false);
             }
 
             @Override
             public void onLoadMore() {
                 page++;
-                getDataFromServer(true, false);
+                getDataFromServer(true);
             }
         });
         hotListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 page = 1;
-                getDataFromServer(false, false);
+                getDataFromServer(false);
             }
 
             @Override
             public void onLoadMore() {
                 page++;
-                getDataFromServer(true, false);
+                getDataFromServer(true);
             }
         });
 
@@ -132,9 +131,8 @@ public class TopicNoteActivity extends Activity {
         String cache = CacheUtils.getCache(GlobalContants.NOTES_LIST_URL + topicKey, this);
         if (!TextUtils.isEmpty(cache)) {
             parseData(cache,false);
-        }else{
-            getDataFromServer(false, true);
         }
+        getDataFromServer(false);
     }
 
     private void setViewClick(){
@@ -176,19 +174,12 @@ public class TopicNoteActivity extends Activity {
         activityManager.popActivity(this);
     }
 
-    private void getDataFromServer(final boolean isMore, final boolean isHttpCache){
+    private void getDataFromServer(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NOTES_LIST_URL);
         params.addQueryStringParameter("page", page+"");
         params.addQueryStringParameter("topic_key", topicKey);
         params.setCacheMaxAge(1000 * 60);
-        x.http().get(params, new Callback.CacheCallback<String>() {
-
-            @Override
-            public boolean onCache(String result) {
-                LogUtils.d("CacheResult", result);
-                afterHttp(result, isMore);
-                return isHttpCache;
-            }
+        x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {

@@ -1,13 +1,11 @@
 package com.me.firstapp.pager;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -54,9 +52,11 @@ public class TopicsFindPager extends TopicsBasePager {
     private ViewPager mViewPager;
     private LinePageIndicator mIndicator;
     private Handler mHandler;
+    private MainActivity activity;//必须用传过来的activity，不能用mActivity
 
     public TopicsFindPager(MainActivity mActivity) {
         super(mActivity);
+        this.activity = mActivity;
     }
 
     @Override
@@ -86,6 +86,13 @@ public class TopicsFindPager extends TopicsBasePager {
         if (refreshFlag == false){
             getDataFromServer(false);
         }
+
+        activity.setOnRefreshTopicsListener(new MainActivity.OnRefreshTopicsListener() {
+            @Override
+            public void refreshTopics() {
+                getDataFromServer(false);
+            }
+        });
     }
 
     private void listItemClick(){

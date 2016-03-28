@@ -22,6 +22,10 @@ public class FindPager extends BasePager {
     @Override
     public void initViews() {
         super.initViews();
+        mRadioGroup.setVisibility(View.GONE);
+        redCircle.setVisibility(View.GONE);
+        tvTitle.setVisibility(View.VISIBLE);
+        tvTitle.setText("精选");
     }
 
     @Override

@@ -25,6 +25,7 @@ public class TopicPager extends BasePager {
     private ViewPager mViewPager;
     private ArrayList<TopicsBasePager> mPagerList;
 
+
     public TopicPager(MainActivity activity) {
         super(activity);
     }
@@ -32,6 +33,7 @@ public class TopicPager extends BasePager {
     @Override
     public void initViews() {
         super.initViews();
+
         btnCreateTopic.setVisibility(View.VISIBLE);
         btnCreateTopic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +58,7 @@ public class TopicPager extends BasePager {
         mViewPager.setAdapter(new TopicsViewPagerAdapter(mPagerList));
         mViewPager.addOnPageChangeListener(new TopicViewPagerListener());
         mRadioGroup.setOnCheckedChangeListener(new TopicRadioCheckedChangeListener());
+        mRadioGroup.check(R.id.pager_base_rbtn_left);//默认勾选第一个
         mPagerList.get(0).initData();//初始化首页数据
 
         flContent.removeAllViews();
