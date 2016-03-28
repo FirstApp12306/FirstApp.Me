@@ -33,7 +33,6 @@ import de.greenrobot.event.ThreadMode;
 public class MainActivity extends FragmentActivity {
 
     private static final String FRAGMENT_CONTENT = "fragment_content";
-    private OnMyWindowFocusChanged onMyWindowFocusChanged;
     OnReceiveMsgListener mReceiveMsgListener;
     OnReceiveNewCommentListener mReceiveNewCommentListener;
     OnRefreshConvListener mOnRefreshConvListener;
@@ -49,22 +48,6 @@ public class MainActivity extends FragmentActivity {
         initFragment();
         JMessageClient.registerEventReceiver(this);
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (onMyWindowFocusChanged != null){
-            onMyWindowFocusChanged.onWindowFocusChanged(hasFocus);
-        }
-    }
-
-    public interface  OnMyWindowFocusChanged{
-        void onWindowFocusChanged(boolean hasFocus);
-    }
-
-    public void setOnMyWindowFocusChangedListener(OnMyWindowFocusChanged onMyWindowFocusChanged){
-        this.onMyWindowFocusChanged = onMyWindowFocusChanged;
     }
 
     /**

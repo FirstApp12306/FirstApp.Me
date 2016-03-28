@@ -1,56 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#3f80dc">
-
-        <Button
-            android:id="@+id/person_pager_btn_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="18dp"
-            android:background="@null"
-            android:text="设置"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/pager_person_ll_one"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:drawableRight="@drawable/icon_expand_select"
-            android:text="话题" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:drawableRight="@drawable/icon_expand_select"
-            android:text="帖子" />
-    </LinearLayout>
-
-    <com.me.firstapp.view.MyScrollView
+    <com.me.firstapp.view.HoveringScrollview
         android:id="@+id/pager_person_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,17 +31,17 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/take_photo_me" />
+                        android:padding="10dp"
+                        android:src="@drawable/person_avatar_default_round" />
 
                     <Button
                         android:id="@+id/person_pager_btn_edit_data"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="10dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/btn_person_pager_edit_person_data"
-                        android:text="编辑资料" />
+                        android:background="@drawable/btn_profile_edit_selector" />
                 </RelativeLayout>
 
                 <TextView
@@ -92,10 +49,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/header_person_pager_second_rl"
-                    android:layout_marginTop="20dp"
+                    android:padding="10dp"
                     android:gravity="center"
                     android:text="FirstApp"
-                    android:textSize="18sp" />
+                    android:textSize="16sp"
+                    android:textColor="#435356"/>
 
                 <RelativeLayout
                     android:id="@+id/person_pager_third_rl"
@@ -109,7 +67,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:padding="5dp"
-                        android:text="等级：15" />
+                        android:text="等级：15"
+                        android:textSize="14sp"
+                        android:textColor="#435356"/>
 
                     <TextView
                         android:id="@+id/person_pager_id"
@@ -118,7 +78,9 @@
                         android:layout_alignParentTop="true"
                         android:layout_toStartOf="@+id/person_pager_level"
                         android:padding="5dp"
-                        android:text="ID:123456" />
+                        android:text="ID:123456"
+                        android:textSize="14sp"
+                        android:textColor="#435356"/>
 
                     <TextView
                         android:id="@+id/person_pager_location"
@@ -127,7 +89,9 @@
                         android:layout_alignParentTop="true"
                         android:layout_toEndOf="@+id/person_pager_level"
                         android:padding="5dp"
-                        android:text="陕西西安" />
+                        android:text="西安"
+                        android:textSize="14sp"
+                        android:textColor="#435356"/>
 
                 </RelativeLayout>
 
@@ -144,7 +108,9 @@
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="33dp"
                         android:layout_toStartOf="@+id/person_pager_fans"
-                        android:text="关注：9" />
+                        android:text="关注：9"
+                        android:textSize="16sp"
+                        android:textColor="#b5b5b5"/>
 
                     <Button
                         android:id="@+id/person_pager_btn_favourite"
@@ -156,7 +122,10 @@
                         android:layout_marginEnd="69dp"
                         android:drawableLeft="@drawable/icon_collect"
                         android:padding="5dp"
-                        android:text="收藏夹" />
+                        android:background="@null"
+                        android:text="收藏夹"
+                        android:textColor="#435356"
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/person_pager_fans"
@@ -166,7 +135,9 @@
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="33dp"
                         android:layout_toStartOf="@id/person_pager_btn_favourite"
-                        android:text="粉丝：9" />
+                        android:text="粉丝：9"
+                        android:textSize="16sp"
+                        android:textColor="#b5b5b5"/>
                 </RelativeLayout>
 
                 <TextView
@@ -174,51 +145,86 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/person_pager_forth_rl"
+                    android:paddingBottom="10dp"
                     android:gravity="center"
                     android:maxLength="30"
-                    android:text="理想很丰满，现实很骨感" />
+                    android:text="理想很丰满，现实很骨感"
+                    android:textColor="#7e7e7e"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/pager_person_ll_two"
+                android:id="@+id/search02"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_below="@id/person_pager_sign">
 
-                <Button
-                    android:layout_width="0dp"
+                <!-- 悬浮控件。。开始-->
+                <LinearLayout
+                    android:id="@+id/hoveringLayout"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:drawableRight="@drawable/icon_expand_select"
-                    android:text="话题" />
+                    android:background="#ffffff">
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:drawableRight="@drawable/icon_expand_select"
-                    android:text="帖子" />
+                    <RadioGroup
+                        android:id="@+id/pager_person_radiogroup"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <RadioButton
+                            android:id="@+id/pager_person_rbtn_topic"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp"
+                            android:text="话题"
+                            android:textSize="16sp"
+                            android:textColor="@drawable/rbtn_tab_text_selector"
+                            android:button="@null"
+                            android:background="@drawable/rbtn_pager_person_note_selector"/>
+                        <RadioButton
+                            android:id="@+id/pager_person_rbtn_note"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:text="帖子"
+                            android:textSize="16sp"
+                            android:textColor="@drawable/rbtn_tab_text_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp"
+                            android:background="@drawable/rbtn_pager_person_topic_selector"/>
+
+                    </RadioGroup>
+
+                </LinearLayout>
+                <!-- 悬浮控件。。结束-->
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/pager_person_test"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager_person_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容\n测试内容"
-                android:textSize="40dp" />
+                android:layout_height="800dp">
 
-            <!--<ListView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_marginLeft="10dp"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:layout_weight="1">-->
-            <!--</ListView>-->
+            </android.support.v4.view.ViewPager>
 
         </LinearLayout>
-    </com.me.firstapp.view.MyScrollView>
+    </com.me.firstapp.view.HoveringScrollview>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/search01"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:visibility="invisible">
+    </LinearLayout>
+
+</RelativeLayout>

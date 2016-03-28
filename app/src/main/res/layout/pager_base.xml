@@ -75,15 +75,15 @@
 
 
         <Button
-            android:id="@+id/btn_manage"
+            android:id="@+id/pager_base_btn_setting"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:text="选择" />
+            android:background="@drawable/btn_returnback_bg"
+            android:textColor="#435356"
+            android:textSize="18sp"
+            android:text="设置" />
 
     </RelativeLayout>
 

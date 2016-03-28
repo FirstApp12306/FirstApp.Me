@@ -73,10 +73,10 @@ public class TopicPager extends BasePager {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId){
                 case R.id.pager_base_rbtn_left :
-                    mViewPager.setCurrentItem(0,false);
+                    mViewPager.setCurrentItem(0,true);
                     break;
                 case R.id.pager_base_rbtn_right :
-                    mViewPager.setCurrentItem(1,false);
+                    mViewPager.setCurrentItem(1,true);
                     break;
             }
         }

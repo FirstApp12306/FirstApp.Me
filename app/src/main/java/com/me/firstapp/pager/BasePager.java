@@ -32,6 +32,7 @@ public class BasePager {
     public RadioButton rbtRight;
     public TextView redCircle;
     public TextView tvTitle;
+    public Button btnSetting;
 
     public BasePager(MainActivity activity) {
         mActivity = activity;
@@ -46,6 +47,7 @@ public class BasePager {
         flContent = (FrameLayout) mRootView.findViewById(R.id.pager_base_content);
         mRl = (RelativeLayout) mRootView.findViewById(R.id.pager_base_rl);
         btnCreateTopic = (Button) mRootView.findViewById(R.id.pager_base_btn_create_topic);
+        btnSetting = (Button) mRootView.findViewById(R.id.pager_base_btn_setting);
         mRadioGroup = (RadioGroup) mRootView.findViewById(R.id.pager_base_rg);
         rbtLeft = (RadioButton) mRootView.findViewById(R.id.pager_base_rbtn_left);
         rbtRight = (RadioButton) mRootView.findViewById(R.id.pager_base_rbtn_right);
