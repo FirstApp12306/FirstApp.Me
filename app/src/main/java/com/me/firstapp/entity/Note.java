@@ -9,17 +9,12 @@ package com.me.firstapp.entity;
  */
 public class Note {
     public String note_key;
-    public String approve_sts;
-    public String approve_yn;
     public long create_date;
     public long create_time;
     public String time_stamp;
-    public String display_yn;
-    public int myrownum;
     public long note_agree_counts;
     public long note_comment_counts;
     public String note_content;
-    public String report_sts;
     public String topic_key;
     public String image_key;
 

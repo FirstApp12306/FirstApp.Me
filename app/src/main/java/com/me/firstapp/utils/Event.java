@@ -1,5 +1,6 @@
 package com.me.firstapp.utils;
 
+import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.User;
 
 import cn.jpush.im.android.api.model.Conversation;
@@ -123,5 +124,26 @@ public class Event {
      */
     public static class RefreshTopicsEvent{
 
+    }
+
+    /**
+     * 刷新帖子事件
+     */
+    public static class RefreshNotesEvent{
+        private Note note;
+        private User user;
+
+        public RefreshNotesEvent(Note note, User user) {
+            this.note = note;
+            this.user = user;
+        }
+
+        public Note getNote() {
+            return note;
+        }
+
+        public User getUser() {
+            return user;
+        }
     }
 }

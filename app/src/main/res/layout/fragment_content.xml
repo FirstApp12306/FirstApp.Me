@@ -61,7 +61,8 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginTop="6dp"
-            android:background="@drawable/red_circle"/>
+            android:background="@drawable/red_circle"
+            android:visibility="gone"/>
     </FrameLayout>
 
 </LinearLayout>

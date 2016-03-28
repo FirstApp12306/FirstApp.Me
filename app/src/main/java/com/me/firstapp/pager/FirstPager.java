@@ -171,10 +171,12 @@ public class FirstPager extends  BasePager {
                     }
 
                 }
-                mListView.onRefreshComplete(false);// 收起加载更多的布局
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            mListView.onRefreshComplete(true);// 收起加载更多的布局
         }
     }
 }

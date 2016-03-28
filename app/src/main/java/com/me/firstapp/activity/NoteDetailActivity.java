@@ -1,6 +1,7 @@
 package com.me.firstapp.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -96,12 +97,12 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private  String[] titles = new String[2];
     private String topic_key;
     private String note_key;
+    private String note_image;
     private ArrayList<Support> supports;
     private ArrayList<Comment> comments;
     private Comment comment;
     private long page = 1;
 
-    private boolean isMoreNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,9 +124,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         String cache = PrefUtils.getString(this, GlobalContants.NOTE_SUPPORT_COMMENT_LIST_URL + note_key, null);
         if (!TextUtils.isEmpty(cache)){
             parseData(cache, false);
-        }else{
-            initServerData(false);
         }
+        initServerData(false);
         setViewClick();
 
         views.add(agreeView);
@@ -145,26 +145,16 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         agreeListview.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
             @Override
             public void onLoadMore() {
-                if (isMoreNext == false) {
-                    page++;
-                    initServerData(true);
-                } else {
-                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                    agreeListview.onRefreshComplete(false);// 收起加载更多的布局
-                }
+                page++;
+                initServerData(true);
 
             }
         });
         commentListView.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
             @Override
             public void onLoadMore() {
-                if (isMoreNext == false) {
-                    page++;
-                    initServerData(true);
-                } else {
-                    //Toast.makeText(TopicNoteActivity.this, "已经是最后一页了", Toast.LENGTH_SHORT).show();
-                    commentListView.onRefreshComplete(false);// 收起加载更多的布局
-                }
+                page++;
+                initServerData(true);
             }
         });
         commentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -200,6 +190,19 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                 Toast.makeText(NoteDetailActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
                 mEditText.setText(null);
                 SoftInputUtils.hideSoftInputWindow(NoteDetailActivity.this);
+
+                Gson gson = new Gson();
+                try {
+                    JSONObject object1 = new JSONObject(result);
+                    JSONObject object2 = object1.getJSONObject("resultMap");
+                    Comment comment = gson.fromJson(object2.toString(), Comment.class);
+                    LogUtils.d("comment", comment.toString());
+                    if (adapter2 != null){
+                        adapter2.addNewCom(comment);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -226,7 +229,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         String user_avatar = getIntent().getStringExtra("user_avatar");
         String user_name = getIntent().getStringExtra("user_name");
         note_key = getIntent().getStringExtra("note_key");
-        String note_image = getIntent().getStringExtra("note_image");
+        note_image = getIntent().getStringExtra("note_image");
         String note_content = getIntent().getStringExtra("note_content");
         long  note_agree_counts = getIntent().getLongExtra("note_agree_counts", 0);
         long note_comment_counts = getIntent().getLongExtra("note_comment_counts", 0);
@@ -279,14 +282,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private void initServerData(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NOTE_SUPPORT_COMMENT_LIST_URL);
         params.addQueryStringParameter("note_key", note_key);
-        params.addQueryStringParameter("page", page+"");
-        params.setCacheMaxAge(1000 * 60);
-        x.http().get(params, new Callback.CacheCallback<String>() {
-
-            @Override
-            public boolean onCache(String result) {
-                return false;
-            }
+        params.addQueryStringParameter("page", page + "");
+        x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
@@ -367,19 +364,13 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         }else{
             if (supports.size() != 0){
                 adapter1.addMoreSup(supports);
-            }else{
-                isMoreNext = true;
-                agreeListview.onRefreshComplete(false);
             }
             if (comments.size() != 0){
                 adapter2.addMoreCom(comments);
-            }else{
-                isMoreNext = true;
-                commentListView.onRefreshComplete(false);
             }
-
         }
-
+        commentListView.onRefreshComplete(true);
+        agreeListview.onRefreshComplete(true);
     }
 
     private void setViewClick(){
@@ -389,6 +380,11 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                 switch (v.getId()){
                     case R.id.activity_note_detail_btn_back :
                         finish();
+                        break;
+                    case R.id.activity_note_detail_note_image :
+                        Intent intent = new Intent(NoteDetailActivity.this, ScanImageActivity.class);
+                        intent.putExtra("image_url", note_image);
+                        startActivity(intent);
                         break;
                     case R.id.activity_note_detail_avatar :
                         break;
@@ -417,6 +413,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         ivAvatar.setOnClickListener(listener);
         btnAgree.setOnClickListener(listener);
         btnPub.setOnClickListener(listener);
+        ivNoteImage.setOnClickListener(listener);
     }
 
     private void sendSupportDataToServer(){
@@ -457,16 +454,25 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PrefUtils.setString(this, "temp_edit_comment", null);
+    }
+
+    @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         //现在认为只要控件将Activity向上推的高度超过了1/3屏幕高，就认为软键盘弹起
         if(oldBottom != 0 && bottom != 0 &&(oldBottom - bottom > keyHeight)){
             //软键盘弹起
+            LogUtils.d("qqq", "软键盘弹起");
+            mEditText.requestFocus();
             btnAgree.setVisibility(View.GONE);
             btnPub.setVisibility(View.VISIBLE);
             String temp_edit_comment = PrefUtils.getString(this, "temp_edit_comment", null);
             mEditText.setText(temp_edit_comment);
         }else if(oldBottom != 0 && bottom != 0 &&(bottom - oldBottom > keyHeight)){
             //软件盘关闭
+            LogUtils.d("wwww", "软件盘关闭");
             btnAgree.setVisibility(View.VISIBLE);
             btnPub.setVisibility(View.GONE);
             PrefUtils.setString(this, "temp_edit_comment", mEditText.getText().toString());

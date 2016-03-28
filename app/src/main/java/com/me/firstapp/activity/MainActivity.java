@@ -82,11 +82,10 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
         JMessageClient.unRegisterEventReceiver(this);
         EventBus.getDefault().unregister(this);
-//        PrefUtils.setBoolean(this, "topic_pager_init_flag0", false);
-//        PrefUtils.setBoolean(this, "topic_pager_init_flag1", false);
         PrefUtils.setBoolean(this, MyApplication.FIND_TOPICS_REFRESH_FLAG, false);
         PrefUtils.setBoolean(this, MyApplication.NEW_TOPICS_REFRESH_FLAG, false);
         PrefUtils.setBoolean(this, MyApplication.FIRST_PAGER_REFRESH_FLAG, false);
+        PrefUtils.setBoolean(this, MyApplication.FIND_PAGER_REFRESH_FLAG, false);
 
     }
 
@@ -139,7 +138,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     //接受聊天消息监听
-
     public void setOnReceiveMsgListener(OnReceiveMsgListener listener){
         mReceiveMsgListener = listener;
     }

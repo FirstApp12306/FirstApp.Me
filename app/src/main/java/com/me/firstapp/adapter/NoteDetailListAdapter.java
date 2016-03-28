@@ -75,11 +75,19 @@ public class NoteDetailListAdapter extends BaseAdapter {
 
     public void addMoreSup(ArrayList<Support> supports){
         this.supports.addAll(supports);
+        typeFlag = true;
         doNotify();
     }
 
     public void addMoreCom(ArrayList<Comment> comments){
         this.comments.addAll(comments);
+        typeFlag = false;
+        doNotify();
+    }
+
+    public void addNewCom(Comment comment){
+        this.comments.add(0, comment);
+        typeFlag = false;
         doNotify();
     }
 

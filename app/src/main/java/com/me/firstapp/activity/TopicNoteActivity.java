@@ -21,6 +21,7 @@ import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.manager.ActivityManager;
 import com.me.firstapp.utils.CacheUtils;
+import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.view.RefreshListView;
 import com.viewpagerindicator.TabPageIndicator;
@@ -36,6 +37,10 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者： FirstApp.Me.
@@ -83,6 +88,8 @@ public class TopicNoteActivity extends Activity {
 
         activityManager = ActivityManager.getInstance();
         activityManager.pushActivity(this);
+
+        EventBus.getDefault().register(this);
 
         topicKey = getIntent().getStringExtra("topic_key");
         topicTitle = getIntent().getStringExtra("topic_title");
@@ -172,13 +179,13 @@ public class TopicNoteActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         activityManager.popActivity(this);
+        EventBus.getDefault().unregister(this);
     }
 
     private void getDataFromServer(final boolean isMore){
         RequestParams params = new RequestParams(GlobalContants.NOTES_LIST_URL);
         params.addQueryStringParameter("page", page+"");
         params.addQueryStringParameter("topic_key", topicKey);
-        params.setCacheMaxAge(1000 * 60);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
@@ -315,5 +322,12 @@ public class TopicNoteActivity extends Activity {
         }
         newListView.onRefreshComplete(false);// 收起加载更多的布局
         hotListView.onRefreshComplete(false);// 收起加载更多的布局
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.RefreshNotesEvent event){
+        if (newNotePagerListAdapter != null){
+            newNotePagerListAdapter.addNew(event.getNote(), event.getUser());
+        }
     }
 }

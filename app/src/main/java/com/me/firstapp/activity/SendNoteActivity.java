@@ -18,9 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.me.firstapp.R;
 import com.me.firstapp.adapter.PubNoteGridViewAdapter;
 import com.me.firstapp.application.MyApplication;
+import com.me.firstapp.entity.Note;
+import com.me.firstapp.entity.User;
 import com.me.firstapp.entity.images.ImageItem;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.DialogUtils;
@@ -118,6 +121,10 @@ public class SendNoteActivity extends BaseActivity {
                         finish();
                         break;
                     case R.id.activity_send_note_btn_pub :
+                        if (TextUtils.isEmpty(mEditText.getText().toString()) && ImageUtils.tempSelectedImg.size() == 0){
+                            Toast.makeText(SendNoteActivity.this, "发布的帖子不能为空", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         sendNote();
                         break;
                 }
@@ -134,12 +141,7 @@ public class SendNoteActivity extends BaseActivity {
             //获取token
             getToken();
         }else{
-            if (!TextUtils.isEmpty(mEditText.getText().toString())){
-                sendDataToServer(null);
-            }else{
-                Toast.makeText(this, "发布的帖子不能为空", Toast.LENGTH_SHORT).show();
-            }
-
+            sendDataToServer(null);
         }
     }
 
@@ -192,7 +194,7 @@ public class SendNoteActivity extends BaseActivity {
                             LogUtils.d("qiniu", res.toString());
                             try {
                                 String image_key = res.getString("key");
-                                if (!TextUtils.isEmpty(image_key)){
+                                if (!TextUtils.isEmpty(image_key)) {
                                     sendDataToServer(image_key);
                                 }
                             } catch (JSONException e) {
@@ -216,6 +218,20 @@ public class SendNoteActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
+                Gson gson = new Gson();
+                if (!TextUtils.isEmpty(result)){
+                    try {
+                        JSONObject object1 = new JSONObject(result);
+                        JSONObject object2 = object1.getJSONObject("resultMap");
+                        Note note = gson.fromJson(object2.toString(), Note.class);
+                        User user = gson.fromJson(object2.toString(), User.class);
+                        LogUtils.d("note", note.toString());
+                        LogUtils.d("user", user.toString());
+                        EventBus.getDefault().post(new Event.RefreshNotesEvent(note, user));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 finish();
             }
 

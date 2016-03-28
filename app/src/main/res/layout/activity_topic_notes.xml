@@ -12,12 +12,11 @@
         <ImageButton
             android:id="@+id/activity_topic_note_btn_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:background="@null"
+            android:background="@drawable/btn_returnback_bg"
             android:src="@drawable/return_back_btn" />
 
         <TextView

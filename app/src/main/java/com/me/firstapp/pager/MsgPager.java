@@ -100,6 +100,7 @@ public class MsgPager extends BasePager {
         mViewList.add(noticeView);
         mViewPager.setAdapter(new MsgViewPagerAdapter(mViewList));
         mViewPager.addOnPageChangeListener(new ViewPagerListener());
+        mRadioGroup.check(R.id.pager_base_rbtn_left);//默认勾选第一个
         mRadioGroup.setOnCheckedChangeListener(new RadioCheckedChangeListener());
 
         initConvListAdapter();
@@ -133,6 +134,7 @@ public class MsgPager extends BasePager {
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        redCircle.setVisibility(View.VISIBLE);
                         setNum();
                     }
                 });
@@ -167,6 +169,7 @@ public class MsgPager extends BasePager {
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        redCircle.setVisibility(View.VISIBLE);
                         setNum();
                     }
                 });
@@ -180,6 +183,7 @@ public class MsgPager extends BasePager {
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        redCircle.setVisibility(View.VISIBLE);
                         setNum();
                     }
                 });
@@ -219,6 +223,10 @@ public class MsgPager extends BasePager {
             ivFansArrow.setVisibility(View.GONE);
             tvNewFansNum.setText(newFansNum);
             tvNewFansNum.setVisibility(View.VISIBLE);
+        }
+
+        if ("0".equals(newCommentNum) && "0".equals(newSupportNum) && "0".equals(newFansNum)){
+            redCircle.setVisibility(View.GONE);
         }
     }
 

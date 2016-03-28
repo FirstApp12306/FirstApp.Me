@@ -52,4 +52,6 @@ public class GlobalContants {
     public static final String NOTICE_FANS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NoticeFansListController";
     //客户端首页数据获取接口
     public static final String FRIEND_NOTIES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/FriendNotesListController";
+    //客户端精选页面获取数据接口
+    public static final String FIND_NOTIES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/FindNotesListController";
 }

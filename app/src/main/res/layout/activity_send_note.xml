@@ -11,14 +11,14 @@
 
         <Button
             android:id="@+id/activity_send_note_btn_cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_returnback_bg"
             android:text="取消"
             android:textColor="#435356"
-            android:textSize="18sp"
-            android:background="@null" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/activity_send_note_title"
@@ -31,14 +31,14 @@
 
         <Button
             android:id="@+id/activity_send_note_btn_pub"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:background="@drawable/btn_returnback_bg"
             android:text="发布"
-            android:textColor="#888688"
-            android:textSize="18sp"
-            android:background="@null" />
+            android:textColor="#435356"
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <View

@@ -52,11 +52,9 @@ public class TopicsFindPager extends TopicsBasePager {
     private ViewPager mViewPager;
     private LinePageIndicator mIndicator;
     private Handler mHandler;
-    private MainActivity activity;//必须用传过来的activity，不能用mActivity
 
     public TopicsFindPager(MainActivity mActivity) {
         super(mActivity);
-        this.activity = mActivity;
     }
 
     @Override
@@ -87,12 +85,6 @@ public class TopicsFindPager extends TopicsBasePager {
             getDataFromServer(false);
         }
 
-        activity.setOnRefreshTopicsListener(new MainActivity.OnRefreshTopicsListener() {
-            @Override
-            public void refreshTopics() {
-                getDataFromServer(false);
-            }
-        });
     }
 
     private void listItemClick(){

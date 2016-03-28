@@ -117,7 +117,6 @@ public class CreateTopicSecondActivity extends BaseActivity {
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 Toast.makeText(x.app(), "话题发布成功", Toast.LENGTH_LONG).show();
-                EventBus.getDefault().post(new Event.RefreshTopicsEvent());
                 finish();
             }
 

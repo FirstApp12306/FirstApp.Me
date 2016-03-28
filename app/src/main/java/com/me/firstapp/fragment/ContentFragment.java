@@ -18,8 +18,16 @@ import com.me.firstapp.pager.MsgPager;
 import com.me.firstapp.pager.PersonPager;
 import com.me.firstapp.pager.TopicPager;
 import com.me.firstapp.utils.DensityUtils;
+import com.me.firstapp.utils.Event;
+import com.me.firstapp.utils.LogUtils;
 
 import java.util.ArrayList;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.event.MessageEvent;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者： FirstApp.Me.
@@ -37,6 +45,8 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        JMessageClient.registerEventReceiver(this);
+        EventBus.getDefault().register(this);
     }
 
 
@@ -117,8 +127,29 @@ public class ContentFragment extends BaseFragment {
         });
     }
 
+    public void onEvent(MessageEvent event) {
+        LogUtils.d("MessageEvent", "MessageEvent");
+        redCircle.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.NewCommentEvent event) {
+        redCircle.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.NewSupportEvent event){
+        redCircle.setVisibility(View.VISIBLE);
+    }
+
+    public void onUserEvent(Event.NewFansEvent event){
+        redCircle.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        JMessageClient.unRegisterEventReceiver(this);
+        EventBus.getDefault().unregister(this);
     }
 }
