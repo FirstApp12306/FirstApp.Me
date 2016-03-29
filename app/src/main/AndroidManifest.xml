@@ -69,6 +69,7 @@
         <activity android:name=".activity.notices.NoticeSupportActivity"/>
         <activity android:name=".activity.ScanImageActivity"/>
         <activity android:name=".activity.notices.NoticeFansActivity"/>
+        <activity android:name=".activity.profile.ProfileActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity

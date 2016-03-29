@@ -19,6 +19,8 @@ public class User {
     public String user_sex;
     public String user_signature;
     public String sts;
+    public String fans;
+    public String follow;
 
 
     @Override

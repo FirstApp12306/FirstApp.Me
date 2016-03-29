@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/person_rllayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -55,17 +56,18 @@
                     android:textSize="16sp"
                     android:textColor="#435356"/>
 
-                <RelativeLayout
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:id="@+id/person_pager_third_rl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:layout_below="@id/person_pager_nickname">
 
                     <TextView
                         android:id="@+id/person_pager_level"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
+                        android:layout_height="match_parent"
                         android:padding="5dp"
                         android:text="等级：15"
                         android:textSize="14sp"
@@ -75,8 +77,6 @@
                         android:id="@+id/person_pager_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_toStartOf="@+id/person_pager_level"
                         android:padding="5dp"
                         android:text="ID:123456"
                         android:textSize="14sp"
@@ -86,64 +86,87 @@
                         android:id="@+id/person_pager_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/person_pager_level"
                         android:padding="5dp"
                         android:text="西安"
                         android:textSize="14sp"
                         android:textColor="#435356"/>
 
-                </RelativeLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/person_pager_forth_rl"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/person_pager_third_rl">
+                    android:gravity="center_horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="关注:"
+                        android:textSize="16sp"
+                        android:textColor="#b5b5b5"/>
 
                     <TextView
                         android:id="@+id/person_pager_attention"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="33dp"
-                        android:layout_toStartOf="@+id/person_pager_fans"
-                        android:text="关注：9"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="9"
+                        android:textSize="16sp"
+                        android:textColor="#435356"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="粉丝:"
                         android:textSize="16sp"
                         android:textColor="#b5b5b5"/>
 
+                    <TextView
+                        android:id="@+id/person_pager_fans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="19"
+                        android:textSize="16sp"
+                        android:textColor="#435356"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
                     <Button
                         android:id="@+id/person_pager_btn_favourite"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="69dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
                         android:drawableLeft="@drawable/icon_collect"
                         android:padding="5dp"
                         android:background="@null"
                         android:text="收藏夹"
                         android:textColor="#435356"
                         android:textSize="16sp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"/>
 
-                    <TextView
-                        android:id="@+id/person_pager_fans"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/person_pager_attention"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="33dp"
-                        android:layout_toStartOf="@id/person_pager_btn_favourite"
-                        android:text="粉丝：9"
-                        android:textSize="16sp"
-                        android:textColor="#b5b5b5"/>
-                </RelativeLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/person_pager_sign"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_below="@id/person_pager_forth_rl"
                     android:paddingBottom="10dp"
                     android:gravity="center"
@@ -208,12 +231,18 @@
                 <!-- 悬浮控件。。结束-->
             </LinearLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager_person_view_pager"
+            <LinearLayout
+                android:id="@+id/vpLinearLayout"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="800dp">
+                android:layout_height="0dp">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager_person_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            </android.support.v4.view.ViewPager>
+                </android.support.v4.view.ViewPager>
+            </LinearLayout>
 
         </LinearLayout>
     </com.me.firstapp.view.HoveringScrollview>

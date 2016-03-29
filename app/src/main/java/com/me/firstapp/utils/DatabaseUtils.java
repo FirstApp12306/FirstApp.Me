@@ -101,6 +101,8 @@ public class DatabaseUtils {
                 user.user_sex = cursor.getString(cursor.getColumnIndex("sex"));
                 user.user_signature = cursor.getString(cursor.getColumnIndex("signature"));
                 user.sts = cursor.getString(cursor.getColumnIndex("sts"));
+                user.follow = cursor.getString(cursor.getColumnIndex("follow"));
+                user.fans = cursor.getString(cursor.getColumnIndex("fans"));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -129,6 +131,8 @@ public class DatabaseUtils {
                 user.user_sex = cursor.getString(cursor.getColumnIndex("sex"));
                 user.user_signature = cursor.getString(cursor.getColumnIndex("signature"));
                 user.sts = cursor.getString(cursor.getColumnIndex("sts"));
+                user.follow = cursor.getString(cursor.getColumnIndex("follow"));
+                user.fans = cursor.getString(cursor.getColumnIndex("fans"));
             }
         }catch (Exception e){
             e.printStackTrace();
