@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.me.firstapp.R;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.view.RoundProgressBar;
 import com.me.firstapp.zoom.PhotoView;
@@ -60,14 +61,14 @@ public class ScanImageActivity extends BaseActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.activity_scan_image_btn_save :
                 RequestParams params = new RequestParams(imageUrl);
-                String path = Environment.getExternalStorageDirectory()+"/FirstApp/pictures/NoteImages/"+imageUrl.substring(24, imageUrl.length())+".jpg";
+                final String path = ImageUtils.DOWNLOAD_IMG_DIR + System.currentTimeMillis() + ".jpeg";
                 LogUtils.d("path", path);
                 params.setSaveFilePath(path);
                 x.http().get(params, new Callback.ProgressCallback<File>() {
                     @Override
                     public void onSuccess(File result) {
                         LogUtils.d("result", result.getPath());
-                        Toast.makeText(ScanImageActivity.this, "已保存至/FirstApp/pictures/NoteImages/", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScanImageActivity.this, "已保存至"+path, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

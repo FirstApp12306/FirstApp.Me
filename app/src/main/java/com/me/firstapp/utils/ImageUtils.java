@@ -3,6 +3,7 @@ package com.me.firstapp.utils;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,8 +23,9 @@ import java.util.ArrayList;
  * 描述:
  */
 public class ImageUtils {
-    public static final String NOTE_IMG_DIR = "sdcard/FirstApp/pictures/";
-    public static final String AVATAR_IMG_DIR = "sdcard/FirstApp/avatars/";
+    public static final String NOTE_IMG_DIR = "sdcard/FirstApp/pictures/noteImages/";
+    public static final String AVATAR_IMG_DIR = "sdcard/FirstApp/pictures/avatars/";
+    public static final String DOWNLOAD_IMG_DIR = "sdcard/FirstApp/pictures/noteImages/download/";
     public static final int MAX_PIC_NUM = 1;// 发布话题时的选中的图片的最大数量
     public static int max = 0;
     public static ArrayList<ImageItem> tempSelectedImg = new ArrayList(); // 选择的图片的临时列表
@@ -38,7 +40,7 @@ public class ImageUtils {
             if (!fileDir.exists()) {
                 fileDir.mkdirs();
             }
-            file = new File(dir, System.currentTimeMillis() + ".jpg");
+            file = new File(dir, System.currentTimeMillis() + ".jpeg");
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
@@ -51,5 +53,22 @@ public class ImageUtils {
             Toast.makeText(activity, "暂无外部存储", Toast.LENGTH_SHORT).show();
         }
         return file;
+    }
+
+    //截图
+    public static void cropImageUri(Activity activity,Uri uri, int outputX, int outputY, int requestCode){
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", outputX);
+        intent.putExtra("outputY", outputY);
+        intent.putExtra("scale", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra("return-data", false);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true); // no face detection
+        activity.startActivityForResult(intent, requestCode);
     }
 }

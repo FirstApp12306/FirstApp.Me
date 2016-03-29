@@ -227,6 +227,8 @@ public class CompleteSignUpActivity extends BaseActivity {
         cv.put("points", user.user_points);
         cv.put("sts", user.sts);
         cv.put("login_sts", "01");
+        cv.put("follow", "0");
+        cv.put("fans", "0");
         cv.put("city", user.user_city);
         new DatabaseUtils(this).insert("user", cv);
     }

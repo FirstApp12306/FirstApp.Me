@@ -70,6 +70,8 @@
         <activity android:name=".activity.ScanImageActivity"/>
         <activity android:name=".activity.notices.NoticeFansActivity"/>
         <activity android:name=".activity.profile.ProfileActivity"/>
+        <activity android:name=".activity.profile.AlterNameActivity"/>
+        <activity android:name=".activity.profile.AlterSexActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity

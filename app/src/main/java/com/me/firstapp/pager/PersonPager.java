@@ -28,6 +28,7 @@ import com.me.firstapp.R;
 import com.me.firstapp.activity.LoginActivity;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.SignUpActivity;
+import com.me.firstapp.activity.profile.ProfileActivity;
 import com.me.firstapp.adapter.FindPagerListAdapter;
 import com.me.firstapp.adapter.FirstPagerListAdapter;
 import com.me.firstapp.adapter.PersonPagerViewAdapter;
@@ -92,6 +93,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
     private TextView tvUserFans;
     private Button btnFav;
     private TextView tvSignature;
+    private Button btnEdit;
 
 
     private ArrayList<View> views = new ArrayList<>();
@@ -126,6 +128,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         if (isLogin){
             view = View.inflate(mActivity, R.layout.pager_person, null);
             init(view);
+            setClick();
 
             //现在本地获取，再在服务器更新最新数据
             if (!TextUtils.isEmpty(userID)){
@@ -255,6 +258,29 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         tvUserFans = (TextView) view.findViewById(R.id.person_pager_fans);
         btnFav = (Button) view.findViewById(R.id.person_pager_btn_favourite);
         tvSignature = (TextView) view.findViewById(R.id.person_pager_sign);
+        btnEdit = (Button) view.findViewById(R.id.person_pager_btn_edit_data);
+    }
+
+    private void setClick(){
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.person_pager_btn_favourite :
+                        break;
+                    case R.id.person_pager_btn_edit_data :
+                        Intent intent = new Intent(mActivity, ProfileActivity.class);
+                        intent.putExtra("user_id", userID);
+                        mActivity.startActivity(intent);
+                        break;
+                    case R.id.pager_base_btn_setting :
+                        break;
+                }
+            }
+        };
+        btnFav.setOnClickListener(listener);
+        btnEdit.setOnClickListener(listener);
+        btnSetting.setOnClickListener(listener);
     }
 
     private void setUserInfo(User mUser){

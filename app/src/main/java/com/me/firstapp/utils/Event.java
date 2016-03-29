@@ -35,6 +35,44 @@ public class Event {
     }
 
     /**
+     * 完成头像图片选择的事件
+     */
+    public static class CompleteAvatarSelectEvent{
+
+    }
+
+    /**
+     * 完成用户名修改事件
+     */
+    public static class CompleteAlterNameEvent{
+
+        private String name;
+
+        public CompleteAlterNameEvent(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
+     * 完成用户性别修改事件
+     */
+    public static class CompleteAlterSexEvent{
+        private String sex;
+
+        public CompleteAlterSexEvent(String sex) {
+            this.sex = sex;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+    }
+
+    /**
      * 新评论事件
      */
     public static class NewCommentEvent{

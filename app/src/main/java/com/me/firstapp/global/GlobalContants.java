@@ -16,6 +16,7 @@ public class GlobalContants {
     // public static final String APP_ID = "ee252ba63500463cb59edea481b54291";
     //主url
     public static final String SERVER_URL = "http://192.168.191.1:8080/fundSys/";
+    public static final String FILE_URL = "http://file.firstapp.me/";
     //服务器用户登录接口
     public static final String SERVER_LOGIN_URL = SERVER_URL + "automake/controller/system/login/LoginAction.do";
     //客户端用户注册接口
@@ -58,4 +59,10 @@ public class GlobalContants {
     public static final String MY_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/MyTopicsListController";
     //客户端获取我的帖子数据接口
     public static final String MY_NOTES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/MyNotesListController";
+    //客户端更新用户头像接口
+    public static final String UPDATE_AVATAR_URL = SERVER_URL + "/automake/controller/firstapp/UpdateAvatarController";
+    //客户端更新用户名接口
+    public static final String UPDATE_USER_NAME_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserNameController";
+    //客户端更新用户性别接口
+    public static final String UPDATE_USER_SEX_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserSexController";
 }

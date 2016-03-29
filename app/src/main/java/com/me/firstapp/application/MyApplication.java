@@ -25,6 +25,7 @@ import cn.smssdk.SMSSDK;
 public class MyApplication extends Application {
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 1;
+    public static final int CROP_BIG_PICTURE = 2;
     public static final String FIND_TOPICS_REFRESH_FLAG = "FIND_TOPICS_REFRESH_FLAG";//刷新发现话题页面的标志
     public static final String NEW_TOPICS_REFRESH_FLAG = "NEW_TOPICS_REFRESH_FLAG";//刷新最新话题页面的标志
     public static final String FIRST_PAGER_REFRESH_FLAG = "FIRST_PAGER_REFRESH_FLAG";//首页刷新标志

@@ -77,9 +77,7 @@ public class PhoneAlbumActivity extends BaseActivity {
             gridImageAdapter = new AlbumGridViewAdapter(this, contentList.get(position).imageList);
             mGridView.setAdapter(gridImageAdapter);
             doOnItemClick(contentList.get(position).imageList);
-        }
-
-        if("SendNoteActivity".equals(activityName)){
+        }else{
             ArrayList<ImageItem> imageItemList = new ArrayList();
             for (int i = 0; i < contentList.size(); i++) {
                 imageItemList.addAll(contentList.get(i).imageList);
@@ -171,6 +169,9 @@ public class PhoneAlbumActivity extends BaseActivity {
                         break;
                     case R.id.activity_phone_album_btn_ok :
                         EventBus.getDefault().post(new Event.CompleteNoteAddimageEvent());
+                        if ("ProfileActivity".equals(activityName)){
+                            EventBus.getDefault().post(new Event.CompleteAvatarSelectEvent());
+                        }
                         finish();
                         break;
 
