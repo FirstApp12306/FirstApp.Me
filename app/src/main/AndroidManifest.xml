@@ -27,6 +27,13 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
@@ -72,6 +79,9 @@
         <activity android:name=".activity.profile.ProfileActivity"/>
         <activity android:name=".activity.profile.AlterNameActivity"/>
         <activity android:name=".activity.profile.AlterSexActivity"/>
+        <activity android:name=".activity.profile.AlterSignatureActivity"/>
+        <activity android:name=".activity.profile.AlterPsdActivity"/>
+        <activity android:name=".activity.profile.AlterCityActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity
@@ -172,6 +182,16 @@
             android:name="JPUSH_APPKEY"
             android:value="a34fc96a898feba55ffecb7a" />
         <!-- Jpush SDK 核心功能结束-->
+
+        <!-- 百度定位开始-->
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote">
+        </service>
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="OhlAOYd7Qrbr5vGe9o2nSikMI0wWjRNh" />
+        <!-- 百度定位结束-->
     </application>
 
 </manifest>

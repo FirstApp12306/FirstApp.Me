@@ -105,6 +105,14 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        showPopUpWindow();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         btnBack.setOnClickListener(this);
         llAvatar.setOnClickListener(this);
         llName.setOnClickListener(this);
@@ -113,7 +121,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         llSignature.setOnClickListener(this);
         llPwd.setOnClickListener(this);
         llLogout.setOnClickListener(this);
-        showPopUpWindow();
 
         databaseUtils = new DatabaseUtils(this);
         userID = getIntent().getStringExtra("user_id");
@@ -121,22 +128,21 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         user = databaseUtils.queryUser(userID);
         LogUtils.d("user", user.toString());
 
-        if (user != null){
-            x.image().bind(ivAvatar, user.user_avatar);
-            tvUserName.setText(user.user_name);
-            if ("01".equals(user.user_sex)){
-                tvUserSex.setText("男");
-            }
-            if ("02".equals(user.user_sex)){
-                tvUserSex.setText("女");
-            }
-            if ("03".equals(user.user_sex)){
-                tvUserSex.setText("未知");
-            }
-            tvUserCity.setText(user.user_city);
-            tvSignature.setText(user.user_signature);
-        }
-        EventBus.getDefault().register(this);
+//        if (user != null){
+//            x.image().bind(ivAvatar, user.user_avatar);
+//            tvUserName.setText(user.user_name);
+//            if ("01".equals(user.user_sex)){
+//                tvUserSex.setText("男");
+//            }
+//            if ("02".equals(user.user_sex)){
+//                tvUserSex.setText("女");
+//            }
+//            if ("03".equals(user.user_sex)){
+//                tvUserSex.setText("未知");
+//            }
+//            tvUserCity.setText(user.user_city);
+//            tvSignature.setText(user.user_signature);
+//        }
     }
 
     @Override
@@ -168,10 +174,20 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent2);
                 break;
             case R.id.activity_profile_ll_city :
+                Intent intent5 = new Intent(this, AlterCityActivity.class);
+                intent5.putExtra("user_id", userID);
+                startActivity(intent5);
                 break;
             case R.id.activity_profile_ll_signature :
+                Intent intent3 = new Intent(this, AlterSignatureActivity.class);
+                intent3.putExtra("user_id", userID);
+                intent3.putExtra("signature", tvSignature.getText().toString());
+                startActivity(intent3);
                 break;
             case R.id.activity_profile_ll_pwd :
+                Intent intent4 = new Intent(this, AlterPsdActivity.class);
+                intent4.putExtra("user_id", userID);
+                startActivity(intent4);
                 break;
             case R.id.activity_profile_ll_logout :
                 break;
@@ -248,6 +264,31 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void run() {
                 tvUserName.setText(name);
+            }
+        });
+    }
+
+    //完成用户签名修改事件消息订阅
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.CompleteAlterSignatureEvent event) {
+        final String signature = event.getSignature();
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvSignature.setText(signature);
+            }
+        });
+    }
+
+    //完成用户城市修改事件消息订阅
+    @Subscribe(threadMode = ThreadMode.PostThread)
+    public void onUserEvent(Event.CompleteAlterCityEvent event) {
+        final String city = event.getCity();
+        LogUtils.d("citycitycitycity", city);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvUserCity.setText(city);
             }
         });
     }

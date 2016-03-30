@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.receiver.MsgNotificationClickEventReceiver;
+import com.me.firstapp.service.LocationService;
 import com.me.firstapp.utils.PrefUtils;
 
 import org.xutils.BuildConfig;
@@ -31,6 +32,8 @@ public class MyApplication extends Application {
     public static final String FIRST_PAGER_REFRESH_FLAG = "FIRST_PAGER_REFRESH_FLAG";//首页刷新标志
     public static final String FIND_PAGER_REFRESH_FLAG = "FIND_PAGER_REFRESH_FLAG";//精选页刷新标志
 
+    public LocationService locationService;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,7 +48,9 @@ public class MyApplication extends Application {
         //JMessage初始化
         JMessageClient.init(getApplicationContext());
         JPushInterface.setDebugMode(true);
-
         new MsgNotificationClickEventReceiver(this);
+
+        //百度定位初始化
+        locationService = new LocationService(getApplicationContext());
     }
 }

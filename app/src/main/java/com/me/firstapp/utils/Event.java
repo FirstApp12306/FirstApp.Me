@@ -58,6 +58,36 @@ public class Event {
     }
 
     /**
+     * 完成用户城市修改事件
+     */
+    public static class CompleteAlterCityEvent{
+        private String city;
+
+        public CompleteAlterCityEvent(String city) {
+            this.city = city;
+        }
+
+        public String getCity() {
+            return city;
+        }
+    }
+
+    /**
+     * 完成用户签名修改事件
+     */
+    public static class CompleteAlterSignatureEvent{
+        private String signature;
+
+        public CompleteAlterSignatureEvent(String signature) {
+            this.signature = signature;
+        }
+
+        public String getSignature() {
+            return signature;
+        }
+    }
+
+    /**
      * 完成用户性别修改事件
      */
     public static class CompleteAlterSexEvent{

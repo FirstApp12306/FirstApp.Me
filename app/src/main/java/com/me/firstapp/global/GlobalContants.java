@@ -65,4 +65,8 @@ public class GlobalContants {
     public static final String UPDATE_USER_NAME_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserNameController";
     //客户端更新用户性别接口
     public static final String UPDATE_USER_SEX_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserSexController";
+    //客户端更新用户签名接口
+    public static final String UPDATE_USER_SIGNATURE_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserSignatureController";
+    //客户端更新用户城市接口
+    public static final String UPDATE_USER_CITY_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserCityController";
 }
