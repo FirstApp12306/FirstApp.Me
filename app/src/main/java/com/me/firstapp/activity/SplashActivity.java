@@ -46,11 +46,17 @@ public class SplashActivity extends BaseActivity {
     private void jumpNextPage() {
         // 判断之前有没有显示过新手引导
         boolean userGuide = PrefUtils.getBoolean(this, "is_user_guide_showed", false);
+        boolean loginFlag = PrefUtils.getBoolean(this, "login_flag", false);
         if (!userGuide) {
             // 跳转到新手引导页
             startActivity(new Intent(SplashActivity.this, GuideActivity.class));
         } else {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            if (loginFlag == true){
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            }else{
+                startActivity(new Intent(SplashActivity.this, ToLoginOrSingupActivity.class));
+            }
+
         }
         finish();
     }

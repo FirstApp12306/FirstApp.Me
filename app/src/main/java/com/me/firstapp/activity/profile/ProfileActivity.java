@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.BaseActivity;
 import com.me.firstapp.activity.PhoneAlbumActivity;
+import com.me.firstapp.activity.ToLoginOrSingupActivity;
 import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.entity.images.ImageItem;
@@ -190,6 +191,8 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent4);
                 break;
             case R.id.activity_profile_ll_logout :
+                Intent intent6 = new Intent(this, ToLoginOrSingupActivity.class);
+                startActivity(intent6);
                 break;
         }
     }

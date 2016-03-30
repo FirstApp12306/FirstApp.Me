@@ -52,8 +52,13 @@ public class GuideActivity extends  BaseActivity {
             public void onClick(View v) {
                 // 更新sp, 表示已经展示了新手引导
                 PrefUtils.setBoolean(GuideActivity.this, "is_user_guide_showed", true);
-                // 跳转主页面
-                startActivity(new Intent(GuideActivity.this, MainActivity.class));
+                boolean loginFlag = PrefUtils.getBoolean(GuideActivity.this, "login_flag", false);
+                if (loginFlag == true){
+                    // 跳转主页面
+                    startActivity(new Intent(GuideActivity.this, MainActivity.class));
+                }else{
+                    startActivity(new Intent(GuideActivity.this, ToLoginOrSingupActivity.class));
+                }
                 finish();
             }
         });

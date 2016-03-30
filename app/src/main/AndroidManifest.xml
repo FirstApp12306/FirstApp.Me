@@ -82,6 +82,7 @@
         <activity android:name=".activity.profile.AlterSignatureActivity"/>
         <activity android:name=".activity.profile.AlterPsdActivity"/>
         <activity android:name=".activity.profile.AlterCityActivity"/>
+        <activity android:name=".activity.ToLoginOrSingupActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity
