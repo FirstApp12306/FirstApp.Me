@@ -95,10 +95,6 @@ public class AlterPsdActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.validateUserName(s.toString())) {
-                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
-                    btnOK.setClickable(false);
-                }
                 if (android.text.TextUtils.isEmpty(etNewPsd.getText().toString()) || android.text.TextUtils.isEmpty(etSurePsd.getText().toString())) {
                     btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                     btnOK.setClickable(false);
@@ -129,10 +125,6 @@ public class AlterPsdActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.validateUserName(s.toString())) {
-                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
-                    btnOK.setClickable(false);
-                }
                 if (android.text.TextUtils.isEmpty(etSurePsd.getText().toString())) {
                     btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                     btnOK.setClickable(false);

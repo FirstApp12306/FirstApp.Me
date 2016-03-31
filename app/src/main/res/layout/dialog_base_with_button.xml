@@ -33,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textColor="#435356"
+            android:textSize="16sp"
             android:background="@drawable/dialog_bottom_left_btn"
             />
 
@@ -42,6 +43,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textColor="#435356"
+            android:textSize="16sp"
             android:background="@drawable/dialog_bottom_right_btn"
             />
 

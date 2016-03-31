@@ -34,6 +34,7 @@ import com.me.firstapp.utils.DialogUtils;
 import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.CircleImageView;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
@@ -49,6 +50,7 @@ import org.xutils.x;
 
 import java.io.File;
 
+import cn.jpush.im.android.api.JMessageClient;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -191,10 +193,37 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent4);
                 break;
             case R.id.activity_profile_ll_logout :
-                Intent intent6 = new Intent(this, ToLoginOrSingupActivity.class);
-                startActivity(intent6);
+                showLogoutTipDialog();
                 break;
         }
+    }
+
+    private Dialog mDialog;
+    private void showLogoutTipDialog(){
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.dialog_base_with_button_cancel_btn:
+                        mDialog.dismiss();
+                        break;
+                    case R.id.dialog_base_with_button_commit_btn:
+                        mDialog.dismiss();
+                        PrefUtils.setBoolean(ProfileActivity.this, "login_flag", false);
+                        PrefUtils.setString(ProfileActivity.this, "loginUser", null);
+                        JMessageClient.logout();
+
+                        activityManager.popAllActivity();
+
+                        Intent intent6 = new Intent(ProfileActivity.this, ToLoginOrSingupActivity.class);
+                        startActivity(intent6);
+
+                        break;
+                }
+            }
+        };
+        mDialog = DialogUtils.createCommonDialog(this, listener, "您确定退出当前账户吗？");
+        mDialog.show();
     }
 
     private void showPopUpWindow() {

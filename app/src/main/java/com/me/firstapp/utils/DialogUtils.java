@@ -31,12 +31,12 @@ public class DialogUtils {
     }
 
     /**
-     * 重新发送消息的对话框
+     * 普通对话框
      * @param context
      * @param listener
      * @return
      */
-    public static Dialog createResendDialog(Context context, View.OnClickListener listener){
+    public static Dialog createCommonDialog(Context context, View.OnClickListener listener, String text){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = View.inflate(context, R.layout.dialog_base_with_button, null);
         builder.setView(view);
@@ -44,7 +44,7 @@ public class DialogUtils {
         Button resendBtn = (Button) view.findViewById(R.id.dialog_base_with_button_commit_btn);
         Dialog dialog = builder.create();
         TextView title = (TextView) view.findViewById(R.id.dialog_base_with_button_title);
-        title.setText("是否重新发送？");
+        title.setText(text);
         cancelBtn.setText("否");
         resendBtn.setText("是");
         cancelBtn.setOnClickListener(listener);

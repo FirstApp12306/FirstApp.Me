@@ -273,7 +273,7 @@ public class ChatListAdapter extends BaseAdapter {
                 }
             }
         };
-        mDialog = DialogUtils.createResendDialog(context, listener);
+        mDialog = DialogUtils.createCommonDialog(context, listener, "是否重新发送？");
         mDialog.show();
     }
 

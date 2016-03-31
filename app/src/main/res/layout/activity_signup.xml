@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#3f80dc" >
+        android:background="#ffffff" >
 
         <ImageButton
             android:id="@+id/activity_regest_returnback"
@@ -21,50 +21,132 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="注册"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textColor="#435356"
+            android:textSize="18sp" />
 
+        <Button
+            android:id="@+id/activity_signup_btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:textColor="#435356"
+            android:background="@drawable/btn_returnback_bg"
+            android:text="下一步"
+            android:clickable="false"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="#d9d9d9"
+            android:layout_alignParentBottom="true"
+            />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:padding="20dp">
+        android:gravity="center">
 
-        <EditText
-            android:id="@+id/activity_signup_phone"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/input_signup_bg_selector"
-            android:drawableLeft="@drawable/signup_login_account_selector"
-            android:inputType="phone"
-            android:hint="输入手机号"
-            android:singleLine="true"
-            android:padding="5dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_height="0.8dp"
+            android:background="#d9d9d9"
+            android:layout_marginTop="20dp"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/activity_signup_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="输入手机号"
+                android:singleLine="true"
+                android:background="#ffffff"
+                android:maxLength="11"
+                android:textColor="#435356"
+                android:textSize="16sp"
+                android:padding="15dp"/>
+
+            <ImageButton
+                android:id="@+id/activity_signup_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@null"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/search_clear_normal"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="#d9d9d9" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_marginTop="15dp">
-            <EditText
-                android:id="@+id/activity_signup_verify_code"
+
+            <View
+                android:layout_width="0.8dp"
+                android:layout_height="match_parent"
+                android:background="#d9d9d9" />
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:inputType="number"
-                android:layout_weight="1"
-                android:background="@drawable/input_signup_bg_selector"
-                android:hint="输入验证码"
-                android:padding="5dp"
-                android:singleLine="true" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#d9d9d9" />
+
+                <EditText
+                    android:id="@+id/activity_signup_verify_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="输入验证码"
+                    android:singleLine="true"
+                    android:background="#ffffff"
+                    android:textColor="#435356"
+                    android:textSize="16sp"
+                    android:padding="15dp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#d9d9d9" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.8dp"
+                android:layout_height="match_parent"
+                android:background="#d9d9d9" />
+
             <Button
                 android:id="@+id/activity_signup_btn_getcode"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:padding="5dp"
                 android:background="@drawable/btn_default_bg"
                 android:enabled="true"
@@ -73,23 +155,6 @@
                 android:textColor="#ffffff" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/activity_signup_btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/btn_default_bg"
-            android:enabled="true"
-            android:text="提交"
-            android:textSize="15sp"
-            android:textColor="#ffffff"
-            android:layout_marginTop="15dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="不用担心，我们不会公开您的手机号码。注册即表明您同意我们的《服务协议》"/>
 
     </LinearLayout>
 

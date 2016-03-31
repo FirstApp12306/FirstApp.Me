@@ -108,12 +108,6 @@ public class AlterNameActivity extends BaseActivity implements View.OnClickListe
                 if (!TextUtils.validateUserName(s.toString())){
                     btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                     btnOK.setClickable(false);
-
-                    if (TextUtils.getStrLength(s.toString()) > 8){
-                        btnOK.setTextColor(Color.parseColor("#bfbfbf"));
-                        btnOK.setClickable(false);
-                        Toast.makeText(AlterNameActivity.this, "用户名过长", Toast.LENGTH_SHORT).show();
-                    }
                 }
             }
         });

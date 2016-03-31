@@ -18,7 +18,7 @@ import cn.jpush.im.android.api.JMessageClient;
  * QQ: 1046566144
  */
 public class BaseActivity extends AppCompatActivity {
-    private ActivityManager activityManager;
+    protected ActivityManager activityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

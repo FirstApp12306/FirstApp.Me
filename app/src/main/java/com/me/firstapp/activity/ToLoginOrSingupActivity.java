@@ -133,12 +133,10 @@ public class ToLoginOrSingupActivity extends BaseActivity implements View.OnClic
             case R.id.activity_to_login_or_signup_btn_login :
                 Intent intent1 = new Intent(this, LoginActivity.class);
                 startActivity(intent1);
-                finish();
                 break;
             case R.id.activity_to_login_or_signup_btn_signup :
                 Intent intent2 = new Intent(this, SignUpActivity.class);
                 startActivity(intent2);
-                finish();
                 break;
         }
     }

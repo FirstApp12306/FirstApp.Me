@@ -2,11 +2,15 @@ package com.me.firstapp.activity;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -45,7 +49,7 @@ import de.greenrobot.event.EventBus;
  * QQ: 1046566144
  */
 @ContentView(R.layout.activity_complete_signup)
-public class CompleteSignUpActivity extends BaseActivity {
+public class CompleteSignUpActivity extends BaseActivity implements View.OnClickListener {
 
     @ViewInject(R.id.activity_complete_regest_nickname)
     private EditText nameEditText;
@@ -54,57 +58,137 @@ public class CompleteSignUpActivity extends BaseActivity {
     @ViewInject(R.id.activity_complete_regest_sure_psd)
     private EditText sureEdiText;
     @ViewInject(R.id.activity_complete_regest_btn_submit)
-    private Button btnCommit;
+    private Button btnOK;
+    @ViewInject(R.id.activity_regest_returnback)
+    private ImageButton btnBack;
+    @ViewInject(R.id.activity_complete_regest_name_clear)
+    private ImageButton btnNameClear;
+    @ViewInject(R.id.activity_complete_regest_new_psd_clear)
+    private ImageButton btnNewPsdClear;
+    @ViewInject(R.id.activity_complete_regest_sure_psd_clear)
+    private ImageButton btnSurePsdClear;
+
     private String phone;
     private Dialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         phone = getIntent().getStringExtra("phone");
-
-        btnCommit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                judgeEdit();
-            }
-        });
-
 
     }
 
-    /**
-     * 判断输入的内容
-     */
-    private void judgeEdit(){
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-        if (TextUtils.isEmpty(phone)){
-            Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+        btnOK.setClickable(false);
 
-        if (TextUtils.isEmpty(nameEditText.getText().toString().trim())){
-            Toast.makeText(this, "昵称不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        btnOK.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        btnNameClear.setOnClickListener(this);
+        btnNewPsdClear.setOnClickListener(this);
+        btnSurePsdClear.setOnClickListener(this);
 
-        if (TextUtils.isEmpty(psdEditText.getText().toString())){
-            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        nameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        if (TextUtils.isEmpty(sureEdiText.getText().toString())){
-            Toast.makeText(this, "确认密码不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            }
 
-        if (!sureEdiText.getText().toString().equals(psdEditText.getText().toString())){
-            Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        sendDataToServer();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0){
+                    btnNameClear.setVisibility(View.GONE);
+                }else{
+                    btnNameClear.setVisibility(View.VISIBLE);
+                }
 
+                if (s.length()<2){
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                }else{
+                    btnOK.setTextColor(Color.parseColor("#435356"));
+                    btnOK.setClickable(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!com.me.firstapp.utils.TextUtils.validateUserName(s.toString())){
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                }
+                if (android.text.TextUtils.isEmpty(psdEditText.getText().toString())) {
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                }
+            }
+        });
+        psdEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0) {
+                    btnNewPsdClear.setVisibility(View.GONE);
+                } else {
+                    btnNewPsdClear.setVisibility(View.VISIBLE);
+                }
+                if (s.length() < 6) {
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                } else {
+                    btnOK.setTextColor(Color.parseColor("#435356"));
+                    btnOK.setClickable(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (android.text.TextUtils.isEmpty(sureEdiText.getText().toString())) {
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                }
+            }
+        });
+        sureEdiText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0) {
+                    btnSurePsdClear.setVisibility(View.GONE);
+                } else {
+                    btnSurePsdClear.setVisibility(View.VISIBLE);
+                }
+                if (s.length() < 6) {
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                } else {
+                    btnOK.setTextColor(Color.parseColor("#435356"));
+                    btnOK.setClickable(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!sureEdiText.getText().toString().equals(psdEditText.getText().toString())){
+                    btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                    btnOK.setClickable(false);
+                }else {
+                    btnOK.setTextColor(Color.parseColor("#435356"));
+                    btnOK.setClickable(true);
+                }
+            }
+        });
     }
 
     private void sendDataToServer(){
@@ -231,5 +315,35 @@ public class CompleteSignUpActivity extends BaseActivity {
         cv.put("fans", "0");
         cv.put("city", user.user_city);
         new DatabaseUtils(this).insert("user", cv);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_complete_regest_btn_submit :
+                sendDataToServer();
+                break;
+            case R.id.activity_regest_returnback :
+                finish();
+                break;
+            case R.id.activity_complete_regest_name_clear :
+                nameEditText.setText("");
+                btnNameClear.setVisibility(View.GONE);
+                btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                btnOK.setClickable(false);
+                break;
+            case R.id.activity_complete_regest_new_psd_clear :
+                psdEditText.setText("");
+                btnNewPsdClear.setVisibility(View.GONE);
+                btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                btnOK.setClickable(false);
+                break;
+            case R.id.activity_complete_regest_sure_psd_clear :
+                sureEdiText.setText("");
+                btnSurePsdClear.setVisibility(View.GONE);
+                btnOK.setTextColor(Color.parseColor("#bfbfbf"));
+                btnOK.setClickable(false);
+                break;
+        }
     }
 }
