@@ -21,6 +21,7 @@ public class User {
     public String sts;
     public String fans;
     public String follow;
+    public String fans_flag;
 
 
     @Override

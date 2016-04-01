@@ -25,6 +25,7 @@ import com.me.firstapp.view.CircleImageView;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -189,7 +190,10 @@ public class ChatListAdapter extends BaseAdapter {
 
         if(msg.getDirect().equals(MessageDirect.send)){
             showTime(holder.sendTime, msg, position);
-            showAvatar(holder.sendAvatar, msg);
+//            showAvatar(holder.sendAvatar, msg);
+            String userID = PrefUtils.getString(context, "loginUser", null);
+            User user = new DatabaseUtils(context).queryUser(userID);
+            x.image().bind(holder.sendAvatar, user.user_avatar);
             String content = ((TextContent) msg.getContent()).getText();
             holder.sendMsg.setText(content);
             handleTextMsg(msg, holder);
@@ -342,12 +346,9 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     private void showAvatar(ImageView avatarView,Message msg){
-        String avatar = msg.getFromUser().getAvatar();
-        if (TextUtils.isEmpty(avatar)){
-            avatarView.setImageResource(R.drawable.person_avatar_default_round);
-        }else{
-            x.image().bind(avatarView, avatar);
-        }
+        String avatarStr = msg.getFromUser().getAvatar();
+        File avatar = msg.getFromUser().getAvatarFile();
+        x.image().bind(avatarView, avatar.getPath());
     }
 
     private class ViewHolder {

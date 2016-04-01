@@ -1,10 +1,9 @@
 package com.me.firstapp.pager;
 
-import android.graphics.Color;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.me.firstapp.R;
@@ -38,6 +37,8 @@ import java.util.ArrayList;
 public class FirstPager extends  BasePager {
 
     private RefreshListView mListView;
+    private ImageView tipImageView;
+    private ProgressBar mProgressBar;
     private String loginUserID;
     private long page = 1;//页数，默认为1
     private FirstPagerListAdapter  adapter;
@@ -62,6 +63,8 @@ public class FirstPager extends  BasePager {
         LogUtils.d("111", "初始化First页面数据。。。。。。。");
         View view = View.inflate(mActivity, R.layout.pager_friend_news, null);
         mListView = (RefreshListView) view.findViewById(R.id.pager_friend_news_listview);
+        tipImageView = (ImageView) view.findViewById(R.id.pager_friend_news_nothing_tip);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.pager_friend_news_pb);
         mListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -83,6 +86,7 @@ public class FirstPager extends  BasePager {
         }
         boolean refreshFlag = PrefUtils.getBoolean(mActivity, MyApplication.FIRST_PAGER_REFRESH_FLAG, false);
         if (refreshFlag == false){
+            mProgressBar.setVisibility(View.VISIBLE);
             getDataFromServer(false);
         }
 
@@ -117,7 +121,7 @@ public class FirstPager extends  BasePager {
 
             @Override
             public void onFinished() {
-
+                mProgressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -163,8 +167,16 @@ public class FirstPager extends  BasePager {
 
                 if (!isMore){
                     if(notes != null && users != null && topics != null){
-                        adapter = new FirstPagerListAdapter(mActivity, notes, users, topics);
-                        mListView.setAdapter(adapter);
+                        if (!notes.isEmpty() && !users.isEmpty() && !topics.isEmpty()){
+                            mListView.setVisibility(View.VISIBLE);
+                            tipImageView.setVisibility(View.GONE);
+                            adapter = new FirstPagerListAdapter(mActivity, notes, users, topics);
+                            mListView.setAdapter(adapter);
+                        }else{
+                            mListView.setVisibility(View.GONE);
+                            tipImageView.setVisibility(View.VISIBLE);
+                        }
+
                     }
                 }else{
                     if (notes != null && users != null && topics != null){

@@ -109,6 +109,7 @@ public class TopicsFindPager extends TopicsBasePager {
     private void handleItemClick(String topic_key){
         RequestParams params = new RequestParams(GlobalContants.TOPIC_BROWSE_COUNT_URL);
         params.addQueryStringParameter("topic_key", topic_key);
+
         x.http().post(params, new Callback.CommonCallback<String>(){
 
             @Override
@@ -151,7 +152,6 @@ public class TopicsFindPager extends TopicsBasePager {
     }
 
     private void getDataFromServer(final boolean isMore){
-        //下拉刷新和加载更多不设置缓存
         RequestParams params = new RequestParams(GlobalContants.FIND_TOPICS_LIST_URL);
         params.addQueryStringParameter("page", page + "");
         x.http().get(params, new Callback.CommonCallback<String>() {

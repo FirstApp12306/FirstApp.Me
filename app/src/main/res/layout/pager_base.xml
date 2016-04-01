@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:textColor="#435356"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:padding="10dp"
             android:background="@drawable/btn_returnback_bg"
             android:text="创建话题"/>
 

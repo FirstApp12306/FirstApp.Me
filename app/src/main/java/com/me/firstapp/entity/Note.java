@@ -17,6 +17,7 @@ public class Note {
     public String note_content;
     public String topic_key;
     public String image_key;
+    public String support_flag;
 
     @Override
     public String toString() {

@@ -2,13 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <ProgressBar
+        android:id="@+id/pager_friend_news_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/custom_progress"
+        android:visibility="gone" />
 
     <com.me.firstapp.view.RefreshListView
         android:id="@+id/pager_friend_news_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
     </com.me.firstapp.view.RefreshListView>
+
+    <ImageView
+        android:id="@+id/pager_friend_news_nothing_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/default_bg_sofa_friend_nothread"
+        android:visibility="gone"/>
 
 </LinearLayout>

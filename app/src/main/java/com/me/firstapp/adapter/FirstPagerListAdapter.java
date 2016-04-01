@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.NoteDetailActivity;
+import com.me.firstapp.activity.PersonInfoActivity;
 import com.me.firstapp.activity.ScanImageActivity;
 import com.me.firstapp.activity.TopicNoteActivity;
 import com.me.firstapp.entity.Note;
@@ -49,14 +49,14 @@ public class FirstPagerListAdapter extends BaseAdapter {
     private boolean loginFlag;
     private String loginUserID;
 
-    public FirstPagerListAdapter(Context context,ArrayList<Note> notes,ArrayList<User> users, ArrayList<Topic> topics) {
+    public FirstPagerListAdapter(Context context, ArrayList<Note> notes, ArrayList<User> users, ArrayList<Topic> topics) {
         this.context = context;
         this.mActivity = (Activity) context;
         this.notes = notes;
         this.users = users;
         this.topics = topics;
         loginFlag = PrefUtils.getBoolean(context, "login_flag", false);
-        loginUserID = PrefUtils.getString(context,"loginUser", null);
+        loginUserID = PrefUtils.getString(context, "loginUser", null);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class FirstPagerListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void doNotify(){
+    public void doNotify() {
         mActivity.runOnUiThread(new Runnable() {
 
             @Override
@@ -85,7 +85,7 @@ public class FirstPagerListAdapter extends BaseAdapter {
     }
 
     //加载更多
-    public void addMore( ArrayList<Note> notes, ArrayList<User> users, ArrayList<Topic> topics){
+    public void addMore(ArrayList<Note> notes, ArrayList<User> users, ArrayList<Topic> topics) {
         this.notes.addAll(notes);
         this.users.addAll(users);
         this.topics.addAll(topics);
@@ -93,10 +93,11 @@ public class FirstPagerListAdapter extends BaseAdapter {
     }
 
     //新增点赞
-    public void addSupport(Note note){
-        for (Note mNote : notes){
-            if (mNote.note_key.equals(note.note_key)){
+    public void addSupport(Note note) {
+        for (Note mNote : notes) {
+            if (mNote.note_key.equals(note.note_key)) {
                 mNote.note_agree_counts++;
+                mNote.support_flag = "true";
                 break;
             }
         }
@@ -120,7 +121,7 @@ public class FirstPagerListAdapter extends BaseAdapter {
             holder.btnAgree = (Button) convertView.findViewById(R.id.pager_friend_news_list_item_btn_support);
 
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
@@ -128,50 +129,48 @@ public class FirstPagerListAdapter extends BaseAdapter {
         final Note note = notes.get(position);
         final Topic topic = topics.get(position);
 
-        if ("#".equals(user.user_avatar) || TextUtils.isEmpty(user.user_avatar)){
-            holder.ivAvatar.setImageResource(R.drawable.person_avatar_default_round);
-        }else{
-            ImageOptions imageOptions = new ImageOptions.Builder()
-                    // 加载中或错误图片的ScaleType
-                    //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                    // 默认自动适应大小
-                    // .setSize(...)
-                    .setIgnoreGif(true)
-                            // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                            //.setUseMemCache(false)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-            x.image().bind(holder.ivAvatar, user.user_avatar, imageOptions);
-        }
-        if ("#".equals(note.image_key) || note.image_key == null){
-            holder.ivNoteImage.setVisibility(View.GONE);
-        }else{
-            holder.ivNoteImage.setVisibility(View.VISIBLE);
-            ImageOptions imageOptions = new ImageOptions.Builder()
-                    // 加载中或错误图片的ScaleType
-                    //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                    // 默认自动适应大小
-                    // .setSize(...)
-                    .setIgnoreGif(true)
-                            // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                            //.setUseMemCache(false)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-            x.image().bind(holder.ivNoteImage, note.image_key, imageOptions);
-        }
+        ImageOptions imageOptions1 = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .setFailureDrawableId(R.drawable.person_avatar_default_round)
+                .setLoadingDrawableId(R.drawable.person_avatar_default_round)
+                .build();
+        x.image().bind(holder.ivAvatar, user.user_avatar, imageOptions1);
+
+
+        holder.ivNoteImage.setVisibility(View.VISIBLE);
+        ImageOptions imageOptions2 = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .build();
+        x.image().bind(holder.ivNoteImage, note.image_key, imageOptions2);
+
 
         holder.tvTopicTitle.setText(topic.topic_title);
         holder.tvUserName.setText(user.user_name);
         holder.tvNoteContent.setText(note.note_content);
         holder.tvTime.setText(note.time_stamp);
-        holder.btnComment.setText(note.note_comment_counts+"");
-        holder.btnAgree.setText(note.note_agree_counts+"");
+        holder.btnComment.setText(note.note_comment_counts + "");
+        holder.btnAgree.setText(note.note_agree_counts + "");
 
-        final boolean agreeFlag = PrefUtils.getBoolean(context, "agree_flag_" + note.note_key, false);
-        LogUtils.d("agreeFlag", agreeFlag + "");
-        if (agreeFlag == true ){
+        LogUtils.d("supportFlag", note.support_flag);
+
+        if ("true".equals(note.support_flag)) {
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_post_like);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.btnAgree.setCompoundDrawables(null, null, drawable, null);
-        }else{
+        } else {
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_post_unlike);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.btnAgree.setCompoundDrawables(null, null, drawable, null);
@@ -180,23 +179,32 @@ public class FirstPagerListAdapter extends BaseAdapter {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.pager_friend_news_list_item_topic_title :
+                switch (v.getId()) {
+                    case R.id.pager_friend_news_list_item_topic_title:
                         Intent intent1 = new Intent(mActivity, TopicNoteActivity.class);
                         intent1.putExtra("topic_key", topic.topic_key);
                         intent1.putExtra("topic_title", topic.topic_title);
                         mActivity.startActivity(intent1);
                         break;
-                    case R.id.pager_friend_news_list_item_pop :
+                    case R.id.pager_friend_news_list_item_pop:
                         break;
-                    case R.id.pager_friend_news_list_item_avatar :
+                    case R.id.pager_friend_news_list_item_avatar:
+                        Intent intent3 = new Intent(context, PersonInfoActivity.class);
+                        intent3.putExtra("user_id", user.user_id);
+                        intent3.putExtra("user_name", user.user_name);
+                        intent3.putExtra("user_avatar", user.user_avatar);
+                        intent3.putExtra("user_city", user.user_city);
+                        intent3.putExtra("signature", user.user_signature);
+                        intent3.putExtra("user_level", user.user_level);
+                        intent3.putExtra("user_phone", user.user_phone);
+                        context.startActivity(intent3);
                         break;
-                    case R.id.pager_friend_news_list_item_note_image :
+                    case R.id.pager_friend_news_list_item_note_image:
                         Intent intent2 = new Intent(context, ScanImageActivity.class);
                         intent2.putExtra("image_url", note.image_key);
                         context.startActivity(intent2);
                         break;
-                    case R.id.pager_friend_news_list_item_btn_comment :
+                    case R.id.pager_friend_news_list_item_btn_comment:
                         Intent intent = new Intent(context, NoteDetailActivity.class);
                         intent.putExtra("topic_key", note.topic_key);
                         intent.putExtra("topic_title", topic.topic_title);
@@ -209,9 +217,8 @@ public class FirstPagerListAdapter extends BaseAdapter {
                         intent.putExtra("note_comment_counts", note.note_comment_counts);
                         context.startActivity(intent);
                         break;
-                    case R.id.pager_friend_news_list_item_btn_support :
-                        if (agreeFlag == false ){
-                            PrefUtils.setBoolean(context, "agree_flag_" + note.note_key, true);
+                    case R.id.pager_friend_news_list_item_btn_support:
+                        if (!"true".equals(note.support_flag)) {
                             addSupport(note);
                             sendSupportDataToServer(holder, note);
                         }
@@ -228,9 +235,9 @@ public class FirstPagerListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void sendSupportDataToServer(final ViewHolder holder, final Note note){
+    private void sendSupportDataToServer(final ViewHolder holder, final Note note) {
         RequestParams params = new RequestParams(GlobalContants.NOTE_SUPPORT_ADD_URL);
-        String userID = PrefUtils.getString(context,"loginUser", null);
+        String userID = PrefUtils.getString(context, "loginUser", null);
         params.addQueryStringParameter("user_id", userID);
         params.addQueryStringParameter("note_key", note.note_key);
         params.addQueryStringParameter("topic_key", note.topic_key);
@@ -259,7 +266,7 @@ public class FirstPagerListAdapter extends BaseAdapter {
         });
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         public ImageButton btnPop;
         public CircleImageView ivAvatar;
         public TextView tvTopicTitle;

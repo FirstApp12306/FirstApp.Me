@@ -23,6 +23,7 @@ import com.me.firstapp.manager.ActivityManager;
 import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.RefreshListView;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -186,6 +187,8 @@ public class TopicNoteActivity extends Activity {
         RequestParams params = new RequestParams(GlobalContants.NOTES_LIST_URL);
         params.addQueryStringParameter("page", page+"");
         params.addQueryStringParameter("topic_key", topicKey);
+        String userID = PrefUtils.getString(this, "loginUser", null);
+        params.addQueryStringParameter("user_id", userID);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override

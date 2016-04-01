@@ -14,8 +14,9 @@ public class GlobalContants {
     public static final String SERVER_USER_PASSWORD = "x5z1zoh9";
     //app编号
     // public static final String APP_ID = "ee252ba63500463cb59edea481b54291";
-    //主url
-    public static final String SERVER_URL = "http://192.168.191.1:8080/fundSys/";
+    //主url120.25.169.221
+//    public static final String SERVER_URL = "http://192.168.191.1:8080/fundSys/";
+    public static final String SERVER_URL = "http://120.25.169.221:8080/fundSys/";
     public static final String FILE_URL = "http://file.firstapp.me/";
     //服务器用户登录接口
     public static final String SERVER_LOGIN_URL = SERVER_URL + "automake/controller/system/login/LoginAction.do";

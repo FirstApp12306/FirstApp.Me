@@ -128,7 +128,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
         user = databaseUtils.queryUser(userID);
         LogUtils.d("user", user.toString());
-
+        LogUtils.d("avataravatarqqqq", "::"+user.user_avatar);
         if (user != null){
             ImageOptions imageOptions = new ImageOptions.Builder()
                     .setIgnoreGif(true)
@@ -415,6 +415,9 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
             public void gotResult(int i, String s) {
                 LogUtils.d("updateUserAvatar","状态码："+i+"描述："+s);
                 if (i == 0){
+                    UserInfo userInfo = JMessageClient.getMyInfo();
+                    LogUtils.d("avatar1111", userInfo.getAvatar());
+                    LogUtils.d("avatar2222", userInfo.getAvatarFile().getPath());
                     updateLocalUser(imgKey);
                 }
             }

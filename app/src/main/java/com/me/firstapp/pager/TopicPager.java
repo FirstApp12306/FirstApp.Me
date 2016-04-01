@@ -46,6 +46,7 @@ public class TopicPager extends BasePager {
         rbtLeft.setText("发现");
         rbtRight.setText("最新");
         redCircle.setVisibility(View.GONE);
+        btnSetting.setVisibility(View.GONE);
     }
 
     @Override

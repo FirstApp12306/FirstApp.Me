@@ -5,14 +5,18 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
+import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.TimeFormat;
 import com.me.firstapp.view.CircleImageView;
 
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
@@ -150,14 +154,23 @@ public class ConversationListAdapter extends BaseAdapter {
         viewHolder.userName.setText(convItem.getTitle());
 
         //设置头像
-        String avatar = ((UserInfo) convItem.getTargetInfo()).getAvatar();
-        if (TextUtils.isEmpty(avatar)){
-            viewHolder.userAvatar.setImageResource(R.drawable.person_avatar_default_round);
-        }else{
-            x.image().bind(viewHolder.userAvatar, ((UserInfo) convItem.getTargetInfo()).getAvatar());
+        File avatar = ((UserInfo) convItem.getTargetInfo()).getAvatarFile();
+        String avatarStr = ((UserInfo) convItem.getTargetInfo()).getAvatar();
+        if (avatar != null){
+            LogUtils.d("avatarpath", avatar.getPath());
+            ImageOptions imageOptions = new ImageOptions.Builder()
+                    .setIgnoreGif(true)
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                    .setFailureDrawableId(R.drawable.person_avatar_default_round)
+                    .setLoadingDrawableId(R.drawable.person_avatar_default_round)
+                    .build();
+            x.image().bind(viewHolder.userAvatar, avatar.getPath(),imageOptions);
         }
+        LogUtils.d("avatarStr", avatarStr);
 
-        // TODO 更新Message的数量,
+//        x.image().
+
+        //更新Message的数量
         if (convItem.getUnReadMsgCnt() > 0) {
             viewHolder.newMsgNumber.setVisibility(View.VISIBLE);
             if (convItem.getUnReadMsgCnt() < 100) {

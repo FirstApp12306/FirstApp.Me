@@ -215,10 +215,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param user
      */
     private void updateUserData(User user){
+        LogUtils.d("avataravatar", user.user_avatar);
         DatabaseUtils databaseUtils = new DatabaseUtils(this);
-        User user1 = databaseUtils.queryUser(user.user_id);
+        User oldUser = databaseUtils.queryUser(user.user_id);
+        LogUtils.d("user1user1", oldUser.toString());
         ContentValues cv = new ContentValues();
-        if (user1 == null){
+        if (oldUser.user_id == null){//因为这里查询结果不是null,所以用id来判断
             cv.put("id", user.user_id);
             cv.put("name", user.user_name);
             cv.put("phone", user.user_phone);

@@ -113,6 +113,7 @@ public class MsgPager extends BasePager {
 //                }
                 Intent intent = new Intent(mActivity, ChatActivity.class);
                 intent.putExtra("targetID", ((UserInfo) convDatas.get(position).getTargetInfo()).getUserName());
+                intent.putExtra("user_name", ((UserInfo) convDatas.get(position).getTargetInfo()).getNickname());
                 mActivity.startActivity(intent);
             }
         });

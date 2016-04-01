@@ -3,8 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:background="@drawable/list_header_logo"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
         <ProgressBar
             android:id="@+id/listview_refresh_header_pb_progress"
             android:layout_width="wrap_content"
@@ -19,5 +29,8 @@
             android:text="下拉刷新"
             android:textColor="#999999"
             android:textSize="16sp" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

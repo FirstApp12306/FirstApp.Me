@@ -4,6 +4,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.me.firstapp.R;
 import com.me.firstapp.application.MyApplication;
@@ -15,6 +17,9 @@ import com.me.firstapp.utils.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.event.MessageEvent;
@@ -75,6 +80,34 @@ public class MainActivity extends FragmentActivity {
         PrefUtils.setBoolean(this, MyApplication.FIRST_PAGER_REFRESH_FLAG, false);
         PrefUtils.setBoolean(this, MyApplication.FIND_PAGER_REFRESH_FLAG, false);
         activityManager.popActivity(this);
+    }
+
+
+    private boolean isExit = false;
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK :
+                exit();
+               break;
+        }
+        return false;
+    }
+
+    private void exit() {
+        if(!isExit) {
+            isExit = true;
+            Toast.makeText(this, "再次点击将退出程序", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    isExit = false;
+                }
+            }, 2000);
+        } else {
+            finish();
+        }
     }
 
     public void onEvent(MessageEvent event) {

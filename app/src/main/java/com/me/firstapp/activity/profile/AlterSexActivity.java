@@ -77,13 +77,13 @@ public class AlterSexActivity extends BaseActivity implements View.OnClickListen
             case R.id.activity_alter_sex_ll_man :
                 ivMan.setVisibility(View.VISIBLE);
                 ivWoman.setVisibility(View.INVISIBLE);
-                userSex = "01";
+                userSex = "男";
                 sendDataToServer();
                 break;
             case R.id.activity_alter_sex_ll_woman :
                 ivMan.setVisibility(View.INVISIBLE);
                 ivWoman.setVisibility(View.VISIBLE);
-                userSex = "02";
+                userSex = "女";
                 sendDataToServer();
                 break;
         }

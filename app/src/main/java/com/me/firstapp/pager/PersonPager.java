@@ -131,6 +131,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         //现在本地获取，再在服务器更新最新数据
         if (!TextUtils.isEmpty(userID)) {
             User user = databaseUtils.queryUser(userID);
+            LogUtils.d("useruser", user.toString());
             setUserInfo(user);
         }
 
