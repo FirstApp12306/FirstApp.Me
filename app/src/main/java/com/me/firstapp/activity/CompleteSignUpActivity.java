@@ -2,10 +2,10 @@ package com.me.firstapp.activity;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +19,6 @@ import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.DatabaseUtils;
 import com.me.firstapp.utils.DialogUtils;
-import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SoftInputUtils;
@@ -40,7 +39,6 @@ import cn.jpush.android.api.TagAliasCallback;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
-import de.greenrobot.event.EventBus;
 
 /**
  * 作者： FirstApp.Me.
@@ -99,16 +97,16 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0){
+                if (s.length() == 0) {
                     btnNameClear.setVisibility(View.GONE);
-                }else{
+                } else {
                     btnNameClear.setVisibility(View.VISIBLE);
                 }
 
-                if (s.length()<2){
+                if (s.length() < 2) {
                     btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                     btnOK.setClickable(false);
-                }else{
+                } else {
                     btnOK.setTextColor(Color.parseColor("#435356"));
                     btnOK.setClickable(true);
                 }
@@ -116,7 +114,7 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!com.me.firstapp.utils.TextUtils.validateUserName(s.toString())){
+                if (!com.me.firstapp.utils.TextUtils.validateUserName(s.toString())) {
                     btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                     btnOK.setClickable(false);
                 }
@@ -180,10 +178,10 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!sureEdiText.getText().toString().equals(psdEditText.getText().toString())){
+                if (!sureEdiText.getText().toString().equals(psdEditText.getText().toString())) {
                     btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                     btnOK.setClickable(false);
-                }else {
+                } else {
                     btnOK.setTextColor(Color.parseColor("#435356"));
                     btnOK.setClickable(true);
                 }
@@ -191,7 +189,7 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
         });
     }
 
-    private void sendDataToServer(){
+    private void sendDataToServer() {
         SoftInputUtils.hideSoftInputWindow(this);
         loadingDialog = DialogUtils.creatLoadingDialog(this, "请稍后...");
         loadingDialog.show();
@@ -211,7 +209,7 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(x.app(), "无法连接服务器", Toast.LENGTH_LONG).show();
-                LogUtils.d("",ex.getMessage());
+                LogUtils.d("", ex.getMessage());
             }
 
             @Override
@@ -221,8 +219,7 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onFinished() {
-                LogUtils.d("","访问服务器结束");
-                loadingDialog.cancel();
+                LogUtils.d("", "访问服务器结束");
             }
         });
 
@@ -230,64 +227,27 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
 
     /**
      * 解析服务器JSON数据
+     *
      * @param result
      */
-    private void parseData(String result){
+    private void parseData(String result) {
         try {
             Gson gson = new Gson();
             JSONObject object1 = new JSONObject(result);
-            JSONObject object2 = object1.getJSONObject("resultMap");
-            String returnCode = object2.getString("return_code");
-            if("000000".equals(returnCode)){
-                JSONObject object3 = object2.getJSONObject("user");
-                LogUtils.d("object3", object3.toString());
-                final User user = gson.fromJson(object3.toString(),User.class);
+            String returnCode = object1.getString("return_code");
+            if ("000000".equals(returnCode)) {
+                JSONObject object2 = object1.getJSONObject("user");
+                User user = gson.fromJson(object2.toString(), User.class);
                 LogUtils.d("user", user.toString());
-                saveUserData(user);
+
                 PrefUtils.setBoolean(this, "login_flag", true);//记录登陆状态
-                LogUtils.d("user_iduser_id", user.user_id);
                 PrefUtils.setString(this, "loginUser", user.user_id);//记录登陆用户
-                EventBus.getDefault().post(new Event.SignUpEvent(user));
-                final Set<String> tags =  new HashSet<String>();
-                tags.add("common");
-                JMessageClient.register(phone, psdEditText.getText().toString(), new BasicCallback() {
-                    @Override
-                    public void gotResult(int i, String s) {
-                        LogUtils.d("register", "状态码：" + i + "描述: " + s);
-                        if (i == 0) {
-                            UserInfo userInfo = JMessageClient.getMyInfo();
-                            userInfo.setNickname(user.user_name);
-                            JMessageClient.updateMyInfo(UserInfo.Field.nickname, userInfo, new BasicCallback() {
-                                @Override
-                                public void gotResult(int i, String s) {
-                                    if (i == 0) {
-                                        JMessageClient.login(user.user_phone, user.password, new BasicCallback() {
-                                            @Override
-                                            public void gotResult(int i, String s) {
-                                                LogUtils.d("register", "状态码：" + i + "描述: " + s);
-                                                if (i == 0) {
-                                                    JPushInterface.setAliasAndTags(CompleteSignUpActivity.this, user.user_phone, tags, new TagAliasCallback() {
-                                                        @Override
-                                                        public void gotResult(int i, String s, Set<String> set) {
-                                                            LogUtils.d("register", "状态码：" + i + "描述: " + s);
-                                                            if (i == 0) {
-                                                                finish();
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            });
 
-                        }
-                    }
-                });
+                setJPush(user);
 
-            }else{
-                Toast.makeText(x.app(), "数据异常，返回码："+returnCode, Toast.LENGTH_LONG).show();
+            } else if ("0001".equals(returnCode)){
+                loadingDialog.cancel();
+                Toast.makeText(this, object1.getString("err_message"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -295,11 +255,58 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
         }
     }
 
+    private void setJPush(final User user) {
+
+        //注册到极光推送
+        JMessageClient.register(phone, psdEditText.getText().toString(), new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                if (i == 0) {
+                    //设置别名和标签
+                    final Set<String> tags = new HashSet<String>();
+                    tags.add("common");
+                    JPushInterface.setAliasAndTags(CompleteSignUpActivity.this, user.user_phone, tags, new TagAliasCallback() {
+                        @Override
+                        public void gotResult(int i, String s, Set<String> set) {
+                            LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                            if (i == 0) {
+                                //登陆到极光推送
+                                JMessageClient.login(user.user_phone, user.password, new BasicCallback() {
+                                    @Override
+                                    public void gotResult(int i, String s) {
+                                        LogUtils.d("register", "状态码：" + i + "描述: " + s);
+                                        if (i == 0) {
+                                            //修改极光推送上用户的昵称
+                                            UserInfo userInfo = JMessageClient.getMyInfo();
+                                            userInfo.setNickname(user.user_name);
+                                            JMessageClient.updateMyInfo(UserInfo.Field.nickname, userInfo, new BasicCallback() {
+                                                @Override
+                                                public void gotResult(int i, String s) {
+                                                    if (i == 0) {
+                                                        saveUserDataToLocal(user);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+
+                }
+            }
+        });
+    }
+
     /**
      * 保存用户数据
+     *
      * @param user
      */
-    private void saveUserData(User user){
+    private void saveUserDataToLocal(User user) {
         ContentValues cv = new ContentValues();
         cv.put("id", user.user_id);
         cv.put("name", user.user_name);
@@ -309,36 +316,39 @@ public class CompleteSignUpActivity extends BaseActivity implements View.OnClick
         cv.put("sex", user.user_sex);
         cv.put("level", user.user_level);
         cv.put("points", user.user_points);
-        cv.put("sts", user.sts);
-        cv.put("login_sts", "01");
         cv.put("follow", "0");
         cv.put("fans", "0");
         cv.put("city", user.user_city);
         new DatabaseUtils(this).insert("user", cv);
+
+        loadingDialog.cancel();
+        activityManager.popAllActivity();//关闭所有activity
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.activity_complete_regest_btn_submit :
+        switch (v.getId()) {
+            case R.id.activity_complete_regest_btn_submit:
                 sendDataToServer();
                 break;
-            case R.id.activity_regest_returnback :
+            case R.id.activity_regest_returnback:
                 finish();
                 break;
-            case R.id.activity_complete_regest_name_clear :
+            case R.id.activity_complete_regest_name_clear:
                 nameEditText.setText("");
                 btnNameClear.setVisibility(View.GONE);
                 btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                 btnOK.setClickable(false);
                 break;
-            case R.id.activity_complete_regest_new_psd_clear :
+            case R.id.activity_complete_regest_new_psd_clear:
                 psdEditText.setText("");
                 btnNewPsdClear.setVisibility(View.GONE);
                 btnOK.setTextColor(Color.parseColor("#bfbfbf"));
                 btnOK.setClickable(false);
                 break;
-            case R.id.activity_complete_regest_sure_psd_clear :
+            case R.id.activity_complete_regest_sure_psd_clear:
                 sureEdiText.setText("");
                 btnSurePsdClear.setVisibility(View.GONE);
                 btnOK.setTextColor(Color.parseColor("#bfbfbf"));

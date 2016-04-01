@@ -1,6 +1,8 @@
 package com.me.firstapp.activity.profile;
 
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,13 +15,28 @@ import android.widget.Toast;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.BaseActivity;
+import com.me.firstapp.activity.ToLoginOrSingupActivity;
 import com.me.firstapp.entity.User;
+import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.DatabaseUtils;
+import com.me.firstapp.utils.DialogUtils;
+import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
+import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.TextUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
+import de.greenrobot.event.EventBus;
 
 /**
  * 作者： FirstApp.Me.
@@ -173,7 +190,7 @@ public class AlterPsdActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.activity_alter_psd_btn_ok :
-
+                sendDataToServer();
                 break;
             case R.id.activity_alter_psd_btn_old_clear :
                 etOldPsd.setText("");
@@ -194,5 +211,81 @@ public class AlterPsdActivity extends BaseActivity implements View.OnClickListen
                 btnSureClear.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    //更新服务器信息
+    private void sendDataToServer(){
+        loadingDialog = DialogUtils.creatLoadingDialog(this, "请稍后...");
+        loadingDialog.show();
+        RequestParams params = new RequestParams(GlobalContants.UPDATE_USER_PASSWORD_URL);
+        params.addQueryStringParameter("user_id", userID);
+        params.addQueryStringParameter("old_password", etOldPsd.getText().toString());
+        params.addQueryStringParameter("new_password", etNewPsd.getText().toString());
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String return_code = jsonObject.getString("return_code");
+                    if ("000000".equals(return_code)){
+                        updatePasswordInJPush();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+
+            }
+        });
+    }
+
+    //更新极光
+    private void updatePasswordInJPush(){
+        JMessageClient.updateUserPassword(etOldPsd.getText().toString(), etNewPsd.getText().toString(), new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                updateLocalUser();
+            }
+        });
+    }
+
+    //更新本地信息
+    private void updateLocalUser(){
+        ContentValues cv = new ContentValues();
+        if (user != null){
+            user.password = etNewPsd.getText().toString();
+            cv.put("password", user.password);
+            databaseUtils.updateTable("user", cv, "id = ?", new String[]{user.user_id});
+
+            doLogout();
+        }
+    }
+
+    private void doLogout(){
+        PrefUtils.setBoolean(AlterPsdActivity.this, "login_flag", false);
+        PrefUtils.setString(AlterPsdActivity.this, "loginUser", null);
+        JMessageClient.logout();
+
+        loadingDialog.cancel();
+
+        activityManager.popAllActivity();
+        Intent intent6 = new Intent(AlterPsdActivity.this, ToLoginOrSingupActivity.class);
+        startActivity(intent6);
     }
 }

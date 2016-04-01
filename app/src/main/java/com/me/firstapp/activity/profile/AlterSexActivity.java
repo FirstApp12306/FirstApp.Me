@@ -129,9 +129,8 @@ public class AlterSexActivity extends BaseActivity implements View.OnClickListen
         ContentValues cv = new ContentValues();
         if (user != null){
             user.user_sex = userSex;
-            cv.put("user_sex", user.user_sex);
+            cv.put("sex", user.user_sex);
             databaseUtils.updateTable("user", cv, "id = ?", new String[]{user.user_id});
-            EventBus.getDefault().post(new Event.CompleteAlterSexEvent(userSex));
             finish();
         }
     }

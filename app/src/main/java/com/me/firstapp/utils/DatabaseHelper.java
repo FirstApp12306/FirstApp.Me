@@ -33,13 +33,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " avatar VARCHAR(500),"
                 + " password VARCHAR(30),"
                 + " signature VARCHAR(100),"
-                + " sex VARCHAR(2),"
+                + " sex VARCHAR(4),"
                 + " level NUMBER(50),"
                 + " points NUMBER(50),"
                 + " follow VARCHAR(11),"
                 + " fans VARCHAR(11),"
-                + " sts VARCHAR(2),"
-                + " login_sts VARCHAR(2),"//01代表登陆，02代表未登陆
                 + " city VARCHAR(30))";
         db.execSQL(sql);
     }

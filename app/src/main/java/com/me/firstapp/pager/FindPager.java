@@ -52,6 +52,7 @@ public class FindPager extends BasePager {
         super.initViews();
         mRadioGroup.setVisibility(View.GONE);
         redCircle.setVisibility(View.GONE);
+        btnSetting.setVisibility(View.GONE);
         tvTitle.setVisibility(View.VISIBLE);
         tvTitle.setText("精选");
     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.me.firstapp.R;
 import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.fragment.ContentFragment;
+import com.me.firstapp.manager.ActivityManager;
 import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
@@ -41,9 +42,13 @@ public class MainActivity extends FragmentActivity {
     OnReceiveFansListener mOnReceiveFansListener;
     OnRefreshTopicsListener mOnRefreshTopicsListener;
 
+    protected ActivityManager activityManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activityManager = ActivityManager.getInstance();
+        activityManager.pushActivity(this);
         x.view().inject(this);
         initFragment();
         JMessageClient.registerEventReceiver(this);
@@ -69,7 +74,7 @@ public class MainActivity extends FragmentActivity {
         PrefUtils.setBoolean(this, MyApplication.NEW_TOPICS_REFRESH_FLAG, false);
         PrefUtils.setBoolean(this, MyApplication.FIRST_PAGER_REFRESH_FLAG, false);
         PrefUtils.setBoolean(this, MyApplication.FIND_PAGER_REFRESH_FLAG, false);
-
+        activityManager.popActivity(this);
     }
 
     public void onEvent(MessageEvent event) {

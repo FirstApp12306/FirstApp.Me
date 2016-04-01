@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -44,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.image.ImageOptions;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -51,6 +53,8 @@ import org.xutils.x;
 import java.io.File;
 
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -111,6 +115,34 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
         showPopUpWindow();
         EventBus.getDefault().register(this);
+
+        databaseUtils = new DatabaseUtils(this);
+        userID = getIntent().getStringExtra("user_id");
+        LogUtils.d("user_id", userID);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        user = databaseUtils.queryUser(userID);
+        LogUtils.d("user", user.toString());
+
+        if (user != null){
+            ImageOptions imageOptions = new ImageOptions.Builder()
+                    .setIgnoreGif(true)
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                    .setFailureDrawableId(R.drawable.person_avatar_default_round)
+                    .setLoadingDrawableId(R.drawable.person_avatar_default_round)
+                    .build();
+            x.image().bind(ivAvatar, user.user_avatar, imageOptions);
+
+            tvUserSex.setText(user.user_sex);
+            tvUserName.setText(user.user_name);
+            tvUserCity.setText(user.user_city);
+            tvSignature.setText(user.user_signature);
+        }
     }
 
     @Override
@@ -125,27 +157,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         llPwd.setOnClickListener(this);
         llLogout.setOnClickListener(this);
 
-        databaseUtils = new DatabaseUtils(this);
-        userID = getIntent().getStringExtra("user_id");
-        LogUtils.d("user_id", userID);
-        user = databaseUtils.queryUser(userID);
-        LogUtils.d("user", user.toString());
-
-//        if (user != null){
-//            x.image().bind(ivAvatar, user.user_avatar);
-//            tvUserName.setText(user.user_name);
-//            if ("01".equals(user.user_sex)){
-//                tvUserSex.setText("男");
-//            }
-//            if ("02".equals(user.user_sex)){
-//                tvUserSex.setText("女");
-//            }
-//            if ("03".equals(user.user_sex)){
-//                tvUserSex.setText("未知");
-//            }
-//            tvUserCity.setText(user.user_city);
-//            tvSignature.setText(user.user_signature);
-//        }
     }
 
     @Override
@@ -288,60 +299,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    //完成用户名修改事件消息订阅
-    @Subscribe(threadMode = ThreadMode.PostThread)
-    public void onUserEvent(Event.CompleteAlterNameEvent event) {
-        final String name = event.getName();
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tvUserName.setText(name);
-            }
-        });
-    }
-
-    //完成用户签名修改事件消息订阅
-    @Subscribe(threadMode = ThreadMode.PostThread)
-    public void onUserEvent(Event.CompleteAlterSignatureEvent event) {
-        final String signature = event.getSignature();
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tvSignature.setText(signature);
-            }
-        });
-    }
-
-    //完成用户城市修改事件消息订阅
-    @Subscribe(threadMode = ThreadMode.PostThread)
-    public void onUserEvent(Event.CompleteAlterCityEvent event) {
-        final String city = event.getCity();
-        LogUtils.d("citycitycitycity", city);
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tvUserCity.setText(city);
-            }
-        });
-    }
-
-    //完成用户性别修改事件消息订阅
-    @Subscribe(threadMode = ThreadMode.PostThread)
-    public void onUserEvent(Event.CompleteAlterSexEvent event) {
-        final String sex = event.getSex();
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if ("01".equals(sex)){
-                    tvUserSex.setText("男");
-                }
-                if ("02".equals(sex)){
-                    tvUserSex.setText("女");
-                }
-            }
-        });
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case MyApplication.REQUEST_CODE_TAKE_PHOTO:
@@ -430,9 +387,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                x.image().bind(ivAvatar, GlobalContants.FILE_URL + imgKey);
-                loadingDialog.cancel();
-                updateLocalUser(GlobalContants.FILE_URL + imgKey);
+                updateAvatarInJPush(imgKey);
             }
 
             @Override
@@ -454,17 +409,27 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
     }
 
     //更新极光推送头像
-    private void updateAvatarInJPush(){
-        //暂时先不做
+    private void updateAvatarInJPush(final String imgKey){
+        JMessageClient.updateUserAvatar(imageFile, new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                LogUtils.d("updateUserAvatar","状态码："+i+"描述："+s);
+                if (i == 0){
+                    updateLocalUser(imgKey);
+                }
+            }
+        });
     }
 
     //更新本地用户信息
-    private void updateLocalUser(String avatar){
+    private void updateLocalUser(String imageKey){
         ContentValues cv = new ContentValues();
         if (user != null){
-            user.user_avatar = avatar;
+            user.user_avatar = GlobalContants.FILE_URL + imageKey;
             cv.put("avatar", user.user_avatar);
             databaseUtils.updateTable("user", cv, "id = ?", new String[]{user.user_id});
+            x.image().bind(ivAvatar, user.user_avatar);
+            loadingDialog.cancel();
         }
     }
 

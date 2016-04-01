@@ -83,35 +83,6 @@ public class DatabaseUtils {
         deleteWhere(table_name, null, null);
     }
 
-    //查询登陆用户
-    public User queryLoginUser(String userID, String loginSts){
-        User user = new User();
-        Cursor cursor = null;
-        try{
-            opendb(context);
-            cursor = sqlitedatabase.rawQuery("select * from user where id = '"+userID+"' and login_sts = '"+loginSts+"'", null);
-            while (cursor.moveToNext()) {
-                user.user_id = userID;
-                user.user_avatar = cursor.getString(cursor.getColumnIndex("avatar"));
-                user.user_city = cursor.getString(cursor.getColumnIndex("city"));
-                user.user_level = cursor.getLong(cursor.getColumnIndex("level"));
-                user.user_name = cursor.getString(cursor.getColumnIndex("name"));
-                user.user_phone = cursor.getString(cursor.getColumnIndex("phone"));
-                user.user_points = cursor.getLong(cursor.getColumnIndex("points"));
-                user.user_sex = cursor.getString(cursor.getColumnIndex("sex"));
-                user.user_signature = cursor.getString(cursor.getColumnIndex("signature"));
-                user.sts = cursor.getString(cursor.getColumnIndex("sts"));
-                user.follow = cursor.getString(cursor.getColumnIndex("follow"));
-                user.fans = cursor.getString(cursor.getColumnIndex("fans"));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            cursor.close();
-            closedb(context);
-        }
-        return user;
-    }
 
     //查询用户
     public User queryUser(String userID){
@@ -127,10 +98,10 @@ public class DatabaseUtils {
                 user.user_level = cursor.getLong(cursor.getColumnIndex("level"));
                 user.user_name = cursor.getString(cursor.getColumnIndex("name"));
                 user.user_phone = cursor.getString(cursor.getColumnIndex("phone"));
+                user.password = cursor.getString(cursor.getColumnIndex("password"));
                 user.user_points = cursor.getLong(cursor.getColumnIndex("points"));
                 user.user_sex = cursor.getString(cursor.getColumnIndex("sex"));
                 user.user_signature = cursor.getString(cursor.getColumnIndex("signature"));
-                user.sts = cursor.getString(cursor.getColumnIndex("sts"));
                 user.follow = cursor.getString(cursor.getColumnIndex("follow"));
                 user.fans = cursor.getString(cursor.getColumnIndex("fans"));
             }

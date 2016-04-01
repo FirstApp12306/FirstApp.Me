@@ -70,6 +70,7 @@ public class MsgPager extends BasePager {
     @Override
     public void initViews() {
         super.initViews();
+        btnSetting.setVisibility(View.GONE);
     }
 
     @Override

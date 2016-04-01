@@ -98,15 +98,13 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
 
     private ArrayList<View> views = new ArrayList<>();
     private String userID;
-    private boolean isLogin;
 
     private DatabaseUtils databaseUtils;
 
     public PersonPager(MainActivity activity) {
         super(activity);
-        isLogin = PrefUtils.getBoolean(mActivity, "login_flag", false);
         userID = PrefUtils.getString(mActivity, "loginUser", null);
-        databaseUtils =  new DatabaseUtils(mActivity);
+        databaseUtils = new DatabaseUtils(mActivity);
     }
 
     @Override
@@ -121,124 +119,98 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
 
     float rgHigh;//viewpager顶部位置距离根布局顶部的高度
     float pHigh;//根布局的高度
+
     @Override
     public void initData() {
         LogUtils.d("", "初始化Person页面数据。。。。。。。");
 
-        if (isLogin){
-            view = View.inflate(mActivity, R.layout.pager_person, null);
-            init(view);
-            setClick();
+        view = View.inflate(mActivity, R.layout.pager_person, null);
+        init(view);
+        setClick();
 
-            //现在本地获取，再在服务器更新最新数据
-            if (!TextUtils.isEmpty(userID)){
-                User user = databaseUtils.queryUser(userID);
-                setUserInfo(user);
-            }
-
-            topicView = View.inflate(mActivity, R.layout.view_pager_person_topic, null);
-            noteView = View.inflate(mActivity, R.layout.view_pager_person_note, null);
-            topicListView = (ListView) topicView.findViewById(R.id.view_pager_person_topic_listview);
-            noteListView = (ListView) noteView.findViewById(R.id.view_pager_person_note_listview);
-
-            hoveringScrollview.setOnScrollListener(this);// set Listener
-            nRadioGroup.check(R.id.pager_person_rbtn_topic);
-
-            nRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.pager_person_rbtn_topic:
-                            mViewPager.setCurrentItem(0, true);
-                            break;
-                        case R.id.pager_person_rbtn_note:
-                            mViewPager.setCurrentItem(1, true);
-                            break;
-                    }
-                }
-            });
-
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    switch (position) {
-                        case 0:
-                            nRadioGroup.check(R.id.pager_person_rbtn_topic);
-                            break;
-                        case 1:
-                            nRadioGroup.check(R.id.pager_person_rbtn_note);
-                            break;
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-            //动态设置viewpager的高度--开始
-            search02.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    rgHigh = search02.getBottom();//viewpager顶部位置距离根布局顶部的高度
-//                    LogUtils.d("rgHigh", rgHigh + "");
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(pHigh - rgHigh));//这里的单位是px，不是dp
-                    vpLinearLayout.setLayoutParams(params);
-                }
-            });
-
-            pRelativeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    pHigh = pRelativeLayout.getHeight();//根布局的高度
-//                    LogUtils.d("pHigh", pHigh + "");
-                }
-            });
-            //动态设置viewpager的高度--结束
-
-            views.add(topicView);
-            views.add(noteView);
-            mViewPager.setAdapter(new PersonPagerViewAdapter(views));
-
-            getDataFromServer();
-
-        }else{
-            view = View.inflate(mActivity, R.layout.pager_unlogin_tip, null);
-            btnLogin = (Button) view.findViewById(R.id.pager_unlogin_btn_login);
-            btnSignUp = (Button) view.findViewById(R.id.pager_unlogin_btn_regest);
-
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switch (v.getId()){
-                        case R.id.pager_unlogin_btn_login:
-                            mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
-                            break;
-                        case R.id.pager_unlogin_btn_regest:
-                            mActivity.startActivity(new Intent(mActivity, SignUpActivity.class));
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            };
-
-            btnLogin.setOnClickListener(listener);
-            btnSignUp.setOnClickListener(listener);
+        //现在本地获取，再在服务器更新最新数据
+        if (!TextUtils.isEmpty(userID)) {
+            User user = databaseUtils.queryUser(userID);
+            setUserInfo(user);
         }
 
+        topicView = View.inflate(mActivity, R.layout.view_pager_person_topic, null);
+        noteView = View.inflate(mActivity, R.layout.view_pager_person_note, null);
+        topicListView = (ListView) topicView.findViewById(R.id.view_pager_person_topic_listview);
+        noteListView = (ListView) noteView.findViewById(R.id.view_pager_person_note_listview);
+
+        hoveringScrollview.setOnScrollListener(this);// set Listener
+        nRadioGroup.check(R.id.pager_person_rbtn_topic);
+
+        nRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.pager_person_rbtn_topic:
+                        mViewPager.setCurrentItem(0, true);
+                        break;
+                    case R.id.pager_person_rbtn_note:
+                        mViewPager.setCurrentItem(1, true);
+                        break;
+                }
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        nRadioGroup.check(R.id.pager_person_rbtn_topic);
+                        break;
+                    case 1:
+                        nRadioGroup.check(R.id.pager_person_rbtn_note);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        //动态设置viewpager的高度--开始
+        search02.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                rgHigh = search02.getBottom();//viewpager顶部位置距离根布局顶部的高度
+//                    LogUtils.d("rgHigh", rgHigh + "");
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (pHigh - rgHigh));//这里的单位是px，不是dp
+                vpLinearLayout.setLayoutParams(params);
+            }
+        });
+
+        pRelativeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                pHigh = pRelativeLayout.getHeight();//根布局的高度
+//                    LogUtils.d("pHigh", pHigh + "");
+            }
+        });
+        //动态设置viewpager的高度--结束
+
+        views.add(topicView);
+        views.add(noteView);
+        mViewPager.setAdapter(new PersonPagerViewAdapter(views));
+
+        getDataFromServer();
 
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
     }
 
-    private void init(View view){
+    private void init(View view) {
         hoveringLayout = (LinearLayout) view.findViewById(R.id.hoveringLayout);
         hoveringScrollview = (HoveringScrollview) view.findViewById(R.id.pager_person_scrollview);
         search01 = (LinearLayout) view.findViewById(R.id.search01);
@@ -261,19 +233,19 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         btnEdit = (Button) view.findViewById(R.id.person_pager_btn_edit_data);
     }
 
-    private void setClick(){
+    private void setClick() {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.person_pager_btn_favourite :
+                switch (v.getId()) {
+                    case R.id.person_pager_btn_favourite:
                         break;
-                    case R.id.person_pager_btn_edit_data :
+                    case R.id.person_pager_btn_edit_data:
                         Intent intent = new Intent(mActivity, ProfileActivity.class);
                         intent.putExtra("user_id", userID);
                         mActivity.startActivity(intent);
                         break;
-                    case R.id.pager_base_btn_setting :
+                    case R.id.pager_base_btn_setting:
                         break;
                 }
             }
@@ -283,29 +255,25 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         btnSetting.setOnClickListener(listener);
     }
 
-    private void setUserInfo(User mUser){
+    private void setUserInfo(User mUser) {
 
-            if (mUser != null){
-                ImageOptions imageOptions1 = new ImageOptions.Builder()
-                        // 加载中或错误图片的ScaleType
-                        //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                        // 默认自动适应大小
-                        // .setSize(...)
-                        .setIgnoreGif(true)
-                                // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                                //.setUseMemCache(false)
-                        .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-                x.image().bind(ivUserAvatar, mUser.user_avatar, imageOptions1);
+        if (mUser != null) {
+            ImageOptions imageOptions = new ImageOptions.Builder()
+                    .setIgnoreGif(true)
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                    .setFailureDrawableId(R.drawable.person_avatar_default_round)
+                    .setLoadingDrawableId(R.drawable.person_avatar_default_round)
+                    .build();
+            x.image().bind(ivUserAvatar, mUser.user_avatar, imageOptions);
 
-
-                tvUserName.setText(mUser.user_name);
-                tvUserLevel.setText("等级:"+mUser.user_level);
-                tvUserID.setText("ID:"+mUser.user_id);
-                tvUserCity.setText(mUser.user_city);
-                tvSignature.setText(mUser.user_signature);
-                tvUserFollow.setText(mUser.follow);
-                tvUserFans.setText(mUser.fans);
-            }
+            tvUserName.setText(mUser.user_name);
+            tvUserLevel.setText("等级:" + mUser.user_level);
+            tvUserID.setText("ID:" + mUser.user_id);
+            tvUserCity.setText(mUser.user_city);
+            tvSignature.setText(mUser.user_signature);
+            tvUserFollow.setText(mUser.follow);
+            tvUserFans.setText(mUser.fans);
+        }
 
 
     }
@@ -329,7 +297,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         }
     }
 
-    private void getDataFromServer(){
+    private void getDataFromServer() {
         RequestParams params = new RequestParams(GlobalContants.MY_TOPICS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
         x.http().post(params, new Callback.CommonCallback<String>() {
@@ -361,12 +329,13 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
     private ArrayList<Note> notes;
     private ArrayList<User> users;
     private ArrayList<Topic> noteTopics;
-    private void parseData(String result){
+
+    private void parseData(String result) {
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
             String returnCode = object1.getString("return_code");
-            if("000000".equals(returnCode)){
+            if ("000000".equals(returnCode)) {
                 topics = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("topic_rows");
                 LogUtils.d("array", array.toString());
@@ -380,7 +349,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
                     topic = null;
                 }
                 LogUtils.d("topics", topics.toString());
-                if (topics != null){
+                if (topics != null) {
                     topicListView.setAdapter(new TopicsAdapter(mActivity, topics));
                 }
 
@@ -412,7 +381,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
                 LogUtils.d("users", users.toString());
                 LogUtils.d("noteTopic", noteTopics.toString());
 
-                if(notes != null && users != null && noteTopics != null){
+                if (notes != null && users != null && noteTopics != null) {
                     noteListView.setAdapter(new FirstPagerListAdapter(mActivity, notes, users, noteTopics));
                 }
 
@@ -422,20 +391,20 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
                 setUserInfo(user1);
 
                 //更新本地user信息
-//                updateLocalUser(user1);
-            }else{
+                updateLocalUser(user1);
+            } else {
                 Toast.makeText(x.app(), "数据异常，返回码：" + returnCode, Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
 //            mListView.onRefreshComplete(false);// 收起加载更多的布局
         }
 
     }
 
-    private void updateLocalUser(User user){
+    private void updateLocalUser(User user) {
         ContentValues cv = new ContentValues();
         cv.put("id", user.user_id);
         cv.put("name", user.user_name);

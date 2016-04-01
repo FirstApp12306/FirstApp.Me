@@ -22,7 +22,7 @@
             android:layout_centerInParent="true"
             android:text="完成注册"
             android:textColor="#435356"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/activity_complete_regest_btn_submit"

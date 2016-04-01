@@ -172,9 +172,8 @@ public class AlterSignatureActivity extends BaseActivity implements View.OnClick
         ContentValues cv = new ContentValues();
         if (user != null){
             user.user_signature = mEditText.getText().toString();
-            cv.put("user_signature", user.user_signature);
+            cv.put("signature", user.user_signature);
             databaseUtils.updateTable("user", cv, "id = ?", new String[]{user.user_id});
-            EventBus.getDefault().post(new Event.CompleteAlterSignatureEvent(mEditText.getText().toString()));
             finish();
         }
     }

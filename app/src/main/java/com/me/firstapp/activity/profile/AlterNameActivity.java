@@ -29,6 +29,9 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -148,7 +151,7 @@ public class AlterNameActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                updateLocalUser();
+                updateNameInJPush();
             }
 
             @Override
@@ -163,7 +166,7 @@ public class AlterNameActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFinished() {
-                loadingDialog.cancel();
+
 
             }
         });
@@ -171,7 +174,16 @@ public class AlterNameActivity extends BaseActivity implements View.OnClickListe
 
     //更新极光
     private void updateNameInJPush(){
-        //暂时先不做
+        UserInfo userInfo = JMessageClient.getMyInfo();
+        userInfo.setNickname(mEditText.getText().toString());
+        JMessageClient.updateMyInfo(UserInfo.Field.nickname, userInfo, new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                if (i == 0){
+                    updateLocalUser();
+                }
+            }
+        });
     }
 
     //更新本地信息
@@ -179,9 +191,9 @@ public class AlterNameActivity extends BaseActivity implements View.OnClickListe
         ContentValues cv = new ContentValues();
         if (user != null){
             user.user_name = mEditText.getText().toString();
-            cv.put("avatar", user.user_name);
+            cv.put("name", user.user_name);
             databaseUtils.updateTable("user", cv, "id = ?", new String[]{user.user_id});
-            EventBus.getDefault().post(new Event.CompleteAlterNameEvent(mEditText.getText().toString()));
+            loadingDialog.cancel();
             finish();
         }
     }

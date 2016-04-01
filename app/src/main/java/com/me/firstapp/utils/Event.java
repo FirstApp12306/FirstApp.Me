@@ -42,67 +42,6 @@ public class Event {
     }
 
     /**
-     * 完成用户名修改事件
-     */
-    public static class CompleteAlterNameEvent{
-
-        private String name;
-
-        public CompleteAlterNameEvent(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    /**
-     * 完成用户城市修改事件
-     */
-    public static class CompleteAlterCityEvent{
-        private String city;
-
-        public CompleteAlterCityEvent(String city) {
-            this.city = city;
-        }
-
-        public String getCity() {
-            return city;
-        }
-    }
-
-    /**
-     * 完成用户签名修改事件
-     */
-    public static class CompleteAlterSignatureEvent{
-        private String signature;
-
-        public CompleteAlterSignatureEvent(String signature) {
-            this.signature = signature;
-        }
-
-        public String getSignature() {
-            return signature;
-        }
-    }
-
-    /**
-     * 完成用户性别修改事件
-     */
-    public static class CompleteAlterSexEvent{
-        private String sex;
-
-        public CompleteAlterSexEvent(String sex) {
-            this.sex = sex;
-        }
-
-        public String getSex() {
-            return sex;
-        }
-    }
-
-    /**
      * 新评论事件
      */
     public static class NewCommentEvent{
