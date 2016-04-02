@@ -1,6 +1,7 @@
 package com.me.firstapp.pager;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.activity.settings.SettingsActivity;
 import com.me.firstapp.utils.DensityUtils;
 
 /**
@@ -59,12 +61,13 @@ public class BasePager {
             @Override
             public void onGlobalLayout() {
                 FrameLayout.LayoutParams msgParams = new FrameLayout.LayoutParams(DensityUtils.dp2px(mActivity, 10), DensityUtils.dp2px(mActivity, 10));
-                msgParams.leftMargin = mRadioGroup.getChildAt(1).getLeft()*2;
+                msgParams.leftMargin = mRadioGroup.getChildAt(1).getLeft() * 2;
 ////                msgParams.topMargin = mRadioGroup.getChildAt(1).getTop()*3/2;
                 redCircle.setLayoutParams(msgParams);
                 redCircle.setGravity(Gravity.CENTER_VERTICAL);
             }
         });
+
     }
 
     /**

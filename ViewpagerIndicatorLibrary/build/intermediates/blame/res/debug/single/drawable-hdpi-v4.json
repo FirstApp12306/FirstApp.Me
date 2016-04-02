@@ -4,23 +4,27 @@
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_selected_pressed_holo.9.png"
     },
     {
-        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_selected_focused_holo.9.png",
-        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_selected_focused_holo.9.png"
+        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\abc_cab_background_top_mtrl_alpha.png",
+        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\abc_cab_background_top_mtrl_alpha.png"
     },
     {
         "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_unselected_holo.9.png",
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_unselected_holo.9.png"
     },
     {
+        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_selected_focused_holo.9.png",
+        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_selected_focused_holo.9.png"
+    },
+    {
         "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_unselected_focused_holo.9.png",
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_unselected_focused_holo.9.png"
     },
     {
-        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_unselected_pressed_holo.9.png",
-        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_unselected_pressed_holo.9.png"
-    },
-    {
         "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png",
         "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_selected_holo.9.png"
+    },
+    {
+        "merged": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\vpi__tab_unselected_pressed_holo.9.png",
+        "source": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\drawable-hdpi\\vpi__tab_unselected_pressed_holo.9.png"
     }
 ]

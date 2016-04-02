@@ -29,6 +29,7 @@ import com.me.firstapp.activity.LoginActivity;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.SignUpActivity;
 import com.me.firstapp.activity.profile.ProfileActivity;
+import com.me.firstapp.activity.settings.SettingsActivity;
 import com.me.firstapp.adapter.FindPagerListAdapter;
 import com.me.firstapp.adapter.FirstPagerListAdapter;
 import com.me.firstapp.adapter.PersonPagerViewAdapter;
@@ -183,6 +184,13 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
             }
         });
 
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.startActivity(new Intent(mActivity, SettingsActivity.class));
+            }
+        });
+
         //动态设置viewpager的高度--开始
         search02.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -262,7 +270,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
 
         if (mUser != null) {
             ImageUtils.bindImageWithOptions(ivUserAvatar,
-                    mUser.user_avatar,R.drawable.person_avatar_default_round,
+                    mUser.user_avatar, R.drawable.person_avatar_default_round,
                     R.drawable.person_avatar_default_round);
             tvUserName.setText(mUser.user_name);
             tvUserLevel.setText("等级:" + mUser.user_level);

@@ -59,7 +59,7 @@ public class PubNoteGridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.pub_note_grid_view_item, null);
             holder = new ViewHolder();

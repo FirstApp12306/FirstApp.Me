@@ -73,17 +73,8 @@ public class AlbumGridViewAdapter extends BaseAdapter {
         if (imageItemList != null && position < imageItemList.size()) {
             path = imageItemList.get(position).imagePath;// 图片路径
         }
-        ImageOptions imageOptions = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-        x.image().bind(viewHolder.imageView, path, imageOptions);
 
+        ImageUtils.bindImage(viewHolder.imageView, path);
         viewHolder.toggleButton.setTag(position);
         viewHolder.chooseButton.setTag(position);
         viewHolder.toggleButton.setOnClickListener(new ToggleClickListener(viewHolder.chooseButton));

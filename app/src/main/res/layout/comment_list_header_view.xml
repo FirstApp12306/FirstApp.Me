@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/comment_list_header_topic_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="单发摄影"
+        android:textColor="#435356"
+        android:textSize="18sp" />
+
+    <com.me.firstapp.view.CircleImageView
+        android:id="@+id/comment_list_header_user_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/test" />
+
+    <TextView
+        android:id="@+id/comment_list_header_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="黑暗系少年"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/comment_list_header_note_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/test" />
+
+    <TextView
+        android:id="@+id/comment_list_header_note_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="得不到的放不下啊啊啊啊啊啊"
+        android:textColor="#435356"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/comment_list_header_support_layout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_post_like"
+            android:padding="10dp"/>
+
+        <com.me.firstapp.view.OptimizeGridView
+            android:id="@+id/comment_list_header_grid_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="#ffffff"
+            android:horizontalSpacing="2dp"
+            android:columnWidth="40dp"
+            android:numColumns="auto_fit"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="2dp" />
+
+        <ImageView
+            android:id="@+id/comment_list_header_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:src="@drawable/arrow"/>
+
+    </LinearLayout>
+
+</LinearLayout>
