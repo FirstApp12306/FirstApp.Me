@@ -850,12 +850,12 @@
                 "from": {
                     "file": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\values\\vpi__styles.xml",
                     "position": {
-                        "startLine": 38,
+                        "startLine": 34,
                         "startColumn": 4,
-                        "startOffset": 1660,
-                        "endLine": 41,
+                        "startOffset": 1444,
+                        "endLine": 37,
                         "endColumn": 12,
-                        "endOffset": 1855
+                        "endOffset": 1639
                     }
                 }
             },
@@ -913,12 +913,12 @@
                 "from": {
                     "file": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\values\\vpi__styles.xml",
                     "position": {
-                        "startLine": 43,
+                        "startLine": 39,
                         "startColumn": 4,
-                        "startOffset": 1861,
-                        "endLine": 46,
+                        "startOffset": 1645,
+                        "endLine": 42,
                         "endColumn": 12,
-                        "endOffset": 2046
+                        "endOffset": 1830
                     }
                 }
             },
@@ -927,9 +927,9 @@
                     "startLine": 65,
                     "startColumn": 4,
                     "startOffset": 6081,
-                    "endLine": 76,
+                    "endLine": 72,
                     "endColumn": 12,
-                    "endOffset": 6773
+                    "endOffset": 6557
                 },
                 "from": {
                     "file": "D:\\Users\\FirstApp.Me\\AndroidStudioProjects\\FirstApp\\ViewpagerIndicatorLibrary\\src\\main\\res\\values\\vpi__styles.xml",
@@ -937,9 +937,9 @@
                         "startLine": 25,
                         "startColumn": 4,
                         "startOffset": 962,
-                        "endLine": 36,
+                        "endLine": 32,
                         "endColumn": 12,
-                        "endOffset": 1654
+                        "endOffset": 1438
                     }
                 }
             }

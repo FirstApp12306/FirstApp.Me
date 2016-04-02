@@ -6,12 +6,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="#ffffff" >
 
         <ImageButton
             android:id="@+id/activity_alter_name_btn_back"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:background="@drawable/btn_returnback_bg"
@@ -23,7 +23,7 @@
             android:layout_centerInParent="true"
             android:text="修改昵称"
             android:textColor="#435356"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/activity_alter_name_btn_ok"

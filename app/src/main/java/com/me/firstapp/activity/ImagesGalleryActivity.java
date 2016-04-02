@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.me.firstapp.R;
 import com.me.firstapp.adapter.GalleryViewPagerAdapter;
+import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.zoom.PhotoView;
 import com.me.firstapp.zoom.ViewPagerFixed;
@@ -19,6 +20,8 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 作者： FirstApp.Me.
@@ -95,7 +98,7 @@ public class ImagesGalleryActivity extends BaseActivity {
             btnOK.setTextColor(Color.parseColor("#435356"));
         } else {
             btnOK.setClickable(false);
-            btnOK.setTextColor(Color.parseColor("#888688"));
+            btnOK.setTextColor(Color.parseColor("#bfbfbf"));
         }
     }
 
@@ -108,8 +111,11 @@ public class ImagesGalleryActivity extends BaseActivity {
                         finish();
                         break;
                     case R.id.activity_images_gallery_btn_del :
+
                         break;
                     case R.id.activity_images_gallery_btn_ok :
+                        EventBus.getDefault().post(new Event.CompleteNoteAddimageEvent());
+                        finish();
                         break;
                 }
             }

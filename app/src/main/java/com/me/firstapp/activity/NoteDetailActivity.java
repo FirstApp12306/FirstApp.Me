@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SoftInputUtils;
 import com.me.firstapp.view.CircleImageView;
+import com.me.firstapp.view.HoveringScrollview;
 import com.me.firstapp.view.NoteDetailListView;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -51,10 +55,10 @@ import java.util.ArrayList;
  * 描述:
  */
 @ContentView(R.layout.activity_note_detail)
-public class NoteDetailActivity extends Activity implements View.OnLayoutChangeListener {
+public class NoteDetailActivity extends Activity implements View.OnLayoutChangeListener ,HoveringScrollview.OnScrollListener {
 
     @ViewInject(R.id.activity_note_detail_rootview)
-    private LinearLayout mRootView;
+    private FrameLayout mRootView;
     @ViewInject(R.id.activity_note_detail_indicator)
     private TabPageIndicator mIndicator;
     @ViewInject(R.id.activity_note_detail_viewpager)
@@ -77,6 +81,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private ImageButton btnAgree;
     @ViewInject(R.id.activity_note_detail_btn_pub)
     private Button btnPub;
+    @ViewInject(R.id.activity_note_detail_sv)
+    private HoveringScrollview mScrollView;
 
     private NoteDetailListView agreeListview;
     private NoteDetailListView commentListView;
@@ -108,6 +114,13 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private String user_level;
     private String user_phone;
 
+    private int searchLayoutTop;
+    @ViewInject(R.id.activity_note_detail_search01)
+    private LinearLayout search01;
+    @ViewInject(R.id.activity_note_detail_search02)
+    private LinearLayout search02;
+    @ViewInject(R.id.activity_note_detail_hoveringLayout)
+    private LinearLayout hoveringLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,28 +160,40 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     protected void onStart() {
         super.onStart();
         loginUserID = PrefUtils.getString(this, "loginUser", null);
-
+        mScrollView.setOnScrollListener(this);
         agreeListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LogUtils.d("OnItemClick", "item被点击");
             }
         });
-        agreeListview.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
+        commentListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onLoadMore() {
-                page++;
-                initServerData(true);
-
+            public void onGlobalLayout() {
+                mScrollView.smoothScrollTo(0, 20);
             }
         });
-        commentListView.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
+        agreeListview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onLoadMore() {
-                page++;
-                initServerData(true);
+            public void onGlobalLayout() {
+                mScrollView.smoothScrollTo(0,20);
             }
         });
+//        agreeListview.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
+//            @Override
+//            public void onLoadMore() {
+//                page++;
+//                initServerData(true);
+//
+//            }
+//        });
+//        commentListView.setOnRefreshListener(new NoteDetailListView.OnRefreshListener() {
+//            @Override
+//            public void onLoadMore() {
+//                page++;
+//                initServerData(true);
+//            }
+//        });
         commentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -372,8 +397,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                 commentAdapter.addMoreCom(comments);
             }
         }
-        commentListView.onRefreshComplete(true);
-        agreeListview.onRefreshComplete(true);
+//        commentListView.onRefreshComplete(true);
+//        agreeListview.onRefreshComplete(true);
     }
 
     private void setViewClick() {
@@ -490,6 +515,24 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
             btnPub.setVisibility(View.GONE);
             PrefUtils.setString(this, "temp_edit_comment", mEditText.getText().toString());
             mEditText.setText(null);
+        }
+    }
+
+    @Override
+    public void onScroll(int scrollY) {
+        searchLayoutTop = tvNoteContent.getBottom();
+        if (scrollY >= searchLayoutTop) {
+            if (hoveringLayout.getParent() != search01) {
+                search02.removeView(hoveringLayout);
+                search01.addView(hoveringLayout);
+                search01.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (hoveringLayout.getParent() != search02) {
+                search01.removeView(hoveringLayout);
+                search02.addView(hoveringLayout);
+                search01.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

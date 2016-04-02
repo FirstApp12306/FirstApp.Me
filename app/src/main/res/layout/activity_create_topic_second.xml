@@ -6,7 +6,7 @@
     android:background="#ffffff">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="#ffffff" >
 
         <ImageButton
@@ -25,7 +25,7 @@
             android:layout_centerInParent="true"
             android:text="创建话题"
             android:textColor="#435356"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <View
@@ -99,7 +99,7 @@
         android:id="@+id/activity_create_topic_second_topic_btn_pub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/btn_default_bg"
         android:textColor="#ffffff"
         android:textSize="18sp"

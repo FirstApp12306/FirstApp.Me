@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="#ffffff" >
 
         <ImageButton
@@ -25,7 +25,14 @@
             android:layout_centerInParent="true"
             android:text="创建话题"
             android:textColor="#435356"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="#d9d9d9"
+            android:layout_alignParentBottom="true"
+            />
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -40,7 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#435356"
             android:text="需要满足三个条件才能创建话题"/>
         <LinearLayout
@@ -50,14 +57,14 @@
             android:layout_marginTop="20dp">
             <ImageView
                 android:id="@+id/activity_create_topic_first_one"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/topic_create_check_pass"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="#435356"
                 android:text="已绑定手机；"/>
         </LinearLayout>
@@ -68,14 +75,14 @@
             android:layout_marginTop="20dp">
             <ImageView
                 android:id="@+id/activity_create_topic_first_two"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/topic_create_check_pass"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="#435356"
                 android:text="在社区内发布过至少一个帖子并关注了至少一个用户；"/>
         </LinearLayout>
@@ -86,14 +93,14 @@
             android:layout_marginTop="20dp">
             <ImageView
                 android:id="@+id/activity_create_topic_first_three"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/topic_create_check_pass"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="#435356"
                 android:text="今日还可以申请5次；"/>
         </LinearLayout>
@@ -101,7 +108,7 @@
             android:id="@+id/activity_create_topic_first_btn_create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/btn_default_bg"
             android:textColor="#ffffff"
             android:textSize="18sp"
@@ -112,6 +119,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="2"/>
 
 </LinearLayout>

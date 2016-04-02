@@ -36,7 +36,6 @@ public class CreateTopicFirstActivity extends BaseActivity {
                 Intent intent = new Intent(CreateTopicFirstActivity.this, CreateTopicSecondActivity.class);
                 startActivity(intent);
                 finish();
-                ;
             }
         });
 

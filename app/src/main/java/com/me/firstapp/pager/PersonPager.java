@@ -40,6 +40,7 @@ import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.DatabaseUtils;
 import com.me.firstapp.utils.DensityUtils;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.CircleImageView;
@@ -260,14 +261,9 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
     private void setUserInfo(User mUser) {
 
         if (mUser != null) {
-            ImageOptions imageOptions = new ImageOptions.Builder()
-                    .setIgnoreGif(true)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                    .setFailureDrawableId(R.drawable.person_avatar_default_round)
-                    .setLoadingDrawableId(R.drawable.person_avatar_default_round)
-                    .build();
-            x.image().bind(ivUserAvatar, mUser.user_avatar, imageOptions);
-
+            ImageUtils.bindImageWithOptions(ivUserAvatar,
+                    mUser.user_avatar,R.drawable.person_avatar_default_round,
+                    R.drawable.person_avatar_default_round);
             tvUserName.setText(mUser.user_name);
             tvUserLevel.setText("等级:" + mUser.user_level);
             tvUserID.setText("ID:" + mUser.user_id);

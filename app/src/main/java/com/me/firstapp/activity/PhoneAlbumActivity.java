@@ -70,26 +70,26 @@ public class PhoneAlbumActivity extends BaseActivity {
         contentList = helper.getImagesBucketList(false);
 
         activityName = getIntent().getStringExtra("activityName");
-        if("PhonePhotoFileActivity".equals(activityName)){
+        if ("PhonePhotoFileActivity".equals(activityName)) {
             position = getIntent().getIntExtra("position", 0);
             tvTitle.setText(contentList.get(position).bucketName);
             mGridView.setEmptyView(noText);
             gridImageAdapter = new AlbumGridViewAdapter(this, contentList.get(position).imageList);
             mGridView.setAdapter(gridImageAdapter);
             doOnItemClick(contentList.get(position).imageList);
-        }else{
+        } else {
             ArrayList<ImageItem> imageItemList = new ArrayList();
             for (int i = 0; i < contentList.size(); i++) {
                 imageItemList.addAll(contentList.get(i).imageList);
             }
             mGridView.setEmptyView(noText);
-            gridImageAdapter = new AlbumGridViewAdapter(this,imageItemList);
+            gridImageAdapter = new AlbumGridViewAdapter(this, imageItemList);
             mGridView.setAdapter(gridImageAdapter);
             doOnItemClick(imageItemList);
         }
     }
 
-    private void doOnItemClick(final ArrayList<ImageItem> imageList){
+    private void doOnItemClick(final ArrayList<ImageItem> imageList) {
         gridImageAdapter.setOnItemClickListener(new AlbumGridViewAdapter.OnItemClickListener() {
 
             @Override
@@ -116,7 +116,7 @@ public class PhoneAlbumActivity extends BaseActivity {
         });
     }
 
-    private boolean removeImageItem (ImageItem imageItem) {
+    private boolean removeImageItem(ImageItem imageItem) {
         if (ImageUtils.tempSelectedImg.contains(imageItem)) {
             ImageUtils.tempSelectedImg.remove(imageItem);
             btnOk.setText("完成" + "(" + ImageUtils.tempSelectedImg.size() + "/" + ImageUtils.MAX_PIC_NUM + ")");
@@ -128,38 +128,34 @@ public class PhoneAlbumActivity extends BaseActivity {
     private void setBtnOk() {
         if (ImageUtils.tempSelectedImg.size() > 0) {
             btnOk.setText("完成" + "(" + ImageUtils.tempSelectedImg.size() + "/" + ImageUtils.MAX_PIC_NUM + ")");
-            btnPre.setPressed(true);
-            btnOk.setPressed(true);
             btnPre.setClickable(true);
             btnOk.setClickable(true);
             btnOk.setTextColor(Color.parseColor("#435356"));
             btnPre.setTextColor(Color.parseColor("#435356"));
         } else {
             btnOk.setText("完成" + "(" + ImageUtils.tempSelectedImg.size() + "/" + ImageUtils.MAX_PIC_NUM + ")");
-            btnPre.setPressed(false);
             btnPre.setClickable(false);
-            btnOk.setPressed(false);
             btnOk.setClickable(false);
-            btnOk.setTextColor(Color.parseColor("#D1D1D1"));
-            btnPre.setTextColor(Color.parseColor("#D1D1D1"));
+            btnOk.setTextColor(Color.parseColor("#bfbfbf"));
+            btnPre.setTextColor(Color.parseColor("#bfbfbf"));
         }
     }
 
-    private void setBtnListen(){
+    private void setBtnListen() {
         btnOk.setText("完成" + "(" + ImageUtils.tempSelectedImg.size() + "/" + ImageUtils.MAX_PIC_NUM + ")");
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.activity_phone_album_btn_back :
+                switch (v.getId()) {
+                    case R.id.activity_phone_album_btn_back:
                         startActivity(new Intent(PhoneAlbumActivity.this, PhonePhotoFileActivity.class));
                         finish();
                         break;
-                    case R.id.activity_phone_album_btn_cancel :
+                    case R.id.activity_phone_album_btn_cancel:
                         ImageUtils.tempSelectedImg.clear();
                         finish();
                         break;
-                    case R.id.activity_phone_album_bt_preview :
+                    case R.id.activity_phone_album_bt_preview:
                         if (ImageUtils.tempSelectedImg.size() > 0) {
                             Intent intent = new Intent(PhoneAlbumActivity.this, ImagesGalleryActivity.class);
                             intent.putExtra("activityName", "PhoneAlbumActivity");
@@ -167,9 +163,9 @@ public class PhoneAlbumActivity extends BaseActivity {
                             //finish();
                         }
                         break;
-                    case R.id.activity_phone_album_btn_ok :
+                    case R.id.activity_phone_album_btn_ok:
                         EventBus.getDefault().post(new Event.CompleteNoteAddimageEvent());
-                        if ("ProfileActivity".equals(activityName)){
+                        if ("ProfileActivity".equals(activityName)) {
                             EventBus.getDefault().post(new Event.CompleteAvatarSelectEvent());
                         }
                         finish();

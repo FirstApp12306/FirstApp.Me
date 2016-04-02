@@ -7,12 +7,12 @@
     android:background="#f7f7f7">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="#ffffff" >
 
         <ImageButton
             android:id="@+id/activity_profile_btn_back"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:background="@drawable/btn_returnback_bg"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
@@ -127,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
@@ -165,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
@@ -203,7 +203,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
@@ -249,7 +249,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
@@ -279,7 +279,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:background="@drawable/profile_layout_click_bg">
 
                 <TextView
