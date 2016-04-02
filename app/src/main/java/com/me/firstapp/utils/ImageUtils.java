@@ -7,10 +7,16 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.me.firstapp.R;
 import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.entity.images.ImageItem;
+
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,5 +76,87 @@ public class ImageUtils {
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true); // no face detection
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 绑定带普通参数设置的图片
+     * @param view
+     * @param path
+     */
+    public static void bindImageWithOptions(View view, String path,int loadingDrawableId, int failureDrawableId){
+        ImageOptions imageOptions = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .setFailureDrawableId(failureDrawableId)
+                .setLoadingDrawableId(loadingDrawableId)
+                .build();
+        x.image().bind((ImageView) view, path, imageOptions);
+    }
+
+    /**
+     * 绑定带加载的图片
+     * @param view
+     * @param path
+     * @param loadingDrawableId
+     */
+    public static void bindImageWithLoadingDrawableId(View view, String path,int loadingDrawableId){
+        ImageOptions imageOptions = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .setLoadingDrawableId(loadingDrawableId)
+                .build();
+        x.image().bind((ImageView) view, path, imageOptions);
+    }
+
+    /**
+     * 绑定带加载失败的图片
+     * @param view
+     * @param path
+     * @param failureDrawableId
+     */
+    public static void bindImageWithFailedDrawableId(View view, String path,int failureDrawableId){
+        ImageOptions imageOptions = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .setFailureDrawableId(failureDrawableId)
+                .build();
+        x.image().bind((ImageView) view, path, imageOptions);
+    }
+
+    /**
+     * 一般性的绑定图片
+     * @param view
+     * @param path
+     */
+    public static void bindImage(View view, String path){
+        ImageOptions imageOptions = new ImageOptions.Builder()
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                // 默认自动适应大小
+                // .setSize(...)
+                .setIgnoreGif(true)
+                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
+                        //.setUseMemCache(false)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .build();
+        x.image().bind((ImageView) view, path, imageOptions);
     }
 }

@@ -16,10 +16,12 @@ import android.widget.TextView;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.ChatActivity;
 import com.me.firstapp.activity.NoteDetailActivity;
+import com.me.firstapp.activity.PersonInfoActivity;
 import com.me.firstapp.activity.ScanImageActivity;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.CircleImageView;
@@ -106,6 +108,17 @@ public class NotePagerListAdapter extends BaseAdapter {
         doNotify();
     }
 
+    //新增粉丝
+    public void addFans(User user){
+        for (User mUser : users){
+            if (mUser.user_id.equals(user.user_id)){
+                mUser.fans_flag = "true";
+                break;
+            }
+        }
+        doNotify();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
@@ -132,19 +145,8 @@ public class NotePagerListAdapter extends BaseAdapter {
         final Note note = notes.get(position);
         holder.tvUserName.setText(user.user_name);
         holder.tvTime.setText(note.time_stamp);
-        ImageOptions imageOptions1 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                .setLoadingDrawableId(R.drawable.person_avatar_default_round)
-                .setFailureDrawableId(R.drawable.person_avatar_default_round)
-                .build();
-        x.image().bind(holder.ivAvatar, user.user_avatar, imageOptions1);
+        ImageUtils.bindImageWithOptions(holder.ivAvatar, user.user_avatar,
+                R.drawable.person_avatar_default_round, R.drawable.person_avatar_default_round);
         if (TextUtils.isEmpty(note.note_content)) {
             holder.tvNoteContent.setVisibility(View.GONE);
         } else {
@@ -153,16 +155,7 @@ public class NotePagerListAdapter extends BaseAdapter {
         }
 
         holder.ivNoteImage.setVisibility(View.VISIBLE);
-        ImageOptions imageOptions2 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-        x.image().bind(holder.ivNoteImage, note.image_key, imageOptions2);
+        ImageUtils.bindImage(holder.ivNoteImage, note.image_key);
 
         holder.btnComment.setText(note.note_comment_counts + "");
         holder.btnAgree.setText(note.note_agree_counts + "");
@@ -191,41 +184,56 @@ public class NotePagerListAdapter extends BaseAdapter {
         }
 
         View.OnClickListener listener = new View.OnClickListener() {
+            Intent intent;
             @Override
             public void onClick(View v) {
 
                 switch (v.getId()) {
                     case R.id.notes_pager_list_item_btn_add_friend:
                         if (!"true".equals(user.fans_flag)) {
-                            doNotify();
-                            sendAddFriendDataToServer(user);
+                            addFans(user);
+                            sendAddFansDataToServer(user);
                         }
-
                         break;
                     case R.id.notes_pager_list_item_pop:
                         break;
                     case R.id.notes_pager_list_item_avatar:
-                        Intent intent1 = new Intent(context, ChatActivity.class);
-                        intent1.putExtra("targetID", user.user_phone);
-                        intent1.putExtra("user_name", user.user_name);
-                        context.startActivity(intent1);
+                        if (!user.user_id.equals(loginUserID)){
+                            intent = new Intent(context, PersonInfoActivity.class);
+                            intent.putExtra("user_id", user.user_id);
+                            intent.putExtra("user_name", user.user_name);
+                            intent.putExtra("user_avatar", user.user_avatar);
+                            intent.putExtra("user_city", user.user_city);
+                            intent.putExtra("signature", user.user_signature);
+                            intent.putExtra("user_level", user.user_level);
+                            intent.putExtra("user_phone", user.user_phone);
+                            intent.putExtra("fans_flag", user.fans_flag);
+                            context.startActivity(intent);
+                        }
                         break;
                     case R.id.notes_pager_list_item_note_image:
-                        Intent intent2 = new Intent(context, ScanImageActivity.class);
-                        intent2.putExtra("image_url", note.image_key);
-                        context.startActivity(intent2);
+                        intent = new Intent(context, ScanImageActivity.class);
+                        intent.putExtra("image_url", note.image_key);
+                        context.startActivity(intent);
                         break;
                     case R.id.notes_pager_list_item_comment:
-                        Intent intent = new Intent(context, NoteDetailActivity.class);
+                        intent = new Intent(context, NoteDetailActivity.class);
                         intent.putExtra("topic_key", note.topic_key);
                         intent.putExtra("topic_title", topicTitle);
                         intent.putExtra("user_avatar", user.user_avatar);
                         intent.putExtra("user_name", user.user_name);
+                        intent.putExtra("user_city", user.user_city);
+                        intent.putExtra("user_phone", user.user_phone);
+                        intent.putExtra("user_level", user.user_level+"");
+                        intent.putExtra("signature", user.user_signature);
+                        intent.putExtra("user_id", user.user_id);
+                        intent.putExtra("fans_flag", user.fans_flag);
                         intent.putExtra("note_key", note.note_key);
                         intent.putExtra("note_image", note.image_key);
                         intent.putExtra("note_content", note.note_content);
                         intent.putExtra("note_agree_counts", note.note_agree_counts);
                         intent.putExtra("note_comment_counts", note.note_comment_counts);
+                        intent.putExtra("support_flag", note.support_flag);
                         context.startActivity(intent);
                         break;
                     case R.id.notes_pager_list_item_agree:
@@ -233,8 +241,6 @@ public class NotePagerListAdapter extends BaseAdapter {
                             addSupport(note);
                             sendSupportDataToServer(holder, note);
                         }
-
-
                         break;
                 }
             }
@@ -280,7 +286,7 @@ public class NotePagerListAdapter extends BaseAdapter {
         });
     }
 
-    private void sendAddFriendDataToServer(User user) {
+    private void sendAddFansDataToServer(User user) {
         RequestParams params = new RequestParams(GlobalContants.ADD_FRIEND_URL);
         params.addQueryStringParameter("user_id", user.user_id);
         params.addQueryStringParameter("fans_id", loginUserID);

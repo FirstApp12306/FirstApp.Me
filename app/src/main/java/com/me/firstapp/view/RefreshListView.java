@@ -32,6 +32,9 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     private View mFooterView;
     private int mFooterViewHeight;
 
+    private boolean pullRefreshAble = true;
+    private boolean loadingMoreAble = true;
+
     private int mCurrrentState = STATE_PULL_REFRESH;// 当前状态
     private TextView tvTitle;
     private ProgressBar pbProgress;
@@ -103,23 +106,29 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
                     break;
                 }
 
-                int endY = (int) ev.getRawY();
-                int dy = endY - startY;// 移动便宜量
+                if (pullRefreshAble == true){
+                    int endY = (int) ev.getRawY();
+                    int dy = endY - startY;// 移动便宜量
 
-                if (dy > 0 && getFirstVisiblePosition() == 0) {// 只有下拉并且当前是第一个item,才允许下拉
-                    int padding = dy - mHeaderViewHeight;// 计算padding
-                    mHeaderView.setPadding(0, padding, 0, 0);// 设置当前padding
+                    if (dy > 0 && getFirstVisiblePosition() == 0) {// 只有下拉并且当前是第一个item,才允许下拉
+                        int padding = dy - mHeaderViewHeight;// 计算padding
+                        mHeaderView.setPadding(0, padding, 0, 0);// 设置当前padding
 
-                    if (padding > 0 && mCurrrentState != STATE_RELEASE_REFRESH) {// 状态改为松开刷新
-                        mCurrrentState = STATE_RELEASE_REFRESH;
-                        refreshState();
-                    } else if (padding < 0 && mCurrrentState != STATE_PULL_REFRESH) {// 改为下拉刷新状态
-                        mCurrrentState = STATE_PULL_REFRESH;
-                        refreshState();
+                        if (padding > 0 && mCurrrentState != STATE_RELEASE_REFRESH) {// 状态改为松开刷新
+                            mCurrrentState = STATE_RELEASE_REFRESH;
+                            refreshState();
+                        } else if (padding < 0 && mCurrrentState != STATE_PULL_REFRESH) {// 改为下拉刷新状态
+                            mCurrrentState = STATE_PULL_REFRESH;
+                            refreshState();
+                        }
+                        super.onTouchEvent(ev);//调用父类方法，防止滑动时触发点击事件
+                        return true;
                     }
+                }else{
                     super.onTouchEvent(ev);//调用父类方法，防止滑动时触发点击事件
                     return true;
                 }
+
                 break;
             case MotionEvent.ACTION_UP:
                 startY = -1;// 重置
@@ -190,6 +199,22 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         }
     }
 
+    /**
+     * 设置是否可下拉刷新
+     * @param pullRefreshAble
+     */
+    public void setPullRefreshAble(boolean pullRefreshAble){
+        this.pullRefreshAble = pullRefreshAble;
+    }
+
+    /**
+     * 设置是否可加载更多
+     * @param loadingMoreAble
+     */
+    public void setLoadingMoreAble(boolean loadingMoreAble){
+        this.loadingMoreAble = loadingMoreAble;
+    }
+
     OnItemClickListener mItemClickListener;
 
     @Override
@@ -210,16 +235,16 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if (scrollState == SCROLL_STATE_IDLE
                 || scrollState == SCROLL_STATE_FLING) {
+            if (loadingMoreAble == true){
+                if (getLastVisiblePosition() == getCount() - 1 && !isLoadingMore) {// 滑动到最后
+                    mFooterView.setPadding(0, 0, 0, 0);// 显示
+                    setSelection(getCount() - 1);// 改变listview显示位置
 
-            if (getLastVisiblePosition() == getCount() - 1 && !isLoadingMore) {// 滑动到最后
-                System.out.println("到底了.....");
-                mFooterView.setPadding(0, 0, 0, 0);// 显示
-                setSelection(getCount() - 1);// 改变listview显示位置
+                    isLoadingMore = true;
 
-                isLoadingMore = true;
-
-                if (mListener != null) {
-                    mListener.onLoadMore();
+                    if (mListener != null) {
+                        mListener.onLoadMore();
+                    }
                 }
             }
         }

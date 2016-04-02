@@ -3,11 +3,9 @@ package com.me.firstapp.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,19 +50,19 @@ public class NoteDetailListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (typeFlag == true){
+        if (typeFlag == true) {
             return supports.size();
-        }else{
-            return  comments.size();
+        } else {
+            return comments.size();
         }
     }
 
     @Override
     public Object getItem(int position) {
-        if (typeFlag == true){
+        if (typeFlag == true) {
             return supports.get(position);
-        }else{
-            return  comments.get(position);
+        } else {
+            return comments.get(position);
         }
     }
 
@@ -73,25 +71,22 @@ public class NoteDetailListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addMoreSup(ArrayList<Support> supports){
+    public void addMoreSup(ArrayList<Support> supports) {
         this.supports.addAll(supports);
-        typeFlag = true;
         doNotify();
     }
 
-    public void addMoreCom(ArrayList<Comment> comments){
+    public void addMoreCom(ArrayList<Comment> comments) {
         this.comments.addAll(comments);
-        typeFlag = false;
         doNotify();
     }
 
-    public void addNewCom(Comment comment){
+    public void addNewCom(Comment comment) {
         this.comments.add(0, comment);
-        typeFlag = false;
         doNotify();
     }
 
-    public void doNotify(){
+    public void doNotify() {
         mActivity.runOnUiThread(new Runnable() {
 
             @Override
@@ -105,8 +100,8 @@ public class NoteDetailListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         SupportViewHolder supportViewHolder = null;
         CommentViewHolder commentViewHolder = null;
-        if (typeFlag == true){
-            if (convertView == null){
+        if (typeFlag == true) {
+            if (convertView == null) {
                 supportViewHolder = new SupportViewHolder();
                 convertView = View.inflate(context, R.layout.note_detail_agree_pager_item, null);
                 supportViewHolder.ivAvatar = (CircleImageView) convertView.findViewById(R.id.note_detail_agree_pager_item_avatar);
@@ -114,11 +109,11 @@ public class NoteDetailListAdapter extends BaseAdapter {
                 supportViewHolder.tvUserID = (TextView) convertView.findViewById(R.id.note_detail_agree_pager_item_user_id);
                 supportViewHolder.tvCity = (TextView) convertView.findViewById(R.id.note_detail_agree_pager_item_city);
                 convertView.setTag(supportViewHolder);
-            }else {
+            } else {
                 supportViewHolder = (SupportViewHolder) convertView.getTag();
             }
-        }else{
-            if (convertView == null){
+        } else {
+            if (convertView == null) {
                 commentViewHolder = new CommentViewHolder();
                 convertView = View.inflate(context, R.layout.note_detail_comment_pager_item, null);
                 commentViewHolder.ivAvatar = (CircleImageView) convertView.findViewById(R.id.note_detail_comment_pager_item_avatar);
@@ -127,12 +122,12 @@ public class NoteDetailListAdapter extends BaseAdapter {
                 commentViewHolder.tvComment = (TextView) convertView.findViewById(R.id.note_detail_comment_pager_item_comment);
                 commentViewHolder.btnPop = (ImageView) convertView.findViewById(R.id.note_detail_comment_pager_item_pop);
                 convertView.setTag(commentViewHolder);
-            }else{
+            } else {
                 commentViewHolder = (CommentViewHolder) convertView.getTag();
             }
         }
 
-        if (typeFlag == true){
+        if (typeFlag == true) {
             Support support = supports.get(position);
             ImageOptions imageOptions = new ImageOptions.Builder()
                     // 加载中或错误图片的ScaleType
@@ -142,14 +137,17 @@ public class NoteDetailListAdapter extends BaseAdapter {
                     .setIgnoreGif(true)
                             // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
                             //.setUseMemCache(false)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                    .setFailureDrawableId(R.drawable.person_avatar_default_round)
+                    .setLoadingDrawableId(R.drawable.person_avatar_default_round)
+                    .build();
             x.image().bind(supportViewHolder.ivAvatar, support.user_avatar, imageOptions);
             supportViewHolder.tvUserName.setText(support.user_name);
-            supportViewHolder.tvUserID.setText("ID:"+support.user_id);
+            supportViewHolder.tvUserID.setText("ID:" + support.user_id);
             supportViewHolder.tvCity.setText(support.user_city);
         }
 
-        if (typeFlag == false){
+        if (typeFlag == false) {
             Comment comment = comments.get(position);
             ImageOptions imageOptions = new ImageOptions.Builder()
                     // 加载中或错误图片的ScaleType
@@ -159,17 +157,20 @@ public class NoteDetailListAdapter extends BaseAdapter {
                     .setIgnoreGif(true)
                             // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
                             //.setUseMemCache(false)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
+                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                    .setFailureDrawableId(R.drawable.person_avatar_default_round)
+                    .setLoadingDrawableId(R.drawable.person_avatar_default_round)
+                    .build();
             x.image().bind(commentViewHolder.ivAvatar, comment.user_avatar, imageOptions);
             commentViewHolder.tvUserName.setText(comment.user_name);
             commentViewHolder.tvDate.setText(comment.time_stamp);
 
-            if ("Y".equals(comment.reply_yn)){
-                String source = "<font color='#918b8a'>回复 "+comment.reply_to_user_name+":</font>"+comment.comment_content;
+            if ("Y".equals(comment.reply_yn)) {
+                String source = "<font color='#918b8a'>回复 " + comment.reply_to_user_name + ":</font>" + comment.comment_content;
                 commentViewHolder.tvComment.setText(Html.fromHtml(source));
-            }else if ("N".equals(comment.reply_yn)){
+            } else if ("N".equals(comment.reply_yn)) {
                 commentViewHolder.tvComment.setText(comment.comment_content);
-            }else{
+            } else {
                 commentViewHolder.tvComment.setText(comment.comment_content);
             }
             commentViewHolder.btnPop.setOnClickListener(new View.OnClickListener() {
@@ -183,14 +184,14 @@ public class NoteDetailListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class SupportViewHolder{
+    private class SupportViewHolder {
         public CircleImageView ivAvatar;
         public TextView tvUserName;
         public TextView tvUserID;
         public TextView tvCity;
     }
 
-    private class CommentViewHolder{
+    private class CommentViewHolder {
         public CircleImageView ivAvatar;
         public TextView tvUserName;
         public TextView tvDate;

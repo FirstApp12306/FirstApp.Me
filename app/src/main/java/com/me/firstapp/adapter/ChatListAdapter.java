@@ -18,6 +18,7 @@ import com.me.firstapp.R;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.utils.DatabaseUtils;
 import com.me.firstapp.utils.DialogUtils;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.TimeFormat;
 import com.me.firstapp.view.CircleImageView;
@@ -190,10 +191,9 @@ public class ChatListAdapter extends BaseAdapter {
 
         if(msg.getDirect().equals(MessageDirect.send)){
             showTime(holder.sendTime, msg, position);
-//            showAvatar(holder.sendAvatar, msg);
             String userID = PrefUtils.getString(context, "loginUser", null);
             User user = new DatabaseUtils(context).queryUser(userID);
-            x.image().bind(holder.sendAvatar, user.user_avatar);
+            ImageUtils.bindImageWithOptions(holder.sendAvatar, user.user_avatar, R.drawable.person_avatar_default_round, R.drawable.person_avatar_default_round);
             String content = ((TextContent) msg.getContent()).getText();
             holder.sendMsg.setText(content);
             handleTextMsg(msg, holder);
@@ -252,7 +252,6 @@ public class ChatListAdapter extends BaseAdapter {
                         @Override
                         public void run() {
                             if (status != 0)
-                               // HandleResponseCode.onHandle(context, status);
                             notifyDataSetChanged();
                         }
                     });
@@ -291,7 +290,6 @@ public class ChatListAdapter extends BaseAdapter {
                 @Override
                 public void gotResult(final int status, String desc) {
                     if (status != 0) {
-                        //HandleResponseCode.onHandle(context, status);
                         holder.sendSending.clearAnimation();
                         holder.sendSending.setVisibility(View.GONE);
                         holder.sendFail.setVisibility(View.VISIBLE);
@@ -346,9 +344,11 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     private void showAvatar(ImageView avatarView,Message msg){
-        String avatarStr = msg.getFromUser().getAvatar();
         File avatar = msg.getFromUser().getAvatarFile();
-        x.image().bind(avatarView, avatar.getPath());
+        if (avatar != null){
+            ImageUtils.bindImageWithOptions(avatarView, avatar.getPath(), R.drawable.person_avatar_default_round, R.drawable.person_avatar_default_round);
+        }
+
     }
 
     private class ViewHolder {

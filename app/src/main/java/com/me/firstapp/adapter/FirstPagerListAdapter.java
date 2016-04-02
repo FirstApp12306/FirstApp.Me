@@ -21,6 +21,7 @@ import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.CircleImageView;
@@ -46,7 +47,6 @@ public class FirstPagerListAdapter extends BaseAdapter {
     private ArrayList<Note> notes;
     private ArrayList<User> users;
     private ArrayList<Topic> topics;
-    private boolean loginFlag;
     private String loginUserID;
 
     public FirstPagerListAdapter(Context context, ArrayList<Note> notes, ArrayList<User> users, ArrayList<Topic> topics) {
@@ -55,7 +55,6 @@ public class FirstPagerListAdapter extends BaseAdapter {
         this.notes = notes;
         this.users = users;
         this.topics = topics;
-        loginFlag = PrefUtils.getBoolean(context, "login_flag", false);
         loginUserID = PrefUtils.getString(context, "loginUser", null);
     }
 
@@ -129,33 +128,12 @@ public class FirstPagerListAdapter extends BaseAdapter {
         final Note note = notes.get(position);
         final Topic topic = topics.get(position);
 
-        ImageOptions imageOptions1 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                .setFailureDrawableId(R.drawable.person_avatar_default_round)
-                .setLoadingDrawableId(R.drawable.person_avatar_default_round)
-                .build();
-        x.image().bind(holder.ivAvatar, user.user_avatar, imageOptions1);
-
+        ImageUtils.bindImageWithOptions(holder.ivAvatar,
+                user.user_avatar, R.drawable.person_avatar_default_round,
+                R.drawable.person_avatar_default_round);
 
         holder.ivNoteImage.setVisibility(View.VISIBLE);
-        ImageOptions imageOptions2 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .build();
-        x.image().bind(holder.ivNoteImage, note.image_key, imageOptions2);
-
+        ImageUtils.bindImage(holder.ivNoteImage, note.image_key);
 
         holder.tvTopicTitle.setText(topic.topic_title);
         holder.tvUserName.setText(user.user_name);
@@ -177,35 +155,40 @@ public class FirstPagerListAdapter extends BaseAdapter {
         }
 
         View.OnClickListener listener = new View.OnClickListener() {
+            Intent intent;
             @Override
             public void onClick(View v) {
+
                 switch (v.getId()) {
                     case R.id.pager_friend_news_list_item_topic_title:
-                        Intent intent1 = new Intent(mActivity, TopicNoteActivity.class);
-                        intent1.putExtra("topic_key", topic.topic_key);
-                        intent1.putExtra("topic_title", topic.topic_title);
-                        mActivity.startActivity(intent1);
+                        intent = new Intent(mActivity, TopicNoteActivity.class);
+                        intent.putExtra("topic_key", topic.topic_key);
+                        intent.putExtra("topic_title", topic.topic_title);
+                        mActivity.startActivity(intent);
                         break;
                     case R.id.pager_friend_news_list_item_pop:
                         break;
                     case R.id.pager_friend_news_list_item_avatar:
-                        Intent intent3 = new Intent(context, PersonInfoActivity.class);
-                        intent3.putExtra("user_id", user.user_id);
-                        intent3.putExtra("user_name", user.user_name);
-                        intent3.putExtra("user_avatar", user.user_avatar);
-                        intent3.putExtra("user_city", user.user_city);
-                        intent3.putExtra("signature", user.user_signature);
-                        intent3.putExtra("user_level", user.user_level);
-                        intent3.putExtra("user_phone", user.user_phone);
-                        context.startActivity(intent3);
+                        if (!user.user_id.equals(loginUserID)){
+                            intent = new Intent(context, PersonInfoActivity.class);
+                            intent.putExtra("user_id", user.user_id);
+                            intent.putExtra("user_name", user.user_name);
+                            intent.putExtra("user_avatar", user.user_avatar);
+                            intent.putExtra("user_city", user.user_city);
+                            intent.putExtra("signature", user.user_signature);
+                            intent.putExtra("user_level", user.user_level);
+                            intent.putExtra("user_phone", user.user_phone);
+                            intent.putExtra("fans_flag", user.fans_flag);
+                            context.startActivity(intent);
+                        }
                         break;
                     case R.id.pager_friend_news_list_item_note_image:
-                        Intent intent2 = new Intent(context, ScanImageActivity.class);
-                        intent2.putExtra("image_url", note.image_key);
-                        context.startActivity(intent2);
+                        intent = new Intent(context, ScanImageActivity.class);
+                        intent.putExtra("image_url", note.image_key);
+                        context.startActivity(intent);
                         break;
                     case R.id.pager_friend_news_list_item_btn_comment:
-                        Intent intent = new Intent(context, NoteDetailActivity.class);
+                        intent = new Intent(context, NoteDetailActivity.class);
                         intent.putExtra("topic_key", note.topic_key);
                         intent.putExtra("topic_title", topic.topic_title);
                         intent.putExtra("user_avatar", user.user_avatar);
@@ -215,6 +198,7 @@ public class FirstPagerListAdapter extends BaseAdapter {
                         intent.putExtra("note_content", note.note_content);
                         intent.putExtra("note_agree_counts", note.note_agree_counts);
                         intent.putExtra("note_comment_counts", note.note_comment_counts);
+                        intent.putExtra("support_flag", note.support_flag);
                         context.startActivity(intent);
                         break;
                     case R.id.pager_friend_news_list_item_btn_support:

@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <ListView
+    <com.me.firstapp.view.RefreshListView
         android:id="@+id/view_pager_person_note_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ListView>
+    </com.me.firstapp.view.RefreshListView>
 
 </LinearLayout>

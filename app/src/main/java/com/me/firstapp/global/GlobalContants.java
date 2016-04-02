@@ -50,6 +50,8 @@ public class GlobalContants {
     public static final String NOTICE_SUPPORTS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NoticeSupportListController";
     //客户端加关注用户接口
     public static final String ADD_FRIEND_URL = SERVER_URL + "/automake/controller/firstapp/FansInsertController";
+    //客户端取消关注用户接口
+    public static final String DELETE_FRIEND_URL = SERVER_URL + "/automake/controller/firstapp/FansDeleteController";
     //客户端提示中我的粉丝列表数据接口
     public static final String NOTICE_FANS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/NoticeFansListController";
     //客户端首页数据获取接口
@@ -58,8 +60,6 @@ public class GlobalContants {
     public static final String FIND_NOTIES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/FindNotesListController";
     //客户端获取我的话题数据接口
     public static final String MY_TOPICS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/MyTopicsListController";
-    //客户端获取我的帖子数据接口
-    public static final String MY_NOTES_LIST_URL = SERVER_URL + "/automake/controller/firstapp/MyNotesListController";
     //客户端更新用户头像接口
     public static final String UPDATE_AVATAR_URL = SERVER_URL + "/automake/controller/firstapp/UpdateAvatarController";
     //客户端更新用户名接口

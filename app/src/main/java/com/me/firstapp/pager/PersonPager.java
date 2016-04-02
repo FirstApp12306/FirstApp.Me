@@ -45,6 +45,7 @@ import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.view.CircleImageView;
 import com.me.firstapp.view.HoveringScrollview;
 import com.me.firstapp.view.MyScrollView;
+import com.me.firstapp.view.RefreshListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,8 +67,6 @@ import java.util.ArrayList;
 public class PersonPager extends BasePager implements HoveringScrollview.OnScrollListener {
 
     private View view;
-    private Button btnLogin;
-    private Button btnSignUp;
 
     private HoveringScrollview hoveringScrollview;
     private int searchLayoutTop;
@@ -79,8 +78,8 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
     private View topicView;
     private View noteView;
     private RadioGroup nRadioGroup;
-    private ListView topicListView;
-    private ListView noteListView;
+    private RefreshListView topicListView;
+    private RefreshListView noteListView;
     private LinearLayout vpLinearLayout;
     private RelativeLayout pRelativeLayout;
 
@@ -137,8 +136,10 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
 
         topicView = View.inflate(mActivity, R.layout.view_pager_person_topic, null);
         noteView = View.inflate(mActivity, R.layout.view_pager_person_note, null);
-        topicListView = (ListView) topicView.findViewById(R.id.view_pager_person_topic_listview);
-        noteListView = (ListView) noteView.findViewById(R.id.view_pager_person_note_listview);
+        topicListView = (RefreshListView) topicView.findViewById(R.id.view_pager_person_topic_listview);
+        noteListView = (RefreshListView) noteView.findViewById(R.id.view_pager_person_note_listview);
+        topicListView.setPullRefreshAble(false);
+        noteListView.setPullRefreshAble(false);
 
         hoveringScrollview.setOnScrollListener(this);// set Listener
         nRadioGroup.check(R.id.pager_person_rbtn_topic);

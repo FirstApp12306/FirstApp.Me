@@ -7,7 +7,7 @@
 
     <ImageView
         android:layout_width="140dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@drawable/list_header_logo"/>
 
     <LinearLayout
