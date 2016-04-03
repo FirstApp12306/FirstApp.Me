@@ -85,6 +85,7 @@
         <activity android:name=".activity.ToLoginOrSingupActivity"/>
         <activity android:name=".activity.PersonInfoActivity"/>
         <activity android:name=".activity.SupportListActivity"/>
+        <activity android:name=".activity.ContactsActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <EditText
+        android:id="@+id/view_activity_contacts_follow_et"
         android:hint="搜索118位联系人"
         android:singleLine="true"
         android:paddingLeft="16dp"
@@ -19,6 +20,7 @@
         android:layout_height="match_parent">
 
         <ListView
+            android:id="@+id/view_activity_contacts_follow_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -26,6 +28,7 @@
             android:scrollbars="none" />
 
         <TextView
+            android:id="@+id/view_activity_contacts_follow_center_text"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
@@ -38,7 +41,8 @@
             tools:visibility="visible" />
 
         <com.me.firstapp.view.SideBar
-            android:layout_width="24dp"
+            android:id="@+id/view_activity_contacts_follow_sidebar"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_gravity="right|center" />
     </FrameLayout>

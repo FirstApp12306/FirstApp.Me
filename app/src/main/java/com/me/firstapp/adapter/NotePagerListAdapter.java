@@ -154,8 +154,13 @@ public class NotePagerListAdapter extends BaseAdapter {
             holder.tvNoteContent.setText(note.note_content);
         }
 
-        holder.ivNoteImage.setVisibility(View.VISIBLE);
-        ImageUtils.bindImage(holder.ivNoteImage, note.image_key);
+        if (TextUtils.isEmpty(note.image_key)){
+            holder.ivNoteImage.setVisibility(View.GONE);
+        }else{
+            holder.ivNoteImage.setVisibility(View.VISIBLE);
+            ImageUtils.bindImage(holder.ivNoteImage, note.image_key);
+        }
+
 
         holder.btnComment.setText(note.note_comment_counts + "");
         holder.btnAgree.setText(note.note_agree_counts + "");

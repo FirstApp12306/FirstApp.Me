@@ -67,7 +67,7 @@
     <ImageView
         android:id="@+id/notes_pager_list_item_note_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="350dp"
         android:src="@drawable/test"
         android:layout_below="@+id/notes_pager_list_item_username"
         android:layout_alignParentStart="true"

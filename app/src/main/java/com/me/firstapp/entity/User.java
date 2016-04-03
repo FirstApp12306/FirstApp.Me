@@ -22,6 +22,7 @@ public class User {
     public String fans;
     public String follow;
     public String fans_flag;
+    public String sortLetters;//显示数据拼音的首字母
 
 
     @Override

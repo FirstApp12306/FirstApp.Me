@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.activity.ChatActivity;
+import com.me.firstapp.activity.ContactsActivity;
 import com.me.firstapp.activity.MainActivity;
 import com.me.firstapp.activity.notices.NoticeCommentActivity;
 import com.me.firstapp.activity.notices.NoticeFansActivity;
@@ -71,6 +72,7 @@ public class MsgPager extends BasePager {
     public void initViews() {
         super.initViews();
         btnSetting.setVisibility(View.GONE);
+        btnContacts.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -252,6 +254,9 @@ public class MsgPager extends BasePager {
                         PrefUtils.setString(mActivity, "new_fans_num", "0");
                         setNum();
                         break;
+                    case R.id.pager_base_btn_contacts :
+                        mActivity.startActivity(new Intent(mActivity, ContactsActivity.class));
+                        break;
                     case R.id.view_pager_msg_notice_firstapp :
                         break;
                 }
@@ -261,6 +266,7 @@ public class MsgPager extends BasePager {
         llLike.setOnClickListener(listener);
         llFans.setOnClickListener(listener);
         llFirstApp.setOnClickListener(listener);
+        btnContacts.setOnClickListener(listener);
     }
 
     // 得到会话列表
