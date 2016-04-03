@@ -5,11 +5,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.entity.Support;
 import com.me.firstapp.utils.ImageUtils;
+import com.me.firstapp.view.CircleImageView;
 
 import java.util.ArrayList;
 
@@ -20,14 +21,14 @@ import java.util.ArrayList;
  * QQ: 1046566144
  * 描述:
  */
-public class SupportAvatarGridViewAdapter extends BaseAdapter {
+public class SupportListAdapter extends BaseAdapter {
     private Context context;
     private Activity mActivity;
     private ArrayList<Support> supports;
 
-    public SupportAvatarGridViewAdapter(Context context, ArrayList<Support> supports) {
+    public SupportListAdapter(Context context, ArrayList<Support> supports) {
         this.context = context;
-        this.mActivity = (Activity) context;
+        mActivity = (Activity) context;
         this.supports = supports;
     }
 
@@ -51,11 +52,6 @@ public class SupportAvatarGridViewAdapter extends BaseAdapter {
         doNotify();
     }
 
-    public void addNew(Support newSupport){
-        this.supports.add(0, newSupport);
-        doNotify();
-    }
-
     private void doNotify(){
         mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -69,21 +65,29 @@ public class SupportAvatarGridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.comment_list_header_grid_item, null);
             holder = new ViewHolder();
-            holder.image = (ImageView) convertView.findViewById(R.id.comment_list_header_grid_item_avatar);
+            convertView = View.inflate(context, R.layout.activity_support_list_item, null);
+            holder.ivAvatar = (CircleImageView) convertView.findViewById(R.id.activity_support_list_item_avatar);
+            holder.tvUserName = (TextView) convertView.findViewById(R.id.activity_support_list_item_user_name);
+            holder.tvUserID = (TextView) convertView.findViewById(R.id.activity_support_list_item_user_id);
+            holder.tvUserCity = (TextView) convertView.findViewById(R.id.activity_support_list_item_city);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
         Support support = supports.get(position);
-        ImageUtils.bindImageWithOptions(holder.image, support.user_avatar,
+        ImageUtils.bindImageWithOptions(holder.ivAvatar, support.user_avatar,
                 R.drawable.person_avatar_default_round, R.drawable.person_avatar_default_round);
+        holder.tvUserName.setText(support.user_name);
+        holder.tvUserID.setText(support.user_id);
+        holder.tvUserCity.setText(support.user_city);
         return convertView;
     }
 
     private class ViewHolder{
-        public ImageView image;
+        public CircleImageView ivAvatar;
+        public TextView tvUserName;
+        public TextView tvUserID;
+        public TextView tvUserCity;
     }
-
 }

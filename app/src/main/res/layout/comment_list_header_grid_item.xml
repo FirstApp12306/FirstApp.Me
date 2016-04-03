@@ -5,6 +5,6 @@
     android:layout_height="match_parent">
     <com.me.firstapp.view.CircleImageView
         android:id="@+id/comment_list_header_grid_item_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 </LinearLayout>

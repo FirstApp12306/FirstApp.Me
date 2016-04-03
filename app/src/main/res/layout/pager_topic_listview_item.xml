@@ -2,16 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/pager_topic_listview_item_topic_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:textSize="16sp"
         android:textColor="#435356"
         android:text="我的大学，不找对象"/>
 
@@ -19,7 +18,9 @@
         android:id="@+id/pager_topic_listview_item_browse_counts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:textSize="12sp"
         android:textColor="#918b8a"
         android:text="2345 次浏览"/>

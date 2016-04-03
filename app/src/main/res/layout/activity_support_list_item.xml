@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="5dp">
+
+    <com.me.firstapp.view.CircleImageView
+        android:id="@+id/activity_support_list_item_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/test"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center|left"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_support_list_item_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="10dp"
+            android:text="哎呦啊哈"
+            android:textColor="#435356"
+            android:textSize="16sp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/activity_support_list_item_user_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:paddingLeft="10dp"
+                android:text="ID:123456"
+                android:textColor="#b3b3b3"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/activity_support_list_item_city"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="西安"
+                android:textColor="#b3b3b3"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:src="@drawable/arrow"
+        />
+
+
+</LinearLayout>

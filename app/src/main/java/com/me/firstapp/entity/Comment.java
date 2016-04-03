@@ -15,6 +15,9 @@ public class Comment {
     public String user_id;
     public String user_name;
     public String user_signature;
+    public String user_phone;
+    public String user_level;
+    public String fans_flag;
     public String reply_yn;
     public String reply_to_user_id;
     public String reply_to_user_name;

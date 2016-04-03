@@ -53,6 +53,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -68,8 +69,9 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:background="#ffffff"
+            android:listSelector="@android:color/transparent"
             android:horizontalSpacing="2dp"
-            android:columnWidth="40dp"
+            android:columnWidth="30dp"
             android:numColumns="auto_fit"
             android:scrollbars="none"
             android:stretchMode="columnWidth"

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,8 +21,11 @@ import com.me.firstapp.adapter.NoteDetailListAdapter;
 import com.me.firstapp.adapter.SupportAvatarGridViewAdapter;
 import com.me.firstapp.entity.Comment;
 import com.me.firstapp.entity.Support;
+import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
+import com.me.firstapp.utils.DatabaseUtils;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 import com.me.firstapp.utils.SoftInputUtils;
@@ -78,10 +82,6 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     //软件盘弹起后所占高度阀值
     private int keyHeight = 0;
 
-    private View agreeView;
-    private View commentView;
-
-    private ArrayList<View> views = new ArrayList<>();
     private String[] titles = new String[2];
     private String topic_key;
     private String note_key;
@@ -89,7 +89,6 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private ArrayList<Support> supports;
     private ArrayList<Comment> comments;
     private Comment comment;
-    private long page = 1;
     private String loginUserID;
     private String user_id;
     private String fans_flag;
@@ -99,6 +98,11 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     private String signature;
     private String user_level;
     private String user_phone;
+    private String topicTitle;
+    private String support_flag;
+    private  String note_content;
+    private User loginUser ;
+    private int page = 1;
 
 
     @Override
@@ -106,6 +110,8 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         x.view().inject(this);
+        loginUserID = PrefUtils.getString(this, "loginUser", null);
+        loginUser = new DatabaseUtils(this).queryUser(loginUserID);
 
         headerView = View.inflate(this, R.layout.comment_list_header_view, null);
         mListView.addHeaderView(headerView);
@@ -127,9 +133,37 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
     @Override
     protected void onStart() {
         super.onStart();
-        loginUserID = PrefUtils.getString(this, "loginUser", null);
         setViewClick();
+        mListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                initServerData(false);
+            }
 
+            @Override
+            public void onLoadMore() {
+                page++;
+                initServerData(true);
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                comment = (Comment) parent.getAdapter().getItem(position);
+                mEditText.setHint("回复:" + comment.user_name);
+                SoftInputUtils.showSoftInputWindow(NoteDetailActivity.this);
+            }
+        });
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LogUtils.d("wewewewe", "点击了！");
+                Intent intent = new Intent(NoteDetailActivity.this, SupportListActivity.class);
+                intent.putExtra("note_key", note_key);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initHeadView(){
@@ -140,6 +174,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         tvNoteText = (TextView) headerView.findViewById(R.id.comment_list_header_note_text);
         mGridView = (OptimizeGridView) headerView.findViewById(R.id.comment_list_header_grid_view);
         ivArrow = (ImageView) headerView.findViewById(R.id.comment_list_header_arrow);
+        supportLayout = (LinearLayout) headerView.findViewById(R.id.comment_list_header_support_layout);
     }
 
     private void sendCommentDataToServer() {
@@ -205,34 +240,34 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         user_level = intent.getStringExtra("user_level");
         user_phone = intent.getStringExtra("user_phone");
         fans_flag = intent.getStringExtra("fans_flag");
-        String topicTitle = intent.getStringExtra("topic_title");
+        topicTitle = intent.getStringExtra("topic_title");
         user_avatar = intent.getStringExtra("user_avatar");
         user_name = intent.getStringExtra("user_name");
-        String support_flag = intent.getStringExtra("support_flag");
+        support_flag = intent.getStringExtra("support_flag");
         note_key = intent.getStringExtra("note_key");
         note_image = intent.getStringExtra("note_image");
-        String note_content = intent.getStringExtra("note_content");
+        note_content = intent.getStringExtra("note_content");
         long note_agree_counts = intent.getLongExtra("note_agree_counts", 0);
         long note_comment_counts = intent.getLongExtra("note_comment_counts", 0);
         titles[0] = note_agree_counts + " 赞";
         titles[1] = note_comment_counts + " 评论";
 
-//        tvTitle.setText(topicTitle);
-//        tvUserName.setText(user_name);
-//        ImageUtils.bindImageWithOptions(ivAvatar, user_avatar, R.drawable.person_avatar_default_round,
-//                R.drawable.person_avatar_default_round);
-//        if (TextUtils.isEmpty(note_image)) {
-//            ivNoteImage.setVisibility(View.GONE);
-//        } else {
-//            ivNoteImage.setVisibility(View.VISIBLE);
-//            ImageUtils.bindImage(ivNoteImage, note_image);
-//        }
-//        if (TextUtils.isEmpty(note_content)) {
-//            tvNoteContent.setVisibility(View.GONE);
-//        } else {
-//            tvNoteContent.setVisibility(View.VISIBLE);
-//            tvNoteContent.setText(note_content);
-//        }
+        tvTopicTitle.setText(topicTitle);
+        ImageUtils.bindImageWithOptions(ivAvatar, user_avatar, R.drawable.person_avatar_default_round,
+                R.drawable.person_avatar_default_round);
+        tvUserName.setText(user_name);
+        if (TextUtils.isEmpty(note_image)) {
+            ivNoteImage.setVisibility(View.GONE);
+        } else {
+            ivNoteImage.setVisibility(View.VISIBLE);
+            ImageUtils.bindImage(ivNoteImage, note_image);
+        }
+        if (TextUtils.isEmpty(note_content)) {
+            tvNoteText.setVisibility(View.GONE);
+        } else {
+            tvNoteText.setVisibility(View.VISIBLE);
+            tvNoteText.setText(note_content);
+        }
 
         if ("true".equals(support_flag)) {
             btnAgree.setClickable(false);
@@ -246,6 +281,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
         RequestParams params = new RequestParams(GlobalContants.NOTE_SUPPORT_COMMENT_LIST_URL);
         params.addQueryStringParameter("note_key", note_key);
         params.addQueryStringParameter("page", page + "");
+        params.addQueryStringParameter("user_id", loginUserID);
         x.http().get(params, new Callback.CommonCallback<String>() {
 
             @Override
@@ -337,6 +373,7 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
 
     private void setViewClick() {
         View.OnClickListener listener = new View.OnClickListener() {
+            Intent intent;
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -345,7 +382,9 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                         break;
                     case R.id.activity_note_detail_btn_agree:
                         btnAgree.setImageResource(R.drawable.icon_post_like);
-                        btnAgree.setClickable(false);
+                        Support support = new Support();
+                        support.user_avatar = loginUser.user_avatar;
+                        supportAdapter.addNew(support);
                         sendSupportDataToServer();
                         break;
                     case R.id.activity_note_detail_btn_pub:
@@ -355,12 +394,40 @@ public class NoteDetailActivity extends Activity implements View.OnLayoutChangeL
                         }
                         sendCommentDataToServer();
                         break;
+                    case R.id.comment_list_header_user_avatar :
+                        if (!user_id.equals(loginUserID)){
+                            intent = new Intent(NoteDetailActivity.this, PersonInfoActivity.class);
+                            intent.putExtra("user_id", user_id);
+                            intent.putExtra("user_name", user_name);
+                            intent.putExtra("user_avatar", user_avatar);
+                            intent.putExtra("user_city", user_city);
+                            intent.putExtra("signature", signature);
+                            intent.putExtra("user_level", user_level);
+                            intent.putExtra("user_phone", user_phone);
+                            intent.putExtra("fans_flag", fans_flag);
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.comment_list_header_support_layout :
+                        LogUtils.d("qqqqqqqqq", "点击了！");
+                        intent = new Intent(NoteDetailActivity.this, SupportListActivity.class);
+                        intent.putExtra("note_key", note_key);
+                        startActivity(intent);
+                        break;
+                    case R.id.comment_list_header_note_image :
+                        intent = new Intent(NoteDetailActivity.this, ScanImageActivity.class);
+                        intent.putExtra("image_url", note_image);
+                        startActivity(intent);
+                        break;
                 }
             }
         };
         btnBack.setOnClickListener(listener);
         btnAgree.setOnClickListener(listener);
         btnPub.setOnClickListener(listener);
+        ivAvatar.setOnClickListener(listener);
+        supportLayout.setOnClickListener(listener);
+        ivNoteImage.setOnClickListener(listener);
     }
 
     private void sendSupportDataToServer() {

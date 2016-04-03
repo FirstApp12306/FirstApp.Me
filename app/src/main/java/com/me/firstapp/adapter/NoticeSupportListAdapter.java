@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.me.firstapp.R;
 import com.me.firstapp.entity.MyComment;
 import com.me.firstapp.entity.MySupport;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.view.CircleImageView;
 
 import org.xutils.image.ImageOptions;
@@ -82,31 +83,16 @@ public class NoticeSupportListAdapter extends BaseAdapter {
         }
         MySupport mySupport = mySupports.get(position);
 
-        ImageOptions imageOptions1 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-        x.image().bind(holder.ivAvatar, mySupport.support_user_avatar, imageOptions1);
+        ImageUtils.bindImageWithOptions(holder.ivAvatar,
+                mySupport.support_user_avatar,
+                R.drawable.person_avatar_default_round,
+                R.drawable.person_avatar_default_round);
         holder.tvUserName.setText(mySupport.support_user_name);
         holder.tvTime.setText(mySupport.time_stamp);
-        if ("#".equals(mySupport.note_image) || TextUtils.isEmpty(mySupport.note_image)){
+        if (TextUtils.isEmpty(mySupport.note_image)){
             holder.ivNoteImage.setVisibility(View.GONE);
         }else {
-            ImageOptions imageOptions2 = new ImageOptions.Builder()
-                    // 加载中或错误图片的ScaleType
-                    //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                    // 默认自动适应大小
-                    // .setSize(...)
-                    .setIgnoreGif(true)
-                            // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                            //.setUseMemCache(false)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-            x.image().bind(holder.ivNoteImage, mySupport.note_image, imageOptions2);
+            ImageUtils.bindImage(holder.ivNoteImage, mySupport.note_image);
         }
 
         return convertView;

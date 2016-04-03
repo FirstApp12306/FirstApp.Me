@@ -72,4 +72,6 @@ public class GlobalContants {
     public static final String UPDATE_USER_CITY_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserCityController";
     //客户端更新用户密码接口
     public static final String UPDATE_USER_PASSWORD_URL = SERVER_URL + "/automake/controller/firstapp/UpdateUserPasswordController";
+    //客户端帖子的赞列表接口
+    public static final String SUPPORT_OF_NOTE_LIST_URL = SERVER_URL + "/automake/controller/firstapp/SupportOfNoteListController";
 }

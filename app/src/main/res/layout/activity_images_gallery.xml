@@ -15,7 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:padding="10dp"
             android:background="@drawable/btn_returnback_bg"
             android:text="返回"
             android:textColor="#435356"

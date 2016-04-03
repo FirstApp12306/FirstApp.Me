@@ -14,6 +14,9 @@ public class Support {
     public String user_id;
     public String user_name;
     public String user_signature;
+    public String user_phone;
+    public String user_level;
+    public String fans_flag;
 
     @Override
     public String toString() {

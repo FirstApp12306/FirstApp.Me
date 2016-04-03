@@ -33,7 +33,6 @@
             android:background="@drawable/btn_returnback_bg"
             android:clickable="false"
             android:gravity="center"
-            android:padding="10dp"
             android:text="下一步"
             android:textColor="#435356"
             android:textSize="16sp" />
