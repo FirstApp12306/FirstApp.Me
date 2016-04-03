@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ffffff">
+
+        <ImageButton
+            android:id="@+id/activity_contacts_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_returnback_bg"
+            android:src="@drawable/return_back_btn" />
+
+        <RadioGroup
+            android:id="@+id/activity_contacts_rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/activity_contacts_rbt_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rbtn_pager_base_find_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="关注"
+                android:textColor="@drawable/rbtn_tab_text_selector"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/activity_contacts_rbt_fans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rbtn_pager_base_new_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="粉丝"
+                android:textColor="@drawable/rbtn_tab_text_selector"
+                android:textSize="16sp" />
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_contacts_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

@@ -26,6 +26,7 @@ import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
+import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.DatabaseUtils;
 import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
@@ -82,6 +83,7 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
 
     private ArrayList<View> views = new ArrayList<>();
     private String userID;
+    private int page = 1;
 
     private DatabaseUtils databaseUtils;
 
@@ -198,7 +200,37 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         views.add(noteView);
         mViewPager.setAdapter(new PersonPagerViewAdapter(views));
 
-        getDataFromServer();
+        topicListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+
+            @Override
+            public void onLoadMore() {
+                page ++;
+                getDataFromServer(true);
+            }
+        });
+        noteListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+
+            @Override
+            public void onLoadMore() {
+                page++;
+                getDataFromServer(true);
+            }
+        });
+
+        String cache = CacheUtils.getCache(GlobalContants.MY_TOPICS_LIST_URL, mActivity);
+        if (!TextUtils.isEmpty(cache)){
+            parseData(cache, false);
+        }
+
+        getDataFromServer(false);
 
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
@@ -286,14 +318,18 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         }
     }
 
-    private void getDataFromServer() {
+    private void getDataFromServer(final boolean isMore) {
         RequestParams params = new RequestParams(GlobalContants.MY_TOPICS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
+        params.addQueryStringParameter("page", page+"");
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                parseData(result);
+                parseData(result, isMore);
+                if (page == 1){
+                    CacheUtils.setCache(GlobalContants.MY_TOPICS_LIST_URL, result, mActivity);
+                }
             }
 
             @Override
@@ -318,8 +354,10 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
     private ArrayList<Note> notes;
     private ArrayList<User> users;
     private ArrayList<Topic> noteTopics;
+    private TopicsAdapter topicsAdapter;
+    private FirstPagerListAdapter firstPagerListAdapter;
 
-    private void parseData(String result) {
+    private void parseData(String result, boolean isMore) {
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
@@ -338,9 +376,6 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
                     topic = null;
                 }
                 LogUtils.d("topics", topics.toString());
-                if (topics != null) {
-                    topicListView.setAdapter(new TopicsAdapter(mActivity, topics));
-                }
 
                 notes = new ArrayList<>();
                 users = new ArrayList<>();
@@ -370,8 +405,18 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
                 LogUtils.d("users", users.toString());
                 LogUtils.d("noteTopic", noteTopics.toString());
 
-                if (notes != null && users != null && noteTopics != null) {
-                    noteListView.setAdapter(new FirstPagerListAdapter(mActivity, notes, users, noteTopics));
+                if (!isMore){
+                    if (topics != null) {
+                        topicsAdapter = new TopicsAdapter(mActivity, topics);
+                        topicListView.setAdapter(topicsAdapter);
+                    }
+                    if (notes != null && users != null && noteTopics != null) {
+                        firstPagerListAdapter = new FirstPagerListAdapter(mActivity, notes, users, noteTopics);
+                        noteListView.setAdapter(firstPagerListAdapter);
+                    }
+                }else{
+                    topicsAdapter.addMore(topics);
+                    firstPagerListAdapter.addMore(notes, users, noteTopics);
                 }
 
                 JSONObject object3 = object1.getJSONObject("user");
@@ -388,7 +433,8 @@ public class PersonPager extends BasePager implements HoveringScrollview.OnScrol
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
-//            mListView.onRefreshComplete(false);// 收起加载更多的布局
+            topicListView.onRefreshComplete(true);// 收起加载更多的布局
+            noteListView.onRefreshComplete(true);// 收起加载更多的布局
         }
 
     }

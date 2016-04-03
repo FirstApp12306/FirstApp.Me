@@ -29,16 +29,16 @@
 
                     <com.me.firstapp.view.CircleImageView
                         android:id="@+id/person_pager_avatar"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:layout_centerInParent="true"
                         android:padding="10dp"
                         android:src="@drawable/person_avatar_default_round" />
 
                     <Button
                         android:id="@+id/person_pager_btn_edit_data"
-                        android:layout_width="80dp"
-                        android:layout_height="30dp"
+                        android:layout_width="70dp"
+                        android:layout_height="25dp"
                         android:layout_marginRight="10dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
@@ -50,7 +50,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/header_person_pager_second_rl"
-                    android:padding="10dp"
                     android:gravity="center"
                     android:text="FirstApp"
                     android:textSize="16sp"

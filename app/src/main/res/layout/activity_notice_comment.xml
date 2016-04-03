@@ -10,7 +10,7 @@
 
         <ImageButton
             android:id="@+id/activity_notice_comment_btn_back"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:background="@drawable/btn_returnback_bg"

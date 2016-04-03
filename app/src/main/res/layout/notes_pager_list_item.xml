@@ -32,8 +32,8 @@
 
         <com.me.firstapp.view.CircleImageView
             android:id="@+id/notes_pager_list_item_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
             android:layout_marginTop="10dp"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="得不到的放不下啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="#435356"
         android:layout_below="@id/notes_pager_list_item_note_image"
         android:layout_centerHorizontal="true" />
