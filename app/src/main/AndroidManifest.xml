@@ -85,7 +85,8 @@
         <activity android:name=".activity.ToLoginOrSingupActivity"/>
         <activity android:name=".activity.PersonInfoActivity"/>
         <activity android:name=".activity.SupportListActivity"/>
-        <activity android:name=".activity.ContactsActivity"/>
+        <activity android:name=".activity.ContactsActivity"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
 
         <!-- Mob短信SDK开始-->
         <activity

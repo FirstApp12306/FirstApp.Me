@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_default_style"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/contacts_list_item_click_dialog_btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@null"
+        android:padding="10dp"
+        android:src="@drawable/icon_close"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <com.me.firstapp.view.CircleImageView
+            android:id="@+id/contacts_list_item_click_dialog_iv_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/person_avatar_default_round"
+            />
+        <TextView
+            android:id="@+id/contacts_list_item_click_dialog_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FirstApp"
+            android:textColor="#435356"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/contacts_list_item_click_dialog_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="ID:123321"
+            android:textColor="#b1b4b3"
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/contacts_list_item_click_dialog_btn_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@null"
+            android:src="@drawable/person_follow_cancel"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/contacts_list_item_click_dialog_btn_chat"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="私信"
+            android:textColor="#435356"
+            android:textSize="15sp"
+            android:drawableTop="@drawable/icon_chat"
+            android:background="@drawable/dialog_bottom_left_btn"
+            />
+
+        <Button
+            android:id="@+id/contacts_list_item_click_dialog_btn_home"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:text="主页"
+            android:textColor="#435356"
+            android:textSize="15sp"
+            android:background="@drawable/dialog_bottom_right_btn"
+            android:drawableTop="@drawable/icon_mainpage"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

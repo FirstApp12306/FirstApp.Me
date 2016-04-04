@@ -4,16 +4,35 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/view_activity_contacts_follow_et"
-        android:hint="搜索118位联系人"
-        android:singleLine="true"
-        android:paddingLeft="16dp"
-        android:textSize="14dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/view_activity_contacts_follow_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="搜索0位联系人"
+            android:singleLine="true"
+            android:paddingLeft="16dp"
+            android:textSize="14dp"
+            android:textColor="#435356"
+            android:background="@drawable/shape_border_grey"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/icon_search"/>
+
+        <ImageButton
+            android:id="@+id/view_activity_contacts_follow_btn_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@null"
+            android:layout_gravity="right|center_vertical"
+            android:visibility="gone"
+            android:src="@drawable/search_clear_normal"/>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
