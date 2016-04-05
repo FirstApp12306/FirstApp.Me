@@ -49,6 +49,11 @@ public class TopicsAdapter extends BaseAdapter {
         doNotify();
     }
 
+    public void clearList(){
+        this.topicList.clear();
+        doNotify();
+    }
+
     public void doNotify(){
         mActivity.runOnUiThread(new Runnable() {
 

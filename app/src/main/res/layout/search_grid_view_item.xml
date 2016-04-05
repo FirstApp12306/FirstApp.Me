@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="5dp"
+    android:background="#ffffff">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.me.firstapp.view.CircleImageView
+            android:id="@+id/search_grid_view_item_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/person_avatar_default_round"/>
+
+        <com.me.firstapp.view.CircleImageView
+            android:id="@+id/search_grid_view_item_shadow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#000000"
+            android:alpha="0.6"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/search_grid_view_item_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_more_arrow"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+
+
+
+    <TextView
+        android:id="@+id/search_grid_view_item_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="FirstApp"
+        android:textColor="#435356"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/search_grid_view_item_user_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="更多"
+        android:textColor="#b5b5b5"
+        android:textSize="14sp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/search_grid_view_item_user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="ID:123456"
+        android:textColor="#b5b5b5"
+        android:textSize="14sp"/>
+
+</LinearLayout>

@@ -76,4 +76,6 @@ public class GlobalContants {
     public static final String SUPPORT_OF_NOTE_LIST_URL = SERVER_URL + "/automake/controller/firstapp/SupportOfNoteListController";
     //客户端联系人列表接口
     public static final String CONTACTS_LIST_URL = SERVER_URL + "/automake/controller/firstapp/ContactsListController";
+    //客户端搜索接口
+    public static final String SEARCH_URL = SERVER_URL + "/automake/controller/firstapp/SearchController";
 }

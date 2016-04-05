@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 import com.me.firstapp.R;
 import com.me.firstapp.activity.CreateTopicFirstActivity;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.activity.SearchActivity;
 import com.me.firstapp.adapter.TopicsViewPagerAdapter;
 import com.me.firstapp.utils.LogUtils;
 
@@ -42,11 +43,19 @@ public class TopicPager extends BasePager {
                 mActivity.startActivity(intent);
             }
         });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, SearchActivity.class);
+                mActivity.startActivity(intent);
+            }
+        });
 
         rbtLeft.setText("发现");
         rbtRight.setText("最新");
         redCircle.setVisibility(View.GONE);
         btnSetting.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.VISIBLE);
     }
 
     @Override

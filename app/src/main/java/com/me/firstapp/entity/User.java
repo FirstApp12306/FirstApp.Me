@@ -24,6 +24,7 @@ public class User {
     public String fans_flag;
     public String friend_flag;
     public String sortLetters;//显示数据拼音的首字母
+    public int myrownum;//行数
 
 
     @Override

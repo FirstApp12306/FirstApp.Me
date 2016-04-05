@@ -99,6 +99,18 @@
             android:text="通讯录"
             android:visibility="gone"/>
 
+        <ImageButton
+            android:id="@+id/pager_base_btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_returnback_bg"
+            android:paddingEnd="10dp"
+            android:visibility="gone"
+            android:src="@drawable/community_search"/>
+
+
     </RelativeLayout>
 
     <View
