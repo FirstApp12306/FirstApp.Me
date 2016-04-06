@@ -80,4 +80,6 @@ public class GlobalContants {
     public static final String SEARCH_URL = SERVER_URL + "/automake/controller/firstapp/SearchController";
     //客户端用户搜索查询
     public static final String USER_SEARCH_URL = SERVER_URL + "/automake/controller/firstapp/UserSearchController";
+    //客户端获取版本信息接口
+    public static final String APK_VERSION_URL = SERVER_URL + "/automake/controller/firstapp/ApkVersionController";
 }

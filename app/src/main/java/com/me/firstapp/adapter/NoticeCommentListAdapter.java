@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 import com.me.firstapp.R;
 import com.me.firstapp.entity.MyComment;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.view.CircleImageView;
-
-import org.xutils.image.ImageOptions;
-import org.xutils.x;
 
 import java.util.ArrayList;
 
@@ -29,6 +27,7 @@ public class NoticeCommentListAdapter extends BaseAdapter {
     private Activity mActivity;
     private Context context;
     private ArrayList<MyComment> myComments;
+
     public NoticeCommentListAdapter(Context context, ArrayList<MyComment> myComments) {
         this.context = context;
         mActivity = (Activity) context;
@@ -50,7 +49,7 @@ public class NoticeCommentListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void doNotify(){
+    public void doNotify() {
         mActivity.runOnUiThread(new Runnable() {
 
             @Override
@@ -60,7 +59,7 @@ public class NoticeCommentListAdapter extends BaseAdapter {
         });
     }
 
-    public void addMore(ArrayList<MyComment> moreComments){
+    public void addMore(ArrayList<MyComment> moreComments) {
         this.myComments.addAll(moreComments);
         doNotify();
     }
@@ -77,43 +76,26 @@ public class NoticeCommentListAdapter extends BaseAdapter {
             holder.tvTime = (TextView) convertView.findViewById(R.id.notice_comment_list_item_time);
             holder.ivNoteImage = (ImageView) convertView.findViewById(R.id.notice_comment_list_item_note_image);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
         MyComment myComment = myComments.get(position);
 
-        ImageOptions imageOptions1 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-        x.image().bind(holder.ivAvatar, myComment.comment_user_avatar, imageOptions1);
+        ImageUtils.bindImageWithOptions(holder.ivAvatar, myComment.comment_user_avatar,
+                R.drawable.person_avatar_default_round,
+                R.drawable.person_avatar_default_round);
         holder.tvUserName.setText(myComment.comment_user_name);
         holder.tvContent.setText(myComment.comment_content);
         holder.tvTime.setText(myComment.time_stamp);
-        if ("#".equals(myComment.note_image) || TextUtils.isEmpty(myComment.note_image)){
+        if ("#".equals(myComment.note_image) || TextUtils.isEmpty(myComment.note_image)) {
             holder.ivNoteImage.setVisibility(View.GONE);
-        }else {
-            ImageOptions imageOptions2 = new ImageOptions.Builder()
-                    // 加载中或错误图片的ScaleType
-                    //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                    // 默认自动适应大小
-                    // .setSize(...)
-                    .setIgnoreGif(true)
-                            // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                            //.setUseMemCache(false)
-                    .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-            x.image().bind(holder.ivNoteImage, myComment.note_image, imageOptions2);
+        } else {
+            ImageUtils.bindImage(holder.ivNoteImage, myComment.note_image);
         }
-
         return convertView;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         public CircleImageView ivAvatar;
         public TextView tvUserName;
         public TextView tvContent;

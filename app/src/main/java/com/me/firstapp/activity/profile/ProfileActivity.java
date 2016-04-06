@@ -233,7 +233,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         };
-        mDialog = DialogUtils.createCommonDialog(this, listener, "您确定退出当前账户吗？");
+        mDialog = DialogUtils.createCommonDialog(this, listener, "您确定退出当前账户吗？","否","是");
         mDialog.show();
     }
 

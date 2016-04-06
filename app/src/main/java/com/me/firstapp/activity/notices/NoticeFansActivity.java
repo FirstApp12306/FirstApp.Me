@@ -80,7 +80,6 @@ public class NoticeFansActivity extends BaseActivity {
         RequestParams params = new RequestParams(GlobalContants.NOTICE_FANS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
         params.addQueryStringParameter("page", page+"");
-//        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

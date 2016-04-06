@@ -94,10 +94,6 @@ public class NoticeCommentActivity extends BaseActivity {
             }
         });
 
-//        String cache = CacheUtils.getCache(GlobalContants.NOTICE_COMMENTS_LIST_URL, this);
-//        if (!TextUtils.isEmpty(cache)){
-//            parseData(cache);
-//        }
         getDataFromServer(false);
     }
 
@@ -105,13 +101,11 @@ public class NoticeCommentActivity extends BaseActivity {
         RequestParams params = new RequestParams(GlobalContants.NOTICE_COMMENTS_LIST_URL);
         params.addQueryStringParameter("user_id", userID);
         params.addQueryStringParameter("page", page+"");
-//        params.addQueryStringParameter("rows", 999999999 + "");//将条数设置很大，意思是让服务器不要分页
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
                 parseData(result, isMore);
-//                CacheUtils.setCache(GlobalContants.NOTICE_COMMENTS_LIST_URL, result, NoticeCommentActivity.this);
             }
 
             @Override

@@ -276,7 +276,7 @@ public class ChatListAdapter extends BaseAdapter {
                 }
             }
         };
-        mDialog = DialogUtils.createCommonDialog(context, listener, "是否重新发送？");
+        mDialog = DialogUtils.createCommonDialog(context, listener, "是否重新发送？", "否", "是");
         mDialog.show();
     }
 

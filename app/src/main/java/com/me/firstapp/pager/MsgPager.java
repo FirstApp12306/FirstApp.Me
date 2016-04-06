@@ -28,12 +28,9 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者： FirstApp.Me.
@@ -49,7 +46,6 @@ public class MsgPager extends BasePager {
     private LinearLayout llComment;
     private LinearLayout llLike;
     private LinearLayout llFans;
-    private LinearLayout llFirstApp;
     private TextView tvNewCommentNum;
     private ImageView ivCommentArrow;
     private TextView tvNewSupportNum;
@@ -88,7 +84,6 @@ public class MsgPager extends BasePager {
         llComment = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_comment);
         llLike = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_like);
         llFans = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_fans);
-        llFirstApp = (LinearLayout) noticeView.findViewById(R.id.view_pager_msg_notice_firstapp);
 
         tvNewCommentNum = (TextView) noticeView.findViewById(R.id.view_pager_msg_notice_comment_new_num);
         ivCommentArrow = (ImageView) noticeView.findViewById(R.id.view_pager_msg_notice_comment_arrow);
@@ -200,64 +195,62 @@ public class MsgPager extends BasePager {
     }
 
     //设置各个提示的数量
-    private void setNum(){
+    private void setNum() {
         String newCommentNum = PrefUtils.getString(mActivity, "new_comment_num", "0");
         String newSupportNum = PrefUtils.getString(mActivity, "new_support_num", "0");
         String newFansNum = PrefUtils.getString(mActivity, "new_fans_num", "0");
-        if ("0".equals(newCommentNum)){
+        if ("0".equals(newCommentNum)) {
             tvNewCommentNum.setVisibility(View.GONE);
             ivCommentArrow.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             ivCommentArrow.setVisibility(View.GONE);
             tvNewCommentNum.setText(newCommentNum);
             tvNewCommentNum.setVisibility(View.VISIBLE);
         }
-        if ("0".equals(newSupportNum)){
+        if ("0".equals(newSupportNum)) {
             tvNewSupportNum.setVisibility(View.GONE);
             ivSupportArrow.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivSupportArrow.setVisibility(View.GONE);
             tvNewSupportNum.setText(newSupportNum);
             tvNewSupportNum.setVisibility(View.VISIBLE);
         }
-        if ("0".equals(newFansNum)){
+        if ("0".equals(newFansNum)) {
             tvNewFansNum.setVisibility(View.GONE);
             ivFansArrow.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivFansArrow.setVisibility(View.GONE);
             tvNewFansNum.setText(newFansNum);
             tvNewFansNum.setVisibility(View.VISIBLE);
         }
 
-        if ("0".equals(newCommentNum) && "0".equals(newSupportNum) && "0".equals(newFansNum)){
+        if ("0".equals(newCommentNum) && "0".equals(newSupportNum) && "0".equals(newFansNum)) {
             redCircle.setVisibility(View.GONE);
         }
     }
 
-    private void setClick(){
+    private void setClick() {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.view_pager_msg_notice_comment :
+                switch (v.getId()) {
+                    case R.id.view_pager_msg_notice_comment:
                         mActivity.startActivity(new Intent(mActivity, NoticeCommentActivity.class));
                         PrefUtils.setString(mActivity, "new_comment_num", "0");
                         setNum();
                         break;
-                    case R.id.view_pager_msg_notice_like :
+                    case R.id.view_pager_msg_notice_like:
                         mActivity.startActivity(new Intent(mActivity, NoticeSupportActivity.class));
                         PrefUtils.setString(mActivity, "new_support_num", "0");
                         setNum();
                         break;
-                    case R.id.view_pager_msg_notice_fans :
+                    case R.id.view_pager_msg_notice_fans:
                         mActivity.startActivity(new Intent(mActivity, NoticeFansActivity.class));
                         PrefUtils.setString(mActivity, "new_fans_num", "0");
                         setNum();
                         break;
-                    case R.id.pager_base_btn_contacts :
+                    case R.id.pager_base_btn_contacts:
                         mActivity.startActivity(new Intent(mActivity, ContactsActivity.class));
-                        break;
-                    case R.id.view_pager_msg_notice_firstapp :
                         break;
                 }
             }
@@ -265,7 +258,6 @@ public class MsgPager extends BasePager {
         llComment.setOnClickListener(listener);
         llLike.setOnClickListener(listener);
         llFans.setOnClickListener(listener);
-        llFirstApp.setOnClickListener(listener);
         btnContacts.setOnClickListener(listener);
     }
 
@@ -282,22 +274,22 @@ public class MsgPager extends BasePager {
         convListView.setAdapter(convAdapter);
     }
 
-    class RadioCheckedChangeListener implements RadioGroup.OnCheckedChangeListener{
+    class RadioCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId){
-                case R.id.pager_base_rbtn_left :
-                    mViewPager.setCurrentItem(0,true);
+            switch (checkedId) {
+                case R.id.pager_base_rbtn_left:
+                    mViewPager.setCurrentItem(0, true);
                     break;
-                case R.id.pager_base_rbtn_right :
-                    mViewPager.setCurrentItem(1,true);
+                case R.id.pager_base_rbtn_right:
+                    mViewPager.setCurrentItem(1, true);
                     break;
             }
         }
     }
 
-    class ViewPagerListener implements ViewPager.OnPageChangeListener{
+    class ViewPagerListener implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -305,12 +297,12 @@ public class MsgPager extends BasePager {
 
         @Override
         public void onPageSelected(int position) {
-            LogUtils.d("position", position+"");
-            switch (position){
-                case 0 :
+            LogUtils.d("position", position + "");
+            switch (position) {
+                case 0:
                     mRadioGroup.check(R.id.pager_base_rbtn_left);
                     break;
-                case 1 :
+                case 1:
                     mRadioGroup.check(R.id.pager_base_rbtn_right);
                     break;
             }

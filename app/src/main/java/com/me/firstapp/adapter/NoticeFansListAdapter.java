@@ -2,21 +2,16 @@ package com.me.firstapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.me.firstapp.R;
-import com.me.firstapp.entity.MySupport;
 import com.me.firstapp.entity.User;
+import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.view.CircleImageView;
-
-import org.xutils.image.ImageOptions;
-import org.xutils.x;
 
 import java.util.ArrayList;
 
@@ -31,6 +26,7 @@ public class NoticeFansListAdapter extends BaseAdapter {
     private Context context;
     private Activity mActivity;
     private ArrayList<User> users;
+
     public NoticeFansListAdapter(Context context, ArrayList<User> users) {
         this.context = context;
         this.mActivity = (Activity) context;
@@ -52,7 +48,7 @@ public class NoticeFansListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void doNotify(){
+    public void doNotify() {
         mActivity.runOnUiThread(new Runnable() {
 
             @Override
@@ -62,7 +58,7 @@ public class NoticeFansListAdapter extends BaseAdapter {
         });
     }
 
-    public void addMore(ArrayList<User> moreUsers){
+    public void addMore(ArrayList<User> moreUsers) {
         this.users.addAll(moreUsers);
         doNotify();
     }
@@ -80,31 +76,22 @@ public class NoticeFansListAdapter extends BaseAdapter {
             holder.btnFollow = (ImageButton) convertView.findViewById(R.id.notice_fans_listview_item_pserson_fallow);
             holder.btnEachOther = (ImageButton) convertView.findViewById(R.id.notice_fans_listview_item_pserson_fallow_eachother);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
         User user = users.get(position);
 
-        ImageOptions imageOptions1 = new ImageOptions.Builder()
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                // 默认自动适应大小
-                // .setSize(...)
-                .setIgnoreGif(true)
-                        // 如果使用本地文件url, 添加这个设置可以在本地文件更新后刷新立即生效.
-                        //.setUseMemCache(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP).build();
-        x.image().bind(holder.ivAvatar, user.user_avatar, imageOptions1);
+        ImageUtils.bindImageWithOptions(holder.ivAvatar, user.user_avatar,
+                R.drawable.person_avatar_default_round, R.drawable.person_avatar_default_round);
         holder.tvUserName.setText(user.user_name);
-        holder.tvUserID.setText(user.user_id);
+        holder.tvUserID.setText("ID:"+user.user_id);
         holder.tvUserCity.setText(user.user_city);
-
 
 
         return convertView;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         public CircleImageView ivAvatar;
         public TextView tvUserName;
         public TextView tvUserID;

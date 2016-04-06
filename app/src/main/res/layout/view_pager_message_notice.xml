@@ -14,8 +14,8 @@
         android:paddingTop="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/notification_comment"/>
 
         <LinearLayout
@@ -81,8 +81,8 @@
         android:paddingTop="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/notification_like"/>
 
         <LinearLayout
@@ -148,8 +148,8 @@
         android:paddingTop="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/notification_fans"/>
 
         <LinearLayout
@@ -207,59 +207,5 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/view_pager_msg_notice_firstapp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/notification_huochaihe"/>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="FirstApp.Me小助手"
-                    android:textColor="#435356"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:padding="10dp"
-                    android:src="@drawable/arrow"
-                    android:layout_alignBottom="@+id/text_comment"
-                    android:layout_alignParentEnd="true" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:paddingTop="10dp"
-                android:background="#d9d9d9"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

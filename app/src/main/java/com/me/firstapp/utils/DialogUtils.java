@@ -41,17 +41,17 @@ public class DialogUtils {
      * @param listener
      * @return
      */
-    public static Dialog createCommonDialog(Context context, View.OnClickListener listener, String text){
+    public static Dialog createCommonDialog(Context context, View.OnClickListener listener, String title, String leftText, String rightText){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = View.inflate(context, R.layout.dialog_base_with_button, null);
         builder.setView(view);
         Button cancelBtn = (Button) view.findViewById(R.id.dialog_base_with_button_cancel_btn);
         Button resendBtn = (Button) view.findViewById(R.id.dialog_base_with_button_commit_btn);
         Dialog dialog = builder.create();
-        TextView title = (TextView) view.findViewById(R.id.dialog_base_with_button_title);
-        title.setText(text);
-        cancelBtn.setText("否");
-        resendBtn.setText("是");
+        TextView tvTitle = (TextView) view.findViewById(R.id.dialog_base_with_button_title);
+        tvTitle.setText(title);
+        cancelBtn.setText(leftText);
+        resendBtn.setText(rightText);
         cancelBtn.setOnClickListener(listener);
         resendBtn.setOnClickListener(listener);
         dialog.setCancelable(true);

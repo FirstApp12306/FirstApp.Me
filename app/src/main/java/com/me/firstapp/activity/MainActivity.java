@@ -1,20 +1,33 @@
 package com.me.firstapp.activity;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.me.firstapp.R;
 import com.me.firstapp.application.MyApplication;
 import com.me.firstapp.fragment.ContentFragment;
+import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.manager.ActivityManager;
+import com.me.firstapp.service.UpdateAPKService;
+import com.me.firstapp.utils.DialogUtils;
 import com.me.firstapp.utils.Event;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
@@ -58,6 +71,12 @@ public class MainActivity extends FragmentActivity {
         initFragment();
         JMessageClient.registerEventReceiver(this);
         EventBus.getDefault().register(this);
+        getVersionFromServer();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     /**
@@ -81,6 +100,90 @@ public class MainActivity extends FragmentActivity {
         PrefUtils.setBoolean(this, MyApplication.FIND_PAGER_REFRESH_FLAG, false);
         activityManager.popActivity(this);
     }
+
+    /**
+     * 获取版本号
+     */
+    private String getVersion() {
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String versionName = info.versionName;
+            int  versionCode = info.versionCode;
+            LogUtils.d("versionName",versionName);
+            LogUtils.d("versionCode",versionCode+"");
+            return  versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "无法获取版本信息";
+        }
+    }
+
+    private void getVersionFromServer(){
+        RequestParams params = new RequestParams(GlobalContants.APK_VERSION_URL);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+                try {
+                    JSONObject object1 = new JSONObject(result);
+                    String return_code = object1.getString("return_code");
+                    if ("000000".equals(return_code)){
+                        JSONObject object2 = object1.getJSONObject("resultMap");
+                        String url = object2.getString("url");
+                        String version_name = object2.getString("version_name");
+                        if (!TextUtils.isEmpty(version_name)){
+                            String curVersion = getVersion();
+                            if (!curVersion.equals(version_name)){
+                                updateTip(url);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private Dialog dialog;
+    private void updateTip(final String url){
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.dialog_base_with_button_cancel_btn:
+                        dialog.cancel();
+                        break;
+                    case R.id.dialog_base_with_button_commit_btn:
+                        Intent intent = new Intent(MainActivity.this, UpdateAPKService.class);
+                        intent.putExtra("url", url);
+                        startService(intent);
+                        dialog.cancel();
+                        break;
+                }
+            }
+        };
+        dialog = DialogUtils.createCommonDialog(this, listener, "发现新版本", "暂时忽略", "立即更新");
+        dialog.show();
+    }
+
 
 
     private boolean isExit = false;

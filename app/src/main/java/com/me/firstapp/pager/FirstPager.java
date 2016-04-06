@@ -192,4 +192,8 @@ public class FirstPager extends  BasePager {
             mListView.onRefreshComplete(true);// 收起加载更多的布局
         }
     }
+
+    private void checkNewVersion(){
+
+    }
 }

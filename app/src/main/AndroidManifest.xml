@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.me.firstapp"
-    android:versionCode="10"
-    android:versionName="1.0">
+    android:versionCode="1"
+    android:versionName="V1.0">
 
     <!-- JPUSH 自定义用来收发消息的相关权限 -->
     <permission
@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
@@ -89,6 +90,10 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
         <activity android:name=".activity.SearchActivity"/>
         <activity android:name=".activity.UserActivity"/>
+
+        <!-- 下载更新service-->
+        <service android:name=".service.UpdateAPKService"
+            android:enabled="true"/>
 
         <!-- Mob短信SDK开始-->
         <activity
