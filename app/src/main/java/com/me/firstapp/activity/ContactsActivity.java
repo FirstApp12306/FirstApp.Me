@@ -375,8 +375,8 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
 
                 setAdapter();
             }
-            etFollowSearch.setHint("搜索"+follow_total+"位联系人");
-            etFansSearch.setHint("搜索" + fans_total + "位联系人");
+            etFollowSearch.setHint("搜索"+follow_total+"位关注人");
+            etFansSearch.setHint("搜索" + fans_total + "位粉丝");
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -1,6 +1,5 @@
 package com.me.firstapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,15 +7,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.me.firstapp.R;
@@ -25,12 +21,8 @@ import com.me.firstapp.adapter.TopicsAdapter;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.entity.User;
 import com.me.firstapp.global.GlobalContants;
-import com.me.firstapp.utils.ImageUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
-import com.me.firstapp.view.CircleImageView;
-import com.me.firstapp.view.NoScrollGridView;
-import com.me.firstapp.view.OptimizeGridView;
 import com.me.firstapp.view.RefreshListView;
 
 import org.json.JSONArray;
@@ -52,12 +44,14 @@ import java.util.ArrayList;
  * 描述:
  */
 @ContentView(R.layout.activity_search)
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
     @ViewInject(R.id.activity_search_et)
     private EditText mEditText;
     @ViewInject(R.id.activity_search_btn_cancel)
     private Button btnCancel;
+    @ViewInject(R.id.activity_search_btn_clear)
+    private ImageButton btnClear;
     @ViewInject(R.id.activity_search_listview)
     private RefreshListView mListView;
 
@@ -65,9 +59,9 @@ public class SearchActivity extends BaseActivity {
     private GridView mGridView;
     private LinearLayout llMore;
 
+
     private String loginUserID;
     private int page = 1;
-    private int colNum;
 
 
     @Override
@@ -83,6 +77,9 @@ public class SearchActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        btnCancel.setOnClickListener(this);
+        btnClear.setOnClickListener(this);
+        llMore.setOnClickListener(this);
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,12 +103,18 @@ public class SearchActivity extends BaseActivity {
                     }
                 }
 
-                if (users != null){
-                    if (users.isEmpty()){
+                if (users != null) {
+                    if (users.isEmpty()) {
                         llMore.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         llMore.setVisibility(View.VISIBLE);
                     }
+                }
+
+                if (TextUtils.isEmpty(s.toString())){
+                    btnClear.setVisibility(View.GONE);
+                }else{
+                    btnClear.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -130,36 +133,82 @@ public class SearchActivity extends BaseActivity {
                 getDataFromServer(true);
             }
         });
-        mGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (userAdapter != null) {
-                    colNum = mGridView.getNumColumns();
-                }
-
-            }
-        });
-
-        LogUtils.d("colNum", colNum+"");
-        if (userAdapter != null){
-            userAdapter.setColNum(colNum);
-        }
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LogUtils.d("mListView", "mListView");
+                Topic topic = (Topic) parent.getAdapter().getItem(position);
+                LogUtils.d("topic_det", topic.topic_title);
+                LogUtils.d("position", position + "");
+
+                handleItemClick(topic.topic_key);//请求网络本身就是异步了
+
+                Intent intent = new Intent(SearchActivity.this, TopicNoteActivity.class);
+                intent.putExtra("topic_key", topic.topic_key);
+                intent.putExtra("topic_title", topic.topic_title);
+                startActivity(intent);
             }
         });
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LogUtils.d("mGridView", "mGridView");
+                User user = (User) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(SearchActivity.this, PersonInfoActivity.class);
+                intent.putExtra("user_name", user.user_name);
+                intent.putExtra("user_id", user.user_id);
+                intent.putExtra("user_avatar", user.user_avatar);
+                intent.putExtra("user_level", user.user_level);
+                intent.putExtra("user_city", user.user_city);
+                intent.putExtra("signature", user.user_signature);
+                intent.putExtra("user_phone", user.user_phone);
+                intent.putExtra("fans_flag", user.fans_flag);
+                startActivity(intent);
+
+            }
+        });
+
+        mGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int colNum = mGridView.getNumColumns();
+                LogUtils.d("colNum", colNum + "");
+                if (users.size() <= colNum) {
+                    llMore.setVisibility(View.GONE);
+                }
             }
         });
 
 
+    }
+
+    private void handleItemClick(String topic_key){
+        RequestParams params = new RequestParams(GlobalContants.TOPIC_BROWSE_COUNT_URL);
+        params.addQueryStringParameter("topic_key", topic_key);
+
+        x.http().post(params, new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String result) {
+                LogUtils.d("result", result);
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     private void getDataFromServer(final boolean isMore) {
@@ -220,8 +269,6 @@ public class SearchActivity extends BaseActivity {
                 }
                 LogUtils.d("topics", topics.toString());
 
-
-
                 if (!isMore) {
                     if (topics != null) {
                         topicAdapter = new TopicsAdapter(this, topics);
@@ -230,14 +277,19 @@ public class SearchActivity extends BaseActivity {
                     if (users != null) {
                         userAdapter = new SearchGridViewAdapter(this, users);
                         mGridView.setAdapter(userAdapter);
+                        if (users.isEmpty()){
+                            llMore.setVisibility(View.GONE);
+                        }else{
+                            llMore.setVisibility(View.VISIBLE);
+                        }
                     }
                 } else {
                     if (topics != null) {
                         topicAdapter.addMore(topics);
                     }
-                    if (users != null) {
-                        userAdapter.addMore(users);
-                    }
+//                    if (users != null) {
+//                        userAdapter.addMore(users);
+//                    }
                 }
 
 
@@ -251,6 +303,21 @@ public class SearchActivity extends BaseActivity {
     }
 
 
-
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_search_btn_clear :
+                mEditText.setText("");
+                btnClear.setVisibility(View.GONE);
+                break;
+            case R.id.activity_search_btn_cancel :
+                finish();
+                break;
+            case R.id.search_list_header_view_ll_more :
+                Intent intent = new Intent(this, UserActivity.class);
+                intent.putExtra("search", mEditText.getText().toString());
+                startActivity(intent);
+                break;
+        }
+    }
 }

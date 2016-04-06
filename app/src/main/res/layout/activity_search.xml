@@ -10,24 +10,43 @@
         android:id="@+id/activity_search"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="55dp"
+        android:padding="10dp">
 
-        <EditText
-            android:id="@+id/activity_search_et"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingStart="10dp"
-            android:background="@drawable/shape_border_grey"
-            android:drawableLeft="@drawable/icon_search"/>
+            android:layout_weight="1">
+            <EditText
+                android:id="@+id/activity_search_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingStart="10dp"
+                android:hint="搜索话题/昵称/ID"
+                android:textColorHint="#808080"
+                android:background="@drawable/shape_grey_edit_bg"
+                android:drawableLeft="@drawable/icon_search"/>
+            <ImageButton
+                android:id="@+id/activity_search_btn_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@null"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/search_clear_normal"/>
+        </FrameLayout>
+
         <Button
             android:id="@+id/activity_search_btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="10dp"
             android:text="取消"
             android:textSize="16sp"
             android:textColor="#435356"
-            android:background="@drawable/btn_returnback_bg"/>
+            android:background="@null"/>
 
     </LinearLayout>
 

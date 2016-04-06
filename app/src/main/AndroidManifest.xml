@@ -88,6 +88,7 @@
         <activity android:name=".activity.ContactsActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
         <activity android:name=".activity.SearchActivity"/>
+        <activity android:name=".activity.UserActivity"/>
 
         <!-- Mob短信SDK开始-->
         <activity

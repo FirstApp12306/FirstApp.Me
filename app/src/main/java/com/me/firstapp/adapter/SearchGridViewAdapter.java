@@ -29,7 +29,6 @@ public class SearchGridViewAdapter extends BaseAdapter {
     private Context context;
     private Activity mActivity;
     private ArrayList<User> users;
-    private int colNum = 0;
 
     public SearchGridViewAdapter(Context context, ArrayList<User> users) {
         this.context = context;
@@ -66,12 +65,6 @@ public class SearchGridViewAdapter extends BaseAdapter {
         });
     }
 
-    //设置列数
-    public void setColNum(int colNum){
-        this.colNum = colNum;
-        doNotify();
-    }
-
     public void clearList(){
         this.users.clear();
         doNotify();
@@ -99,14 +92,6 @@ public class SearchGridViewAdapter extends BaseAdapter {
                 R.drawable.person_avatar_default_round);
         holder.tvUserName.setText(user.user_name);
         holder.tvUserID.setText("ID:"+user.user_id);
-
-        if (user.myrownum == colNum){//如果是最后一列，则显示更多提示
-            holder.ivShadow.setVisibility(View.VISIBLE);
-            holder.ivArrow.setVisibility(View.VISIBLE);
-            holder.tvMore.setVisibility(View.VISIBLE);
-            holder.tvUserName.setVisibility(View.GONE);
-            holder.tvUserID.setVisibility(View.GONE);
-        }
 
         return convertView;
     }

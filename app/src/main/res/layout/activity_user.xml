@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ffffff" >
+
+        <ImageButton
+            android:id="@+id/activity_user_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_returnback_bg"
+            android:src="@drawable/return_back_btn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="用户"
+            android:textColor="#435356"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <com.me.firstapp.view.RefreshListView
+        android:id="@+id/activity_user_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:divider="#d9d9d9"
+        android:dividerHeight="0.8dp">
+
+
+
+    </com.me.firstapp.view.RefreshListView>
+
+</LinearLayout>
