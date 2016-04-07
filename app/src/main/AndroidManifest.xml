@@ -90,6 +90,7 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
         <activity android:name=".activity.SearchActivity"/>
         <activity android:name=".activity.UserActivity"/>
+        <activity android:name=".activity.BlogActivity"/>
 
         <!-- 下载更新service-->
         <service android:name=".service.UpdateAPKService"

@@ -108,18 +108,6 @@ public class ConversationListAdapter extends BaseAdapter {
         doNotify();
     }
 
-    /**
-     * 加载头像并刷新
-     *
-     * @param targetID
-     *            用户名
-     * @param path
-     *            头像路径
-     */
-    public void loadAvatarAndRefresh(String targetID, String path) {
-
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;

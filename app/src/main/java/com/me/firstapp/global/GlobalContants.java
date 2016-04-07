@@ -82,4 +82,6 @@ public class GlobalContants {
     public static final String USER_SEARCH_URL = SERVER_URL + "/automake/controller/firstapp/UserSearchController";
     //客户端获取版本信息接口
     public static final String APK_VERSION_URL = SERVER_URL + "/automake/controller/firstapp/ApkVersionController";
+    //客户端获取博客列表接口
+    public static final String BLOG_LIST_URL = SERVER_URL + "/automake/controller/firstapp/BlogListController";
 }

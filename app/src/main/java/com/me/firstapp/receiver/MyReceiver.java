@@ -58,6 +58,10 @@ public class MyReceiver extends BroadcastReceiver {
                 PrefUtils.setString(context, "new_support_num", newFansNum);
                 EventBus.getDefault().post(new Event.NewFansEvent(bundle.getString(JPushInterface.EXTRA_MESSAGE), bundle.getString(JPushInterface.EXTRA_EXTRA)));
             }
+            //博客消息
+            if ("blog".equals(bundle.getString(JPushInterface.EXTRA_TITLE))){
+
+            }
 
             // 自定义消息不会展示在通知栏，完全要开发者写代码去处理
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {

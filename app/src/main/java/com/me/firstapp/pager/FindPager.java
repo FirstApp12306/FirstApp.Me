@@ -1,17 +1,22 @@
 package com.me.firstapp.pager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.me.firstapp.R;
+import com.me.firstapp.activity.BlogActivity;
 import com.me.firstapp.activity.MainActivity;
+import com.me.firstapp.adapter.BlogPagerListAdapter;
 import com.me.firstapp.adapter.FindPagerListAdapter;
 import com.me.firstapp.adapter.FirstPagerListAdapter;
 import com.me.firstapp.application.MyApplication;
+import com.me.firstapp.entity.Blog;
 import com.me.firstapp.entity.Note;
 import com.me.firstapp.entity.Topic;
 import com.me.firstapp.entity.User;
@@ -19,6 +24,7 @@ import com.me.firstapp.global.GlobalContants;
 import com.me.firstapp.utils.CacheUtils;
 import com.me.firstapp.utils.LogUtils;
 import com.me.firstapp.utils.PrefUtils;
+import com.me.firstapp.view.DropDownListView;
 import com.me.firstapp.view.RefreshListView;
 
 import org.json.JSONArray;
@@ -38,10 +44,8 @@ import java.util.ArrayList;
  */
 public class FindPager extends BasePager {
 
-    private RefreshListView mListView;
     private String loginUserID;
-    private long page = 1;//页数，默认为1
-    private FindPagerListAdapter adapter;
+    private DropDownListView mListView;
 
     public FindPager(MainActivity activity) {
         super(activity);
@@ -54,54 +58,36 @@ public class FindPager extends BasePager {
         redCircle.setVisibility(View.GONE);
         btnSetting.setVisibility(View.GONE);
         tvTitle.setVisibility(View.VISIBLE);
-        tvTitle.setText("精选");
+        tvTitle.setText("博客");
     }
 
     @Override
     public void initData() {
-        LogUtils.d("", "初始化Find页面数据。。。。。。。");
-        View view = View.inflate(mActivity, R.layout.pager_find, null);
-        mListView = (RefreshListView) view.findViewById(R.id.pager_find_listview);
-        mListView.setOnRefreshListener(new RefreshListView.OnRefreshListener() {
+        View view = View.inflate(mActivity, R.layout.pager_blog, null);
+        mListView = (DropDownListView) view.findViewById(R.id.pager_blog_list_view);
+        getDataFromServer();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onRefresh() {
-                page = 1;
-                getDataFromServer(false);
-            }
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Blog blog = (Blog) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(mActivity, BlogActivity.class);
+                intent.putExtra("blog_title", blog.blog_title);
+                intent.putExtra("blog_url", blog.blog_url);
+                mActivity.startActivity(intent);
 
-            @Override
-            public void onLoadMore() {
-                page++;
-                getDataFromServer(true);
             }
         });
-
-        String cache = CacheUtils.getCache(GlobalContants.FIND_NOTIES_LIST_URL, mActivity);
-        LogUtils.d("cache", cache);
-        if (!TextUtils.isEmpty(cache)){
-            parseData(cache, false);
-        }
-        boolean refreshFlag = PrefUtils.getBoolean(mActivity, MyApplication.FIND_PAGER_REFRESH_FLAG, false);
-        if (refreshFlag == false){
-            getDataFromServer(false);
-        }
-
         flContent.removeAllViews();
         flContent.addView(view);// 向FrameLayout中动态添加布局
     }
 
-    private void getDataFromServer(final boolean isMore){
-        RequestParams params = new RequestParams(GlobalContants.FIND_NOTIES_LIST_URL);
-        params.addQueryStringParameter("page", page + "");
+    private void getDataFromServer(){
+        RequestParams params = new RequestParams(GlobalContants.BLOG_LIST_URL);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 LogUtils.d("result", result);
-                parseData(result, isMore);
-                if (page == 1) {
-                    CacheUtils.setCache(GlobalContants.FIND_NOTIES_LIST_URL, result, mActivity);
-                }
-                PrefUtils.setBoolean(mActivity, MyApplication.FIND_PAGER_REFRESH_FLAG, true);
+                parseData(result);
             }
 
             @Override
@@ -121,62 +107,30 @@ public class FindPager extends BasePager {
         });
     }
 
-    private ArrayList<Note> notes;
-    private ArrayList<User> users;
-    private ArrayList<Topic> topics;
-    private void parseData(String result, boolean isMore){
+    private ArrayList<Blog> blogs;
+    private BlogPagerListAdapter blogAdapter;
+    private void parseData(String result){
         Gson gson = new Gson();
         try {
             JSONObject object1 = new JSONObject(result);
-            String returnCode = object1.getString("return_code");
-            if ("000000".equals(returnCode)){
-                notes = new ArrayList<>();
-                users = new ArrayList<>();
-                topics = new ArrayList<>();
-
+            String return_code = object1.getString("return_code");
+            if ("000000".equals(return_code)){
+                blogs = new ArrayList<>();
                 JSONArray array = object1.getJSONArray("rows");
-                JSONObject object2;
-                Note note;
-                User user;
-                Topic topic;
                 for (int i = 0; i < array.length(); i++) {
-                    object2 = array.getJSONObject(i);
-                    note = gson.fromJson(object2.toString(), Note.class);
-                    notes.add(note);
-
-                    user = gson.fromJson(object2.toString(), User.class);
-                    users.add(user);
-
-                    topic = gson.fromJson(object2.toString(), Topic.class);
-                    topics.add(topic);
-
-                    object2 = null;
-                    note = null;
-                    user = null;
-                    topic = null;
+                    JSONObject object2 = array.getJSONObject(i);
+                    Blog blog = gson.fromJson(object2.toString(), Blog.class);
+                    blogs.add(blog);
                 }
-
-                LogUtils.d("notes", notes.toString());
-                LogUtils.d("users", users.toString());
-                LogUtils.d("topics", topics.toString());
-
-                if (!isMore){
-                    if(notes != null && users != null && topics != null){
-                        adapter = new FindPagerListAdapter(mActivity, notes, users, topics);
-                        mListView.setAdapter(adapter);
-                    }
-                }else{
-                    if (notes != null && users != null && topics != null){
-                        adapter.addMore(notes, users, topics);
-                    }
-
+                if (blogs != null){
+                    blogAdapter = new BlogPagerListAdapter(mActivity, blogs);
+                    mListView.setAdapter(blogAdapter);
                 }
-
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
-        }finally {
-            mListView.onRefreshComplete(true);// 收起加载更多的布局
         }
     }
+
 }

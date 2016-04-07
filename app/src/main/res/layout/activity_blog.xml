@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ffffff" >
+
+        <ImageButton
+            android:id="@+id/activity_blog_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_returnback_bg"
+            android:src="@drawable/return_back_btn" />
+
+        <TextView
+            android:id="@+id/activity_blog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="几点放入"
+            android:textColor="#435356"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/activity_blog_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </WebView>
+
+</LinearLayout>

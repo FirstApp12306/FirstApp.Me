@@ -193,6 +193,12 @@ public class FirstPagerListAdapter extends BaseAdapter {
                         intent.putExtra("topic_title", topic.topic_title);
                         intent.putExtra("user_avatar", user.user_avatar);
                         intent.putExtra("user_name", user.user_name);
+                        intent.putExtra("user_city", user.user_city);
+                        intent.putExtra("user_phone", user.user_phone);
+                        intent.putExtra("user_level", user.user_level+"");
+                        intent.putExtra("signature", user.user_signature);
+                        intent.putExtra("user_id", user.user_id);
+                        intent.putExtra("fans_flag", user.fans_flag);
                         intent.putExtra("note_key", note.note_key);
                         intent.putExtra("note_image", note.image_key);
                         intent.putExtra("note_content", note.note_content);
