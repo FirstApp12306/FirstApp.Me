@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "com.me.firstapp"
+        minSdkVersion 17
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs' //就是你放aar的目录地址
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'org.xutils:xutils:3.3.20'
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    provided 'de.greenrobot:eventbus-annotation-processor:3.0.0-beta1'
+    //提高性能
+    compile name: 'SMSSDK-2.0.2', ext: 'aar'
+    compile name: 'SMSSDKGUI-2.0.2', ext: 'aar'
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/qiniu-android-sdk-7.0.10.jar')
+    compile files('libs/happy-dns-0.2.5.jar')
+    compile files('libs/jmessage-android-1.2.0.jar')
+    compile files('libs/pinyin4j-2.5.0.jar')
+    compile files('libs/BaiduLBS_Android.jar')
+    compile project(':ViewpagerIndicatorLibrary')
+}
+
+
